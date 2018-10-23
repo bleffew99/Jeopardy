@@ -16,20 +16,22 @@ type t = {
 }
 
 (** [parse_levels] is the list of level scores from [levels]*)
-let rec parse_levels (levels: Jeopardy.level list) (acc : int list): int list =
-  match levels with
-  | [] -> []
-  | h::t -> parse_levels t ((score h) :: acc)
+let rec parse_levels (levels: Jeopardy.level list): int list =
+  let rec helper levels acc =
+    match levels with
+    | [] -> acc
+    | h::t -> helper t ((score h) :: acc)
+  in List.rev (helper levels [])
 
 (** [parse_categories] is the initial list of category statuses present in 
     [cats], a Jeopardy.category list *)  
 let rec parse_categories (cats: Jeopardy.category list) 
     acc : category_status list = 
   match cats with
-  | [] -> []
+  | [] -> acc
   | h::t -> parse_categories t 
               (({name = get_category_name h; 
-                 levels_left = (parse_levels (get_category_levels h) [])})::acc)
+                 levels_left = (parse_levels (get_category_levels h))})::acc)
 
 (* [init_state jeop] is the initial state of the game when playing [jeop].
     They have a starting score of 0 *)
@@ -48,6 +50,7 @@ let current_score st =
 
 (* [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] *)
+(* here be bugs *)
 let current_category_levels st (cat: category_name) : int list =
   let rec find_category (cats: category_status list) cat = 
     match cats with
@@ -57,13 +60,19 @@ let current_category_levels st (cat: category_name) : int list =
   find_category st.categories cat
 
 let levels_to_string (levs: int list) : string =
-  List.fold_right (fun x acc -> (string_of_int x) ^ ", " ^ acc) levs ""
+  let rec levels levs acc =
+    match levs with
+    | [] -> acc
+    | h::m::t -> levels (m::t) (acc ^ (string_of_int h) ^ ",")
+    | h::t -> levels t (acc ^ (string_of_int h))
+  in levels levs ""
+(*List.fold_right (fun x acc -> (string_of_int x) ^ ", " ^ acc) levs "" *)
 
 let current_category_levels_to_string st : string =
   List.fold_right 
     (fun x acc -> ((Jeopardy.category_name_string x)) ^ ": " ^ 
-                  (levels_to_string (current_category_levels st x)) ^ "\n")
-    st.categories_left ""
+                  (levels_to_string (current_category_levels st x)) ^ "\n" ^ acc)
+    (st.categories_left) ""
 
 type result = Legal of t | Illegal
 
@@ -84,11 +93,13 @@ let rec remove_category (lst : category_name list) (cat : category_name) acc =
     else remove_category t cat (h::acc)  
 
 (** [remove_level lst lev acc] is [lst] but with [lev] removed *)
-let rec remove_level (lst : int list) (lev : int) acc =
-  match lst with
-  | [] -> acc
-  | h::t -> if h = lev then remove_level t lev acc
-    else remove_level t lev (h::acc)
+let rec remove_level (lst : int list) (lev : int) =
+  let rec helper lst lev acc =
+    match lst with
+    | [] -> acc
+    | h::t -> if h = lev then helper t lev acc
+      else helper t lev (h::acc)
+  in List.rev (helper lst lev [])
 
 (* [remove_category_level lst cat lev acc] is lst but with the question with
     [cat] and [lev] removed.*)
@@ -100,7 +111,7 @@ let rec remove_category_level (lst : category_status list)
     if (h.name = cat) 
     then remove_category_level t cat lev 
         (({name = h.name; 
-           levels_left = remove_level h.levels_left lev []}) :: acc)
+           levels_left = remove_level h.levels_left lev }) :: acc)
     else remove_category_level t cat lev (h::acc)                    
 
 (** [play cat lev jeop st] is [r] if attempting to select the question in
@@ -124,8 +135,7 @@ let play cat lev (jeop: Jeopardy.t) st =
     the player's score either increases or decreases by the score of [lev].
     If lev or cat don't exist as an unanswered question, the result 
     is [Illegal]. *)
-let answer (cat : Jeopardy.category_name) lev (ans: string) (jeop: Jeopardy.t) (st: t) =
-  (* TODO : Check if is in form of a question. *)    
+let answer (cat : Jeopardy.category_name) lev (ans: string) (jeop: Jeopardy.t) (st: t) =   
   try (let corrects = answers jeop cat lev in 
        if List.mem ans corrects then 
          Legal {categories = st.categories; 

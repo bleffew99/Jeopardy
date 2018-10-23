@@ -15,3 +15,5 @@ val current_category_levels_to_string : t -> string
 type result = Legal of t | Illegal
 
 val play : Jeopardy.category_name -> int -> Jeopardy.t -> t -> result
+
+val answer : Jeopardy.category_name -> int -> string -> Jeopardy.t -> t -> result

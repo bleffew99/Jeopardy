@@ -18,6 +18,8 @@ val from_json : Yojson.Basic.json -> t
 
 val category_name_string : category_name -> string
 
+val category_name_from_string : string -> category_name
+
 val categories : t -> category list
 
 val categories_list : t -> category_name list

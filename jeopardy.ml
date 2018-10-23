@@ -46,6 +46,10 @@ let from_json json = {
 let category_name_string (cat: category_name) : string =
   cat
 
+(* [category_name_string cat] is string [cat] as a category_name. *)
+let category_name_from_string (cat: string) : category_name =
+  cat
+
 (** [categories jeop] returns the categories of the jeoparady game [jeop] *)
 let categories jeop = 
   jeop.categories
@@ -82,7 +86,7 @@ let get_category_levels (cat: category) =
     Raises UnknownCategory if cat is an invalid category *)
 let levels jeop (cat : category_name) : int list =
   try (let categ = is_category jeop.categories cat in 
-       get_levels (categ.levels) [])
+       (List.rev (get_levels (categ.levels) [])))
   with UnknownCategory cat -> raise (UnknownCategory cat)
 
 (** [get_question levels score] returns the question associated with 
@@ -101,7 +105,7 @@ let question (jeop : t) (cat: category_name) (score : int) : string =
        get_question categ.levels score)
   with UnknownLevel score -> raise (UnknownLevel score)
 
-(** [answers jeop cat score] returns Some ans of the question in category
+(** [answers jeop cat score] returns a list of answers of the question in category
     [cat] with score level [score]. None if the category is empty*)
 let answers (jeop: t) (cat: category_name) (score: int) : string list =
   let rec helper = function
@@ -111,6 +115,9 @@ let answers (jeop: t) (cat: category_name) (score: int) : string list =
   try (let categ = is_category jeop.categories cat in
        helper categ.levels)
   with UnknownCategory cat -> raise (UnknownCategory cat)
+
+let question_of_level (lev: level) =
+  lev.question
 
 let score (lev : level) = 
   lev.score

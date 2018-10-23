@@ -4,6 +4,7 @@ type command =
   | Play of phrase
   | Answer of phrase
   | Score 
+  | Quit
 
 exception Empty
 

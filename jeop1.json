@@ -1,0 +1,132 @@
+{
+  "categories": [
+    {
+      "name": "Music",
+      "levels": [
+        {
+          "score": 100,
+          "question": "What band sang this? 'Cause I want it that way'",
+          "answers": [
+            "Backstreet Boys",
+            "backstreet boys",
+            "back street boys"
+          ]
+        },
+        {
+          "score": 200,
+          "question": "Complete: 'Once I was seven years old my momma told me Go make ___ some friends' ",
+          "answers": [
+            "yourself",
+            "your self",
+            "Yourself"
+          ]
+        },
+        {
+          "score": 300,
+          "question": "What movie is this song from? 'See the line where the sky meets the sea'",
+          "answers": [
+            "Moana",
+            "moana"
+          ]
+        },
+        {
+          "score": 400,
+          "question": "This artist would 'catch a grenade for ya'",
+          "answers": [
+            "Bruno Mars",
+            "Bruno",
+            "bruno mars",
+            "Bruno mars"
+          ]
+        },
+        {
+          "score": 500,
+          "question": "This singer sings treat you better",
+          "answers": [
+            "Shawn Mendes",
+            "shawn mendes",
+            "shawn",
+            "Shawn mendes"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cornell",
+      "levels": [
+        {
+          "score": 100,
+          "question": "Who is the professor of CS3110?",
+          "answers": [
+            "Michael Clarkson",
+            "clarkson",
+            "Clarkson"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Quotes",
+      "levels": [
+        {
+          "score": 100,
+          "question": "Who is the professor of CS3110?",
+          "answers": [
+            "Michael Clarkson",
+            "clarkson",
+            "Clarkson"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Disney",
+      "levels": [
+        {
+          "score": 100,
+          "question": "Which movie is the song 'Circle of Life' from?",
+          "answers": [
+            "The Lion King",
+            "the lion king",
+            "Lion King",
+            "lion king"
+          ]
+        },
+        {
+          "score": 200,
+          "question": "Who was the original Disney princess?",
+          "answers": [
+            "Snow White",
+            "snow white",
+            "Snow white"
+          ]
+        },
+        {
+          "score": 300,
+          "question": "What is the dragon's name in Mulan?",
+          "answers": [
+            "mushu",
+            "Mushu"
+          ]
+        },
+        {
+          "score": 400,
+          "question": "The castle in Disneyland is named after which princess?",
+          "answers": [
+            "Sleeping Beauty",
+            "sleeping beauty",
+            "Sleeping beauty"
+          ]
+        },
+        {
+          "score": 500,
+          "question": "Which country is the movie 'Frozen' set in?",
+          "answers": [
+            "Norway",
+            "norway"
+          ]
+        }
+      ]
+    }
+  ]
+}

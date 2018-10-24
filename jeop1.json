@@ -70,11 +70,51 @@
       "levels": [
         {
           "score": 100,
-          "question": "Who is the professor of CS3110?",
+          "question": "Complete: 'May the _____ be with you' ",
           "answers": [
-            "Michael Clarkson",
-            "clarkson",
-            "Clarkson"
+            "force",
+            "Force"
+          ]
+        },
+        {
+          "score": 200,
+          "question": "Complete: 'Mama always said life was like a box of _____. You never know what you're gonna get' ",
+          "answers": [
+            "chocolates",
+            "Chocolates"
+          ]
+        },
+        {
+          "score": 300,
+          "question": "Who said this? 'Program testing can at best show the presence of errors but never their absence.'",
+          "answers": [
+            "Dijkstra",
+            "dijkstra",
+            "Edsger",
+            "edsger",
+            "Edsger Dijkstra",
+            "edsger dijkstra"
+          ]
+        },
+        {
+          "score": 400,
+          "question": "Which movie/book is this quote from? 'It matters not what someone is born, but what they grow to be.' ",
+          "answers": [
+            "Harry Potter and the Goblet of Fire",
+            "harry potter and the goblet of fire",
+            "Harry Potter And The Goblet Of Fire",
+            "Harry Potter",
+            "harry potter"
+          ]
+        },
+        {
+          "score": 500,
+          "question": "Which movie is this quote from? 'I'm going to make him an offer he can't refuse.' ",
+          "answers": [
+            "The Godfather",
+            "the godfather",
+            "Godfather",
+            "godfather"
           ]
         }
       ]

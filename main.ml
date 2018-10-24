@@ -72,7 +72,7 @@ let rec play_loop jeop (st : State.t) =
     | Answer lst -> print_endline "You need to choose a category right now, not answer a question.";
       play_loop jeop st
     | Score -> print_endline "Very well, your score is: ";
-      print_string (string_of_int (State.current_score st));
+      print_endline (string_of_int (State.current_score st));
       play_loop jeop st  
     | Quit -> print_endline "OK, see ya next time!"; exit 0
 

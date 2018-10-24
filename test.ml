@@ -104,8 +104,7 @@ let jeopardy_tests =
     make_question_test "question 1" (t1) (category_name_from_string "CS3110") 
     100 "Who is the professor of CS3110?";
     make_question_test "question 2" (t2) (category_name_from_string "Music") 
-    200 "Complete: 'Once I was seven years old my momma told me Go make ___ 
-    some friends'";
+    500 "This singer sings treat you better";
     make_question_test "question 3" (t2) (category_name_from_string "Disney")
      500 "Which country is the movie 'Frozen' set in?";
 
@@ -126,6 +125,8 @@ let jeopardy_tests =
     (*answers test exception*)
     make_answers_error_test "answer error 1" t2 (category_name_from_string 
     "Fruit") 400 (UnknownCategory (category_name_from_string "Fruit"));
+    make_answers_error_test "answer error 1" t2 (category_name_from_string 
+    "School") 1000 (UnknownCategory (category_name_from_string "Fruit"));
   ]
 
 let make_parse_test
@@ -146,15 +147,72 @@ let make_parse_error_test
 
 let command_tests = 
   [
+  (* make_parse test*)
+  make_parse_test "parse play 1" "play Music 200" (Play ["Music";"200"]);
+  make_parse_test "parse play 2" "play Cornell 400" (Play ["Cornell";"400"]); 
+  make_parse_test "parse Answer" "what are apples" (Answer ["apples"]);
+  make_parse_test "parse Score" "score" (Score);
+  make_parse_test "parse Quit" "quit" (Quit);
    (* make_parse_error_test "empty" "" Malformed;*)
-
-
+  make_parse_error_test "Empty " "" Empty;
+  make_parse_error_test "Malformed play 1" "play" Malformed;
+  make_parse_error_test "Malformed play 2" "play Fruits" Malformed;
+  make_parse_error_test "Malformed play 3" "play bla bla bla" Malformed;
+  make_parse_error_test "Malformed quit 1" "quit hello" Malformed;
+  make_parse_error_test "Malformed score 1" "score yay" Malformed;
+  make_parse_error_test "Malformed answer 1" "shawn" Malformed;
+  make_parse_error_test "Malformed answer 2" "what is" Malformed;
+  make_parse_error_test "Malformed answer 3" "who" Malformed;
   ]
 
+
+let make_current_category_levels_test  
+    (name: string)
+    (state: State.t)
+    (cate_name: category_name)
+    (expected_output: int list) : test =
+  name >:: (fun _ ->
+      assert_equal expected_output (current_category_levels state cate_name))
+
+let make_current_category_levels_to_string_test  
+    (name: string)
+    (state: State.t)
+    (expected_output: string) : test =
+  name >:: (fun _ ->
+      assert_equal expected_output (current_category_levels_to_string state))
+
+let make_state = function 
+  | Legal t -> t
+  | Illegal -> raise (Failure "Illegal")
+
+let play0 = init_state t2
+let play1 = make_state (play (category_name_from_string "Disney") 200 t2 play0) 
+let play2 = make_state (play (category_name_from_string "Music") 300 t2 play1)
+let play3 = make_state (play (category_name_from_string "Disney") 100 t2 play2)
+let play4 = make_state (play (category_name_from_string "Disney") 400 t2 play3)
+let play5 = make_state (play (category_name_from_string "Disney") 500 t2 play4)
+let play6 = make_state (play (category_name_from_string "Disney") 300 t2 play5)
+
+let state_tests =
+  [
+    make_current_category_levels_test "test 1" play1 
+    (category_name_from_string "Disney") [100; 300; 400; 500];
+    make_current_category_levels_test "test 2" play0
+    (category_name_from_string "Quotes") [100; 200; 300; 400; 500];
+    make_current_category_levels_test "test 3" play2 
+    (category_name_from_string "Music") [100; 200; 400; 500];
+   make_current_category_levels_test "test 4" play4 
+    (category_name_from_string "Disney") [300; 500];
+   
+   (*make_current_category_levels_to_string_test "tester1" play6 
+    ("Music: 100, 200, 400, 500" ^ "\n" ^ ("Cornell: 100, 200, 300, 400, 500" ^ "\n" ^
+     "Quotes: 100, 200, 300, 400, 500"))*) 
+  ]
 let suite =
   "test suite for midterm project"  >::: List.flatten [
     jeopardy_tests;
-    command_tests
+    command_tests;
+    state_tests
   ]
 
 let _ = run_test_tt_main suite

@@ -65,38 +65,42 @@
         },
         {
           "score": 200,
-          "question": "Who is the professor of CS3110?",
+          "question": "Cornell University was founded in this year",
           "answers": [
-            "Michael Clarkson",
-            "clarkson",
-            "Clarkson"
+            "1865"
           ]
         },
          {
           "score": 300,
-          "question": "Who is the professor of CS3110?",
+          "question": "On the morning of October 8, 1997, this peculiar object was found atop McGraw Tower.",
           "answers": [
-            "Michael Clarkson",
-            "clarkson",
-            "Clarkson"
+            "a pumpkin",
+            "the pumpkin",
+            "pumpkin",
+            "Pumpkin",
+            "a Pumpkin"
           ]
         },
          {
           "score": 400,
-          "question": "Who is the professor of CS3110?",
+          "question": "What is Cornell University's oldest building?",
           "answers": [
-            "Michael Clarkson",
-            "clarkson",
-            "Clarkson"
+            "Morrill Hall",
+            "morrill hall",
+            "morrill",
+            "Morrill",
+            "morill",
+            "Morril",
+            "Morill"
           ]
         },
          {
           "score": 500,
-          "question": "Who is the professor of CS3110?",
+          "question": "Ezra Cornell, in addition to founding Cornell University, founded this financial service company.",
           "answers": [
-            "Michael Clarkson",
-            "clarkson",
-            "Clarkson"
+            "Western union",
+            "Western  Union",
+            "western union"
           ]
         }
       ]

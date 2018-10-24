@@ -116,8 +116,9 @@ let question (jeop : t) (cat: category_name) (score : int) : string =
        get_question categ.levels score)
   with UnknownLevel score -> raise (UnknownLevel score)
 
-(** [answers jeop cat score] returns a list of answers of the question in 
-    category [cat] with score level [score]. [None] if the category is empty.*)
+(** [answers jeop cat score] returns a list of answers of the question in category
+    [cat] with score level [score]. Raises NoAnswersProvided if the category 
+    is empty*)
 let answers (jeop: t) (cat: category_name) (score: int) : string list =
   let rec helper = function
     | [] -> raise (NoAnswersProvided)

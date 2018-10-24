@@ -90,6 +90,7 @@ let rec is_category (cats : category list) (cat : category_name) =
   | [] -> raise (UnknownCategory cat)
   | h::t -> if (h.name = cat) then h else is_category t cat
 
+(** [get_category_levels cat] returns the levels for category [cat]. *)
 let get_category_levels (cat: category) = 
   cat.levels
 

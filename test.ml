@@ -168,6 +168,12 @@ let command_tests =
   ]
 
 (* state tests*)
+let make_current_score_test  
+    (name: string)
+    (st: State.t)
+    (expected_output: int) : test =
+  name >:: (fun _ ->
+      assert_equal expected_output (current_score st))
 
 let make_current_category_levels_test  
     (name: string)
@@ -217,8 +223,29 @@ let play4 = make_state (play (category_name_from_string "Disney") 400 t2 play3)
 let play5 = make_state (play (category_name_from_string "Disney") 500 t2 play4)
 let play6 = make_state (play (category_name_from_string "Disney") 300 t2 play5)
 
+let ans1 = make_state (answer (category_name_from_string "Disney") 200 
+                         "snow white" t2 play1) 
+let ans2 = make_state (answer (category_name_from_string "Music") 300 
+                         "moana" t2 ans1) 
+let ans3 = make_state (answer (category_name_from_string "Disney") 100 
+                         "simba" t2 ans2) 
+let ans4 = make_state (answer (category_name_from_string "Disney") 400 
+                         "sleeping beauty" t2 ans3) 
+let ans5 = make_state (answer (category_name_from_string "Disney") 500 
+                         "norway" t2 ans4) 
+let ans6 = make_state (answer (category_name_from_string "Disney") 300 
+                         "norway" t2 ans5) 
+
 let state_tests =
   [
+    (*current_score tests*)
+    make_current_score_test "current score test 1" ans1 200;
+    make_current_score_test "current score test 2" ans2 500;
+    make_current_score_test "current score test 3" ans3 400;
+    make_current_score_test "current score test 4" ans4 800;
+    make_current_score_test "current score test 5" ans5 1300;
+    make_current_score_test "current score test 6" ans6 1000; 
+
     (*current_category_levels tests*)
     make_current_category_levels_test "ccl test 1" play1 
       (category_name_from_string "Disney") [100; 300; 400; 500];
@@ -256,6 +283,5 @@ let suite =
     command_tests;
     state_tests
   ]
-
 
 let _ = run_test_tt_main suite

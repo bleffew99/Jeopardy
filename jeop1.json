@@ -54,8 +54,44 @@
     {
       "name": "Cornell",
       "levels": [
-        {
+         {
           "score": 100,
+          "question": "Who is the professor of CS3110?",
+          "answers": [
+            "Michael Clarkson",
+            "clarkson",
+            "Clarkson"
+          ]
+        },
+        {
+          "score": 200,
+          "question": "Who is the professor of CS3110?",
+          "answers": [
+            "Michael Clarkson",
+            "clarkson",
+            "Clarkson"
+          ]
+        },
+         {
+          "score": 300,
+          "question": "Who is the professor of CS3110?",
+          "answers": [
+            "Michael Clarkson",
+            "clarkson",
+            "Clarkson"
+          ]
+        },
+         {
+          "score": 400,
+          "question": "Who is the professor of CS3110?",
+          "answers": [
+            "Michael Clarkson",
+            "clarkson",
+            "Clarkson"
+          ]
+        },
+         {
+          "score": 500,
           "question": "Who is the professor of CS3110?",
           "answers": [
             "Michael Clarkson",

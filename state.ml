@@ -33,24 +33,23 @@ let rec parse_categories (cats: Jeopardy.category list)
               (({name = get_category_name h; 
                  levels_left = (parse_levels (get_category_levels h))})::acc)
 
-(* [init_state jeop] is the initial state of the game when playing [jeop].
+(** [init_state jeop] is the initial state of the game when playing [jeop].
     They have a starting score of 0 *)
 let init_state (jeop: Jeopardy.t) : t = 
   {categories = parse_categories (categories jeop) []; 
    categories_left = Jeopardy.categories_list jeop;
    score = 0 }
 
-(** [current_categories st] gets the catefories left field from [st] *)  
+(** [current_categories st] gets the categories left field from [st]. *)  
 let current_categories (st: t) =
   st.categories_left
 
-(** [current_score st] gets the current score from [st] *)
+(** [current_score st] gets the current score from [st]. *)
 let current_score st =
   st.score
 
-(* [current_category_levels st cat] returns the current levels still unplayed
+(** [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] *)
-(* here be bugs *)
 let current_category_levels st (cat: category_name) : int list =
   let rec find_category (cats: category_status list) cat = 
     match cats with
@@ -59,6 +58,8 @@ let current_category_levels st (cat: category_name) : int list =
   in
   find_category st.categories cat
 
+(** [levels_to_string levs] returns the scores in list [levs] in a list, with
+    the scores seperated by commas. *)
 let levels_to_string (levs: int list) : string =
   let rec levels levs acc =
     match levs with
@@ -66,33 +67,27 @@ let levels_to_string (levs: int list) : string =
     | h::m::t -> levels (m::t) (acc ^ (string_of_int h) ^ ",")
     | h::t -> levels t (acc ^ (string_of_int h))
   in levels levs ""
-(*List.fold_right (fun x acc -> (string_of_int x) ^ ", " ^ acc) levs "" *)
 
+(** [current_category_levels_to_string st] returns a string containing each 
+    category in categories_left of [st] followed by the levels left in that 
+    category. *)
 let current_category_levels_to_string st : string =
   List.fold_right 
     (fun x acc -> ((Jeopardy.category_name_string x)) ^ ": " ^ 
-                  (levels_to_string (current_category_levels st x)) ^ "\n" ^ acc)
+                  (levels_to_string (current_category_levels st x)) 
+                  ^ "\n" ^ acc)
     (st.categories_left) ""
 
 type result = Legal of t | Illegal
 
-(* 
-let rec remove_category_levels (lst : category_status list) (cat: category_name) acc =
-  match lst with
-  | [] -> acc
-  | h::t -> if (h.name = cat) 
-    then remove_category_levels t cat (({name = h.name;levels_left = []}):: acc)
-    else remove_category_levels t cat (h::acc)
-*)    
-
-(** [remove_category lst cat acc] is [lst] but with [cat] removed *)
+(** [remove_category lst cat acc] is [lst] but with [cat] removed. *)
 let rec remove_category (lst : category_name list) (cat : category_name) acc = 
   match lst with
   | [] -> acc
   | h::t -> if h = cat then remove_category t cat acc
     else remove_category t cat (h::acc)  
 
-(** [remove_level lst lev acc] is [lst] but with [lev] removed *)
+(** [remove_level lst lev acc] is [lst] but with [lev] removed. *)
 let rec remove_level (lst : int list) (lev : int) =
   let rec helper lst lev acc =
     match lst with
@@ -130,12 +125,13 @@ let play cat lev (jeop: Jeopardy.t) st =
                 categories_left = st.categories_left; score = st.score}
 
 
-(* [answer cat lev jeop st] is [r] if attempting to answer the question
+(** [answer cat lev jeop st] is [r] if attempting to answer the question
     in [cat] and [lev] in [jeop]. Depending on whether or not [ans] is correct,
     the player's score either increases or decreases by the score of [lev].
     If lev or cat don't exist as an unanswered question, the result 
     is [Illegal]. *)
-let answer (cat : Jeopardy.category_name) lev (ans: string) (jeop: Jeopardy.t) (st: t) =   
+let answer (cat : Jeopardy.category_name) lev (ans: string) 
+    (jeop: Jeopardy.t) (st: t) =   
   try (let corrects = answers jeop cat lev in 
        if List.mem ans corrects then 
          Legal {categories = st.categories; 

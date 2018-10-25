@@ -72,22 +72,22 @@ let levels_to_string (levs: int list) : string =
     category in categories_left of [st] followed by the levels left in that 
     category. *)
 let current_category_levels_to_string st : string =
-  (List.fold_right 
-     (fun x acc -> ((Jeopardy.category_name_string x)) ^ ": " ^ 
-                   (levels_to_string (current_category_levels st x)) 
-                   ^ "\n" ^ acc)
-     (st.categories_left) "")
-
-
+  List.fold_right 
+    (fun x acc -> ((Jeopardy.category_name_string x)) ^ ": " ^ 
+                  (levels_to_string (current_category_levels st x)) 
+                  ^ "\n" ^ acc)
+    (st.categories_left) ""
 
 type result = Legal of t | Illegal
 
 (** [remove_category lst cat acc] is [lst] but with [cat] removed. *)
-let rec remove_category (lst : category_name list) (cat : category_name) acc = 
-  match lst with
-  | [] -> acc
-  | h::t -> if h = cat then remove_category t cat acc
-    else remove_category t cat (h::acc)  
+let remove_category (lst : category_name list) (cat : category_name) = 
+  let rec helper l acc =
+    match l with
+    | [] -> acc
+    | h::t -> if h = cat then helper t acc
+      else helper t (h::acc) 
+  in List.rev (helper lst [])
 
 (** [remove_level lst lev acc] is [lst] but with [lev] removed. *)
 let rec remove_level (lst : int list) (lev : int) =
@@ -100,18 +100,16 @@ let rec remove_level (lst : int list) (lev : int) =
 
 (* [remove_category_level lst cat lev acc] is lst but with the question with
     [cat] and [lev] removed.*)
-let remove_category_level (lst : category_status list) 
-    (cat : category_name) (lev : int) =
-  let rec helper l acc =
-    match l with 
-    | [] -> acc
-    | h::t -> 
-      if (h.name = cat) 
-      then helper t
-          (({name = h.name; 
-             levels_left = remove_level h.levels_left lev }) :: acc)
-      else helper t (h::acc)
-  in List.rev (helper lst [])                    
+let rec remove_category_level (lst : category_status list) 
+    (cat : category_name) (lev : int) acc =
+  match lst with 
+  | [] -> acc
+  | h::t -> 
+    if (h.name = cat) 
+    then remove_category_level t cat lev 
+        (({name = h.name; 
+           levels_left = remove_level h.levels_left lev }) :: acc)
+    else remove_category_level t cat lev (h::acc)                    
 
 (** [play cat lev jeop st] is [r] if attempting to select the question in
     categoty [cat] and level [lev] in jeopardy [jeop]. If [cat] or [lev]
@@ -122,10 +120,10 @@ let play cat lev (jeop: Jeopardy.t) st =
   else let levels = current_category_levels st cat in
     if not (List.mem lev levels) then Illegal 
     else if List.length levels = 1 
-    then Legal {categories = remove_category_level st.categories cat lev; 
-                categories_left = remove_category st.categories_left cat []; 
+    then Legal {categories = remove_category_level st.categories cat lev []; 
+                categories_left = remove_category st.categories_left cat; 
                 score = st.score}
-    else Legal {categories = remove_category_level st.categories cat lev; 
+    else Legal {categories = remove_category_level st.categories cat lev []; 
                 categories_left = st.categories_left; score = st.score}
 
 

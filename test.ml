@@ -194,7 +194,7 @@ let make_current_category_levels_to_string_test
     (state: State.t)
     (expected_output: string) : test =
   name >:: (fun _ ->
-      assert_equal expected_output (current_category_levels_to_string state)~printer:(fun (x:string) -> x))
+      assert_equal expected_output (current_category_levels_to_string state))
 
 let make_play_illegal_tests
     (name : string)
@@ -263,6 +263,10 @@ let state_tests =
       (category_name_from_string "Disney") [300; 500];
 
     (*current_category_levels_to_string test*)
+    make_current_category_levels_to_string_test "ccls test 1" play4
+      ("Disney: 300,500" ^ "\n" ^ "Quotes: 100,200,300,400,500" ^ "\n" ^ 
+       "Cornell: 100,200,300,400,500" ^ "\n" ^ 
+       "Music: 100,200,400,500" ^ "\n");
     make_current_category_levels_to_string_test "ccls test 1" play5
       ("Disney: 300" ^ "\n" ^ "Quotes: 100,200,300,400,500" ^ "\n" ^ 
        "Cornell: 100,200,300,400,500" ^ "\n" ^ 

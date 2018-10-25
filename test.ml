@@ -10,7 +10,8 @@ let make_get_category_name_test
     (cat: category) 
     (expected_output : string) : test = 
   name >:: (fun _ -> 
-      assert_equal expected_output (category_name_string (get_category_name cat)))
+      assert_equal expected_output 
+        (category_name_string (get_category_name cat)))
 
 let make_levels_test 
     (name: string) 
@@ -68,7 +69,8 @@ let make_answers_error_test
     (score: int)
     (expected_output: exn) : test =
   name >:: (fun _ -> 
-      assert_raises (UnknownCategory cat_name) (answer_unit jeop cat_name score))
+      assert_raises (UnknownCategory cat_name) 
+        (answer_unit jeop cat_name score))
 
 let t1 = from_json(Yojson.Basic.from_file "3110.json")
 let t2 = from_json(Yojson.Basic.from_file "jeop1.json")
@@ -86,10 +88,12 @@ let jeopardy_tests =
       (List.nth (cate2) 3) "Disney";   
 
     (*levels test without exception*)
-    make_levels_test "level 1" (t1) (category_name_from_string "CS3110") [100];
-    make_levels_test "level 2" (t2) (category_name_from_string "Music") [100;
-                                                                         200; 300; 400; 500];
-    make_levels_test "level 3" (t2) (category_name_from_string "Quotes") 
+    make_levels_test "level 1" (t1) 
+      (category_name_from_string "CS3110") [100];
+    make_levels_test "level 2" (t2) 
+      (category_name_from_string "Music") [100; 200; 300; 400; 500];
+    make_levels_test "level 3" (t2) 
+      (category_name_from_string "Quotes") 
       [100; 200; 300; 400; 500];
 
     (*levels test with exception*)
@@ -109,24 +113,26 @@ let jeopardy_tests =
       500 "Which country is the movie 'Frozen' set in?";
 
     (*question test with exceptions*)
-    make_question_error_test "question error 1" (t1) (category_name_from_string 
-                                                        "CS3110") (200) (UnknownLevel 200);
-    make_question_error_test "question error 2" (t2) (category_name_from_string 
-                                                        "Music") (727) (UnknownLevel 727);
+    make_question_error_test "question error 1" (t1) 
+      (category_name_from_string "CS3110") (200) (UnknownLevel 200);
+    make_question_error_test "question error 2" (t2) 
+      (category_name_from_string "Music") (727) (UnknownLevel 727);
 
     (*answers test no excpetion*)
     make_answers_test "answer test 1" t1 (category_name_from_string "CS3110") 
       100 ["Michael Clarkson";"clarkson";"Clarkson"];
     make_answers_test "answer test 2" t2 (category_name_from_string "Disney") 
       400 ["Sleeping Beauty"; "sleeping beauty";"Sleeping beauty"];
-    make_answers_test "answer test 3" t2 (category_name_from_string "Music") 200 
-      [ "yourself"; "your self";"Yourself"];
+    make_answers_test "answer test 3" t2 (category_name_from_string "Music") 
+      200 [ "yourself"; "your self";"Yourself"];
 
     (*answers test exception*)
-    make_answers_error_test "answer error 1" t2 (category_name_from_string 
-                                                   "Fruit") 400 (UnknownCategory (category_name_from_string "Fruit"));
-    make_answers_error_test "answer error 1" t2 (category_name_from_string 
-                                                   "School") 1000 (UnknownCategory (category_name_from_string "Fruit"));
+    make_answers_error_test "answer error 1" t2 
+      (category_name_from_string "Fruit") 400 
+      (UnknownCategory (category_name_from_string "Fruit"));
+    make_answers_error_test "answer error 1" t2 
+      (category_name_from_string "School") 
+      1000 (UnknownCategory (category_name_from_string "Fruit"));
   ]
 
 (* command tests*)

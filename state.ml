@@ -81,11 +81,13 @@ let current_category_levels_to_string st : string =
 type result = Legal of t | Illegal
 
 (** [remove_category lst cat acc] is [lst] but with [cat] removed. *)
-let rec remove_category (lst : category_name list) (cat : category_name) acc = 
-  match lst with
-  | [] -> acc
-  | h::t -> if h = cat then remove_category t cat acc
-    else remove_category t cat (h::acc)  
+let remove_category (lst : category_name list) (cat : category_name) = 
+  let rec helper l acc =
+    match l with
+    | [] -> acc
+    | h::t -> if h = cat then helper t acc
+      else helper t (h::acc) 
+  in List.rev (helper lst [])
 
 (** [remove_level lst lev acc] is [lst] but with [lev] removed. *)
 let rec remove_level (lst : int list) (lev : int) =
@@ -119,7 +121,7 @@ let play cat lev (jeop: Jeopardy.t) st =
     if not (List.mem lev levels) then Illegal 
     else if List.length levels = 1 
     then Legal {categories = remove_category_level st.categories cat lev []; 
-                categories_left = remove_category st.categories_left cat []; 
+                categories_left = remove_category st.categories_left cat; 
                 score = st.score}
     else Legal {categories = remove_category_level st.categories cat lev []; 
                 categories_left = st.categories_left; score = st.score}

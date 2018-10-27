@@ -146,6 +146,18 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
   | NoAnswersProvided -> Illegal 
   | UnknownCategory cat -> Illegal
 
+(** [hint cat lev jeop st] is [r] if requesting a hint for question [lev] in
+    category [cat]. If [lev] or [cat] don't exist the result is [Illegal],
+    otherwise the player is subtracted 100 points for asking for a hint.
+    Hint does NO printing *)
+let hint (cat: Jeopardy.category_name) (lev:int) (jeop: Jeopardy.t) st =
+  try (let _ = Jeopardy.hint jeop cat lev in
+       Legal {categories = st.categories;
+              categories_left = st.categories_left;
+              score = st.score - 100})
+  with
+  | UnknownLevel lev -> Illegal
+  | UnknownCategory cat -> Illegal
 
 
 

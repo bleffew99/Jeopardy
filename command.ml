@@ -5,6 +5,8 @@ type command =
   | Answer of phrase
   | Score
   | Quit
+  | Hint
+  | Pass
 
 exception Empty
 
@@ -56,4 +58,10 @@ let parse str : command =
         then if t1 = [] then raise Malformed
           else (Answer t1) else raise Malformed
       | [] -> raise Malformed)
+    else if h = "hint" then 
+      if t <> [] then raise Malformed 
+      else Hint
+    else if h = "pass" then
+      if t <> [] then raise Malformed
+      else Pass
     else raise Malformed

@@ -7,47 +7,41 @@
           "score": 100,
           "question": "What band sang this? 'Cause I want it that way'",
           "answers": [
-            "Backstreet Boys",
-            "backstreet boys",
-            "back street boys"
-          ]
+            "backstreet boys"
+          ],
+          "hint": "Two words, both start with 'B'."
         },
         {
           "score": 200,
           "question": "Complete: 'Once I was seven years old my momma told me Go make ___ some friends'",
           "answers": [
-            "yourself",
-            "your self",
-            "Yourself"
-          ]
+            "yourself"
+          ],
+          "hint": "Synonym of you."
         },
         {
           "score": 300,
-          "question": "What movie is this song from? 'See the line where the sky meets the sea'",
+          "question": "What movie is this song from? 'Because I'm happy Clap along if you feel like a room without a roof'",
           "answers": [
-            "Moana",
-            "moana"
-          ]
+            "despicable me 2"
+          ],
+          "hint": "Features a Demigod with a fish hook."
         },
         {
           "score": 400,
           "question": "This artist would 'catch a grenade for ya'",
           "answers": [
-            "Bruno Mars",
-            "Bruno",
-            "bruno mars",
-            "Bruno mars"
-          ]
+            "bruno mars"
+          ],
+          "hint": "This artist sang a song about being lazy."
         },
         {
           "score": 500,
           "question": "This singer sings treat you better",
           "answers": [
-            "Shawn Mendes",
-            "shawn mendes",
-            "shawn",
-            "Shawn mendes"
-          ]
+            "shawn mendes"
+          ],
+          "hint": "this artist is 20 years old."
         }
       ]
     },
@@ -58,19 +52,19 @@
           "score": 100,
           "question": "Who is the professor of CS3110?",
           "answers": [
-            "Michael Clarkson",
+            "michael clarkson",
             "clarkson",
-            "Clarkson",
-            "michael",
-            "Michael"
-          ]
+            "michael"
+          ],
+          "hint": "You're in this class!!"
         },
         {
           "score": 200,
           "question": "Cornell University was founded in this year",
           "answers": [
             "1865"
-          ]
+          ],
+          "hint": "An eventful time in American history, this year saw the end of the civil war, and the assassination of Abraham Lincoln."
         },
         {
           "score": 300,
@@ -78,32 +72,29 @@
           "answers": [
             "a pumpkin",
             "the pumpkin",
-            "pumpkin",
-            "Pumpkin",
-            "a Pumpkin"
-          ]
+            "pumpkin"
+          ],
+          "hint": "This object was very seasonal for the spooky month of October."
         },
         {
           "score": 400,
           "question": "What is Cornell University's oldest building?",
           "answers": [
-            "Morrill Hall",
             "morrill hall",
             "morrill",
-            "Morrill",
             "morill",
-            "Morril",
-            "Morill"
-          ]
+            "morril"
+          ],
+          "hint": "This arts quad building, home to the linguistics department, is also under heavy renovations this year."
         },
         {
           "score": 500,
-          "question": "Ezra Cornell, in addition to founding Cornell University, founded this financial service company.",
+          "question": "Ezra Cornell, in addition to founding Cornell University, helped found this financial service company.",
           "answers": [
-            "Western union",
-            "Western  Union",
+            "western  union",
             "western union"
-          ]
+          ],
+          "hint": "Originally a telegraph company, it now mostly serves as a money transfer service."
         }
       ]
     },
@@ -114,50 +105,45 @@
           "score": 100,
           "question": "Complete: 'May the _____ be with you' ",
           "answers": [
-            "force",
-            "Force"
-          ]
+            "force"
+          ],
+          "hint": "This quote is from Star Wars."
         },
         {
           "score": 200,
           "question": "Complete: 'Mama always said life was like a box of _____. You never know what you're gonna get' ",
           "answers": [
-            "chocolates",
-            "Chocolates"
-          ]
+            "chocolates"
+          ],
+          "hint": "A brown and sweet snack."
         },
         {
           "score": 300,
           "question": "Who said this? 'Program testing can at best show the presence of errors but never their absence.'",
           "answers": [
-            "Dijkstra",
             "dijkstra",
-            "Edsger",
             "edsger",
-            "Edsger Dijkstra",
             "edsger dijkstra"
-          ]
+          ],
+          "hint": "A Dutch programmer who invented an algorithm for finding the shortest paths between nodes in a graph."
         },
         {
           "score": 400,
           "question": "Which movie/book is this quote from? 'It matters not what someone is born, but what they grow to be.' ",
           "answers": [
-            "Harry Potter and the Goblet of Fire",
             "harry potter and the goblet of fire",
-            "Harry Potter And The Goblet Of Fire",
-            "Harry Potter",
             "harry potter"
-          ]
+          ],
+          "hint": "The fourth of a series of fantasy novels featuring a young wizard."
         },
         {
           "score": 500,
           "question": "Which movie is this quote from? 'I'm going to make him an offer he can't refuse.' ",
           "answers": [
-            "The Godfather",
             "the godfather",
-            "Godfather",
             "godfather"
-          ]
+          ],
+          "hint": "A famous mob drama."
         }
       ]
     },
@@ -168,45 +154,42 @@
           "score": 100,
           "question": "Which movie is the song 'Circle of Life' from?",
           "answers": [
-            "The Lion King",
             "the lion king",
-            "Lion King",
             "lion king"
-          ]
+          ],
+          "hint": "It's the movie featuring lions."
         },
         {
           "score": 200,
           "question": "Who was the original Disney princess?",
           "answers": [
-            "Snow White",
-            "snow white",
-            "Snow white"
-          ]
+            "snow white"
+          ],
+          "hint": "Who bites the poisoned apple?"
         },
         {
           "score": 300,
           "question": "What is the dragon's name in Mulan?",
           "answers": [
-            "mushu",
-            "Mushu"
-          ]
+            "mushu"
+          ],
+          "hint": "M _ s h _"
         },
         {
           "score": 400,
           "question": "The castle in Disneyland is named after which princess?",
           "answers": [
-            "Sleeping Beauty",
-            "sleeping beauty",
-            "Sleeping beauty"
-          ]
+            "sleeping beauty"
+          ],
+          "hint": "The villian in the movie this princess is featured in is Maleficient."
         },
         {
           "score": 500,
           "question": "Which country is the movie 'Frozen' set in?",
           "answers": [
-            "Norway",
             "norway"
-          ]
+          ],
+          "hint": "The country is next to Sweden."
         }
       ]
     }

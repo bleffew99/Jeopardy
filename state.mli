@@ -40,3 +40,10 @@ val play : Jeopardy.category_name -> int -> Jeopardy.t -> t -> result
     is [Illegal]. *)
 val answer : 
   Jeopardy.category_name -> int -> string -> Jeopardy.t -> t -> result
+
+(** [hint cat lev jeop st] is [r] if requesting a hint for question [lev] in
+    category [cat]. If [lev] or [cat] don't exist the result is [Illegal],
+    otherwise the player is subtracted 100 points for asking for a hint.
+    Hint does NO printing *)
+val hint : 
+  Jeopardy.category_name -> int -> Jeopardy.t -> t -> result

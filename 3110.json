@@ -7,10 +7,11 @@
           "score": 100,
           "question": "Who is the professor of CS3110?",
           "answers": [
-            "Michael Clarkson",
             "clarkson",
-            "Clarkson"
-          ]
+            "michael clarkson",
+            "michael"
+          ],
+          "hint": "You're in this class!!"
         }
       ]
     }

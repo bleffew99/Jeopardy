@@ -5,7 +5,7 @@ type question
 type category_name
 
 (** [level] represents a level in a category that has a score, a question, 
-    and a list of possible correct answers. *)
+    a list of possible correct answers, and a hint for the answers. *)
 type level
 
 (** [category] represents a jeopardy category that has a name and a list of
@@ -67,3 +67,8 @@ val answers : t -> category_name -> int -> string list
 
 (** [score lev] is the score of level [lev]. *)
 val score : level -> int
+
+(** [hint jeop cat score] returns the hint in the game [jeop]
+    with category [cat] and level [score]
+    Raises: UnknownLevel if score is not a valid level. *)
+val hint: t -> category_name -> int -> string

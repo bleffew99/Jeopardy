@@ -5,6 +5,8 @@ type command =
   | Answer of phrase
   | Score 
   | Quit
+  | Hint
+  | Pass
 
 exception Empty
 

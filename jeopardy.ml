@@ -11,11 +11,12 @@ exception UnknownLevel of int
 exception NoAnswersProvided
 
 (** [level] represents a level in a category that has a score, a question, 
-    and a list of possible correct answers. *)
+    a list of possible correct answers, and a hint for the answers. *)
 type level = {
   score: int;
   question: question;
   answers: string list;
+  hint: string;
 }
 
 (** [category] represents a jeopardy category that has a name and a list of
@@ -37,6 +38,7 @@ let level_of_json json = {
   score = json |> member "score" |> to_int;
   question = json |> member "question" |> to_string;
   answers = json |> member "answers" |> to_list |> List.map to_string;
+  hint = json |> member "hint" |> to_string;
 }
 (** [category_of_json json] is the representation of a category in [json]
     Requires:json is a valid JSON. *)
@@ -117,7 +119,7 @@ let question (jeop : t) (cat: category_name) (score : int) : string =
        get_question categ.levels score)
   with UnknownLevel score -> raise (UnknownLevel score)
 
-(** [answers jeop cat score] returns a list of answers of the question in category
+(** [answers jeop cat score] returns a list of answers of a question in category
     [cat] with score level [score]. Raises NoAnswersProvided if the category 
     is empty*)
 let answers (jeop: t) (cat: category_name) (score: int) : string list =
@@ -133,3 +135,21 @@ let answers (jeop: t) (cat: category_name) (score: int) : string list =
 let score (lev : level) = 
   lev.score
 
+(** [get_hint levels score] returns the hint associated with 
+     level score [score] in the list of levels [levels]
+     Raises: UnknownLevel if score is not a valid level. *)
+let rec get_hint (levels : level list) (score : int) : string =
+  match levels with 
+  | [] -> raise (UnknownLevel score)
+  | h::t -> if h.score = score then h.hint else get_hint t score
+
+(** [hint jeop cat score] returns the hint in the game [jeop]
+    with category [cat] and level [score]
+    Raises: UnknownLevel if score is not a valid level.
+    Raises: UnknownCategory if cat is an invalid category. *)
+let hint (jeop : t) (cat: category_name) (score : int) : string = 
+  try (let categ = is_category jeop.categories cat in
+       get_hint categ.levels score)
+  with 
+  | UnknownCategory cat -> raise (UnknownCategory cat)
+  | UnknownLevel score -> raise (UnknownLevel score) 

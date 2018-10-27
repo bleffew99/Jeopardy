@@ -21,8 +21,10 @@ let rec question_loop jeop (st : State.t)
       question_loop jeop st lev cat
     | Answer lst -> 
       (let answ = 
-         String.trim (List.fold_left (fun x acc -> x ^ " " ^ acc) "" lst) in
-       let result = State.answer cat lev answ jeop st in 
+         String.trim (List.fold_left (fun x acc -> 
+             x ^ " " ^ acc) "" lst) in                              
+       let result = State.answer cat lev 
+           (String.lowercase_ascii answ) jeop st in 
        match result with
        | Illegal -> 
          print_endline "That answer is illegal.";
@@ -32,8 +34,23 @@ let rec question_loop jeop (st : State.t)
            (print_endline "Congratulations, you are correct!"; 
             s)
          else (print_endline 
-                 "Sorry that's wrong, better luck next time, buckaroo."; s))
+                 "Sorry that's wrong, better luck next time, buckaroo.";
+               print_endline "The answer was: ";
+               let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
+               print_endline correct;
+               s))
     | Quit -> print_endline "OK, see ya next time!"; exit 0
+    | Hint -> (print_endline "Here is a hint to help you:";
+               let hint = Jeopardy.hint jeop cat lev in
+               print_endline hint;
+               match (State.hint cat lev jeop st) with
+               | Legal st' -> question_loop jeop st' lev cat
+               | Illegal -> 
+                 print_endline 
+                   "That is an invalid cat/lev combination (this shouldn't happen)";
+                 question_loop jeop st lev cat)
+    | Pass -> print_endline "We will let you go this time!"; st
+
 
 (** [play_loop jeop st] conducts the main game loop, prompting the user, 
     updating [st] until the user quits *)
@@ -91,6 +108,10 @@ let rec play_loop jeop (st : State.t) =
       print_endline (string_of_int (State.current_score st));
       play_loop jeop st  
     | Quit -> print_endline "OK, see ya next time!"; exit 0
+    | Hint -> print_endline "You need to choose a category and level first!";
+      play_loop jeop st
+    | Pass -> print_endline "You haven't even chosen a question yet!";
+      play_loop jeop st
 
 (** [play_game f] starts the jeopardy in file [f]. *)
 let play_game f =

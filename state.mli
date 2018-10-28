@@ -16,6 +16,9 @@ val current_categories : t -> Jeopardy.category_name list
 (** [current_score st] gets the current score from [st]. *)
 val current_score : t -> int
 
+(** [current_board st] get the current score from [st]*)
+val current_board : t -> string
+
 (** [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] *)
 val current_category_levels : t -> Jeopardy.category_name -> int list

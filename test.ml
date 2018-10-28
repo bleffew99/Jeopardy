@@ -232,7 +232,7 @@ let play6 = make_state (play (category_name_from_string "Disney") 300 t2 play5)
 let ans1 = make_state (answer (category_name_from_string "Disney") 200 
                          "snow white" t2 play1) 
 let ans2 = make_state (answer (category_name_from_string "Music") 300 
-                         "moana" t2 ans1) 
+                         "despicable me 2" t2 ans1) 
 let ans3 = make_state (answer (category_name_from_string "Disney") 100 
                          "simba" t2 ans2) 
 let ans4 = make_state (answer (category_name_from_string "Disney") 400 

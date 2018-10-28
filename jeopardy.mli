@@ -41,7 +41,7 @@ val categories_list : t -> category_name list
 (** [get_category_name cat] returns the name of the cateogry [cat] *)
 val get_category_name : category -> category_name
 
-(** [get_level levels] returns the list of scores in the level [levels]. *)
+(** [get_level levels] returns the list of scores in the level list [levels]. *)
 val get_levels : level list -> int list -> int list
 
 (** [is_category cats cat] returns the category matching [cat] if [cat] is 
@@ -55,6 +55,10 @@ val get_category_levels : category -> level list
 (** [levels jeop cat] is the levels in category cat of jeoprady game [jeop]
     Raises: UnknownCategory if cat is an invalid category. *)
 val levels : t -> category_name -> int list
+
+(** [all_levels jeop] returns a list of all the levels in each category of 
+    [jeop]*)
+val all_levels : t -> int list list
 
 (** [question jeop cat score] returns the question in the game [jeop]
     with category [cat] and level [score]

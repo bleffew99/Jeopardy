@@ -31,14 +31,16 @@ let rec question_loop jeop (st : State.t)
          question_loop jeop st lev cat
        | Legal s -> 
          if (State.current_score s) > (State.current_score st) then
-           (print_endline "Congratulations, you are correct!"; 
+           (ANSITerminal.erase Screen;
+            print_endline "Congratulations, you are correct!";
             s)
-         else (print_endline 
-                 "Sorry that's wrong, better luck next time, buckaroo.";
-               print_endline "The answer was: ";
-               let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
-               print_endline correct;
-               s))
+         else ( ANSITerminal.erase Screen;
+                print_endline 
+                  "Sorry that's wrong, better luck next time, buckaroo.";
+                print_endline "The answer was: ";
+                let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
+                print_endline correct;
+                s))
     | Quit -> print_endline "OK, see ya next time!"; exit 0
     | Hint -> (print_endline "Here is a hint to help you:";
                let hint = Jeopardy.hint jeop cat lev in
@@ -62,7 +64,8 @@ let rec play_loop jeop (st : State.t) =
      exit 0)
   else 
     print_endline ("Here are the current categories and levels left:\n");
-  print_string (State.current_category_levels_to_string st);
+  (*print_string (State.current_category_levels_to_string st);*)
+  print_string (State.current_board st);
   print_string ("Please choose a category: ");
   match parse (read_line ()) with
   | exception Empty -> print_string "\nPlease choose an category!\n";
@@ -115,18 +118,31 @@ let rec play_loop jeop (st : State.t) =
 
 (** [play_game f] starts the jeopardy in file [f]. *)
 let play_game f =
-  ANSITerminal.(print_string [yellow] "
-  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. 
-  | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
-  | |     _____    | || |  _________   | || |     ____     | || |   ______     | || |      __      | || |   _______    | || |  ________    | || |  ____  ____  | |
-  | |    |_   _|   | || | |_   ___  |  | || |   .'    `.   | || |  |_   __ \\  | || |     /  \\    | || |   |_   __\\  | || | |_   ___ `.  | || | |_  _||_  _| | |
-  | |      | |     | || |   | |_  \\_| | || |  /  .--.  \\ | || |    | |__) |  | || |    / /\\\\   | || |   | |__) |   | || |   | |   `. \\| || |  \\\\  / /   | |
-  | |   _  | |     | || |   |  _|  _   | || |  | |    | |  | || |    |  ___/   | || |   / ____ \\  | || |   |  __ /    | || |   | |    | | | || |   \\\\/ /    | |
-  | |  | |_' |     | || |  _| |___/ |  | || |  \\ `--'  /  | || |   _| |_      | || | _/ /    \\\\_| || |  _| |  \\\\_ | || |  _| |___.' / | || |    _|  |_    | |
-  | |  `.___.'     | || | |_________|  | || |   `.____.'   | || |  |_____|     | || ||____|  |____|| || | |____| |___| | || | |________.'  | || |   |______|   | |
-  | |              | || |              | || |              | || |              | || |              | || |              | || |              | || |              | |
-  | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
-   '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
+  ANSITerminal.(print_string [red] "
+                                                                                                                            dddddddd                        
+             jjjj                                                                                                           d::::::d                        
+            j::::j                                                                                                          d::::::d                        
+             jjjj                                                                                                           d::::::d                        
+                                                                                                                            d:::::d                         
+           jjjjjjj    eeeeeeeeeeee       ooooooooooo   ppppp   ppppppppp     aaaaaaaaaaaaa  rrrrr   rrrrrrrrr       ddddddddd:::::dyyyyyyy           yyyyyyy
+           j:::::j  ee::::::::::::ee   oo:::::::::::oo p::::ppp:::::::::p    a::::::::::::a r::::rrr:::::::::r    dd::::::::::::::d y:::::y         y:::::y 
+            j::::j e::::::eeeee:::::eeo:::::::::::::::op:::::::::::::::::p   aaaaaaaaa:::::ar:::::::::::::::::r  d::::::::::::::::d  y:::::y       y:::::y  
+            j::::je::::::e     e:::::eo:::::ooooo:::::opp::::::ppppp::::::p           a::::arr::::::rrrrr::::::rd:::::::ddddd:::::d   y:::::y     y:::::y   
+            j::::je:::::::eeeee::::::eo::::o     o::::o p:::::p     p:::::p    aaaaaaa:::::a r:::::r     r:::::rd::::::d    d:::::d    y:::::y   y:::::y    
+            j::::je:::::::::::::::::e o::::o     o::::o p:::::p     p:::::p  aa::::::::::::a r:::::r     rrrrrrrd:::::d     d:::::d     y:::::y y:::::y     
+            j::::je::::::eeeeeeeeeee  o::::o     o::::o p:::::p     p:::::p a::::aaaa::::::a r:::::r            d:::::d     d:::::d      y:::::y:::::y      
+            j::::je:::::::e           o::::o     o::::o p:::::p    p::::::pa::::a    a:::::a r:::::r            d:::::d     d:::::d       y:::::::::y       
+            j::::je::::::::e          o:::::ooooo:::::o p:::::ppppp:::::::pa::::a    a:::::a r:::::r            d::::::ddddd::::::dd       y:::::::y        
+            j::::j e::::::::eeeeeeee  o:::::::::::::::o p::::::::::::::::p a:::::aaaa::::::a r:::::r             d:::::::::::::::::d        y:::::y         
+            j::::j  ee:::::::::::::e   oo:::::::::::oo  p::::::::::::::pp   a::::::::::aa:::ar:::::r              d:::::::::ddd::::d       y:::::y          
+            j::::j    eeeeeeeeeeeeee     ooooooooooo    p::::::pppppppp      aaaaaaaaaa  aaaarrrrrrr               ddddddddd   ddddd      y:::::y           
+            j::::j                                      p:::::p                                                                          y:::::y            
+  jjjj      j::::j                                      p:::::p                                                                         y:::::y             
+ j::::jj   j:::::j                                     p:::::::p                                                                       y:::::y              
+ j::::::jjj::::::j                                     p:::::::p                                                                      y:::::y               
+  jj::::::::::::j                                      p:::::::p                                                                     yyyyyyy                
+    jjj::::::jjj                                       ppppppppp                                                                                            
+       jjjjjj                                                                                                                                               
   \n");
   let jeop = Jeopardy.from_json (Yojson.Basic.from_file f) in
   let st = State.init_state jeop in
@@ -134,13 +150,15 @@ let play_game f =
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
+  (* ANSITerminal.resize 140 40; *)
   ANSITerminal.(print_string [red]
                   "\n\nWelcome to our jeopardy game extravaganza!\n");
   print_endline "Enter the name of the jeopardy file you want to play.";
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()
-  | file_name -> play_game file_name
+  | file_name -> ANSITerminal.erase Screen;
+    play_game file_name
 
 (* Execute the game engine. *)
 let () = main ()

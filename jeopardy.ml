@@ -74,11 +74,11 @@ let categories_list jeop =
     | h::t -> get_categories t (h.name :: acc)
   in get_categories jeop.categories []
 
-(** [get_category_name cat] returns the name of the cateogry [cat] *)
+(** [get_category_name cat] returns the name of the category [cat] *)
 let get_category_name (cat: category) = 
   cat.name
 
-(** [get_level levels] returns the list of scores in the level [levels]. *)
+(** [get_level levels] returns the list of scores in the level list [levels]. *)
 let rec get_levels (levels : level list) (acc : int list) : int list =
   match levels with
   | [] -> acc
@@ -102,6 +102,13 @@ let levels jeop (cat : category_name) : int list =
   try (let categ = is_category jeop.categories cat in 
        (List.rev (get_levels (categ.levels) [])))
   with UnknownCategory cat -> raise (UnknownCategory cat)
+
+(** [all_levels jeop] returns a list of all the levels in each category of 
+    [jeop]*)
+let all_levels jeop : int list list =
+  let cats = categories jeop in
+  let cat_names = List.map get_category_name cats in
+  List.map (levels jeop) cat_names
 
 (** [get_question levels score] returns the question associated with 
      level score [score] in the list of levels [levels]

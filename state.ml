@@ -13,6 +13,7 @@ type t = {
   categories : category_status list;
   categories_left : category_name list;
   score : int;
+  board : string
 }
 
 (** [parse_levels] is the list of level scores from [levels]*)
@@ -36,9 +37,13 @@ let rec parse_categories (cats: Jeopardy.category list)
 (** [init_state jeop] is the initial state of the game when playing [jeop].
     They have a starting score of 0 *)
 let init_state (jeop: Jeopardy.t) : t = 
+  let cats = Jeopardy.categories jeop in
+  let cat_names = List.map Jeopardy.get_category_name cats in
+  let level_list = List.map (Jeopardy.levels jeop) cat_names in
   {categories = parse_categories (categories jeop) []; 
    categories_left = Jeopardy.categories_list jeop;
-   score = 0 }
+   score = 0; 
+   board = Board.game_board jeop level_list}
 
 (** [current_categories st] gets the categories left field from [st]. *)  
 let current_categories (st: t) =
@@ -47,6 +52,10 @@ let current_categories (st: t) =
 (** [current_score st] gets the current score from [st]. *)
 let current_score st =
   st.score
+
+(** [current_board st] get the current score from [st]*)
+let current_board st =
+  st.board
 
 (** [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] *)
@@ -109,7 +118,35 @@ let rec remove_category_level (lst : category_status list)
     then remove_category_level t cat lev 
         (({name = h.name; 
            levels_left = remove_level h.levels_left lev }) :: acc)
-    else remove_category_level t cat lev (h::acc)                    
+    else remove_category_level t cat lev (h::acc)
+
+(** [all_levels_left st] returns a list of all the levels left in each category
+    left in the state [st]*)
+let all_levels_left (cats_lst: category_status list) =
+  let rec get_levels (cats: category_status list) (acc : int list list) =
+    match cats with
+    | [] -> acc
+    | h::t -> get_levels t (h.levels_left :: acc)
+  in List.rev (get_levels cats_lst [])
+
+(** [new_board jeop cats] returns the new board according to the current state of
+    categories*)
+let new_board (jeop: Jeopardy.t) (cats: category_status list) : string =
+  let rec level_diffs 
+      (full_levs: int list list) (curr_levs: int list list) acc =
+    match full_levs, curr_levs with
+    | h::t, h'::t' -> (let rec diffs (lst1 : int list) (lst2 : int list) acc =
+                         match lst1 with
+                         | [] -> acc
+                         | h::t -> 
+                           let acc' =if List.mem h lst2 then h::acc else 0::acc 
+                           in diffs t lst2 acc' in
+                       level_diffs t t' (((List.rev (diffs h h' []))):: acc))
+    | _ , _ -> acc
+  in 
+  let new_levs =
+    List.rev (level_diffs (Jeopardy.all_levels jeop) (all_levels_left cats) []) 
+  in Board.game_board jeop new_levs
 
 (** [play cat lev jeop st] is [r] if attempting to select the question in
     categoty [cat] and level [lev] in jeopardy [jeop]. If [cat] or [lev]
@@ -122,9 +159,14 @@ let play cat lev (jeop: Jeopardy.t) st =
     else if List.length levels = 1 
     then Legal {categories = remove_category_level st.categories cat lev []; 
                 categories_left = remove_category st.categories_left cat; 
-                score = st.score}
+                score = st.score;
+                board = new_board jeop 
+                    (remove_category_level st.categories cat lev [])}
     else Legal {categories = remove_category_level st.categories cat lev []; 
-                categories_left = st.categories_left; score = st.score}
+                categories_left = st.categories_left; 
+                score = st.score;
+                board = new_board jeop 
+                    (remove_category_level st.categories cat lev [])}
 
 
 (** [answer cat lev jeop st] is [r] if attempting to answer the question
@@ -138,10 +180,12 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
        if List.mem ans corrects then 
          Legal {categories = st.categories; 
                 categories_left = st.categories_left;
-                score = st.score + lev}
+                score = st.score + lev;
+                board = st.board}
        else Legal {categories = st.categories; 
                    categories_left = st.categories_left;
-                   score = st.score -lev})
+                   score = st.score -lev;
+                   board = st.board})
   with 
   | NoAnswersProvided -> Illegal 
   | UnknownCategory cat -> Illegal
@@ -154,7 +198,8 @@ let hint (cat: Jeopardy.category_name) (lev:int) (jeop: Jeopardy.t) st =
   try (let _ = Jeopardy.hint jeop cat lev in
        Legal {categories = st.categories;
               categories_left = st.categories_left;
-              score = st.score - 100})
+              score = st.score - 100;
+              board = st.board})
   with
   | UnknownLevel lev -> Illegal
   | UnknownCategory cat -> Illegal

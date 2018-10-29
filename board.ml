@@ -96,7 +96,7 @@ let board_box (n : int) (lev: int) =
 let rec make_row (n: int) (row: int) (levs : int list list) =
   let row_levels = 
     List.fold_right (fun lst acc -> (List.nth lst row)::acc) levs [] in
-  List.fold_left (fun acc x -> acc ^ (board_box n x)) "" row_levels  
+  List.fold_left (fun acc x -> acc ^ (board_box n x)) "" (List.rev row_levels) 
 
 (** pos starts at 0*)
 let game_board jeop (levs: int list list) =

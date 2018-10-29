@@ -110,15 +110,16 @@ let rec remove_level (lst : int list) (lev : int) =
 (* [remove_category_level lst cat lev acc] is lst but with the question with
     [cat] and [lev] removed.*)
 let rec remove_category_level (lst : category_status list) 
-    (cat : category_name) (lev : int) acc =
-  match lst with 
-  | [] -> acc
-  | h::t -> 
-    if (h.name = cat) 
-    then remove_category_level t cat lev 
-        (({name = h.name; 
-           levels_left = remove_level h.levels_left lev }) :: acc)
-    else remove_category_level t cat lev (h::acc)
+    (cat : category_name) (lev : int) =
+  let rec helper lst' acc = 
+    match lst' with 
+    | [] -> acc
+    | h::t -> 
+      if (h.name = cat) 
+      then helper t (({name = h.name; 
+                       levels_left = remove_level h.levels_left lev }) :: acc)
+      else helper t (h::acc) 
+  in List.rev (helper lst [])
 
 (** [all_levels_left st] returns a list of all the levels left in each category
     left in the state [st]*)
@@ -139,7 +140,7 @@ let new_board (jeop: Jeopardy.t) (cats: category_status list) : string =
                          match lst1 with
                          | [] -> acc
                          | h::t -> 
-                           let acc' =if List.mem h lst2 then h::acc else 0::acc 
+                           let acc' = if List.mem h lst2 then h::acc else 0::acc 
                            in diffs t lst2 acc' in
                        level_diffs t t' (((List.rev (diffs h h' []))):: acc))
     | _ , _ -> acc
@@ -157,16 +158,16 @@ let play cat lev (jeop: Jeopardy.t) st =
   else let levels = current_category_levels st cat in
     if not (List.mem lev levels) then Illegal 
     else if List.length levels = 1 
-    then Legal {categories = remove_category_level st.categories cat lev []; 
+    then Legal {categories = remove_category_level st.categories cat lev; 
                 categories_left = remove_category st.categories_left cat; 
                 score = st.score;
                 board = new_board jeop 
-                    (remove_category_level st.categories cat lev [])}
-    else Legal {categories = remove_category_level st.categories cat lev []; 
+                    (remove_category_level st.categories cat lev)}
+    else Legal {categories = remove_category_level st.categories cat lev; 
                 categories_left = st.categories_left; 
                 score = st.score;
                 board = new_board jeop 
-                    (remove_category_level st.categories cat lev [])}
+                    (remove_category_level st.categories cat lev)}
 
 
 (** [answer cat lev jeop st] is [r] if attempting to answer the question

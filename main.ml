@@ -34,13 +34,13 @@ let rec question_loop jeop (st : State.t)
            (ANSITerminal.erase Screen;
             print_endline "Congratulations, you are correct!";
             s)
-         else ( ANSITerminal.erase Screen;
-                print_endline 
-                  "Sorry that's wrong, better luck next time, buckaroo.";
-                print_endline "The answer was: ";
-                let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
-                print_endline correct;
-                s))
+         else (ANSITerminal.erase Screen;
+               print_endline 
+                 "Sorry that's wrong, better luck next time, buckaroo.";
+               print_endline "The answer was: ";
+               let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
+               print_endline correct;
+               s))
     | Quit -> print_endline "OK, see ya next time!"; exit 0
     | Hint -> (print_endline "Here is a hint to help you:";
                let hint = Jeopardy.hint jeop cat lev in

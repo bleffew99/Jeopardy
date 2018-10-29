@@ -23,9 +23,10 @@
           "score": 300,
           "question": "What movie is this song from? 'Because I'm happy Clap along if you feel like a room without a roof'",
           "answers": [
-            "despicable me 2"
+            "despicable me 2",
+            "despicable me"
           ],
-          "hint": "Features a Demigod with a fish hook."
+          "hint": "This movie features tiny yellow creatures."
         },
         {
           "score": 400,

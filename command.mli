@@ -1,5 +1,7 @@
 type phrase = string list
 
+(** [command] represents the verbs that the players can input. It is either
+    [Play], [Answer], [Score], [Quit], [Hint], or [Pass]. *)
 type command = 
   | Play of phrase
   | Answer of phrase

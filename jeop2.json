@@ -1,0 +1,230 @@
+{
+  "categories": [
+    {
+      "name": "States",
+      "levels": [
+        {
+          "score": 100,
+          "question": "This state is the most populous state in the country",
+          "answers": [
+            "california"
+          ],
+          "hint": "This west coast state is also home to the second largest city in the country."
+        },
+        {
+          "score": 200,
+          "question": "This state contains the highest mountain in the country.",
+          "answers": [
+            "alaska"
+          ],
+          "hint": "This is also the largest state by area."
+        },
+        {
+          "score": 300,
+          "question": "Which of these states were not a part of the original 13 colonies: Georgia, Delaware, Maine, New Hampshire?",
+          "answers": [
+            "maine"
+          ],
+          "hint": "It's not Georgia!"
+        },
+        {
+          "score": 400,
+          "question": "The territory currently comprising Washington DC was formerly part of this state.",
+          "answers": [
+            "maryland"
+          ],
+          "hint": "This state is also known for their blue crabs."
+        },
+        {
+          "score": 500,
+          "question": "This state is the only state to have a unicameral state legislature.",
+          "answers": [
+            "nebraska"
+          ],
+          "hint": "this midwestern state's capitol is Lincoln."
+        },
+        {
+          "score": 600,
+          "question": "Many know the 49th and 50th state (Alaska and Hawaii), but this state was the 48th state to join the country.",
+          "answers": [
+            "arizona"
+          ],
+          "hint": "This state was also formerly a part of Mexico."
+        }
+      ]
+    },
+    {
+      "name": "Animals",
+      "levels": [
+        {
+          "score": 100,
+          "question": "What do fish breathe with?",
+          "answers": [
+            "gills"
+          ],
+          "hint": "Rhymes with hills."
+        },
+        {
+          "score": 200,
+          "question": "Most mammals feed what to babies?",
+          "answers": [
+            "milk"
+          ],
+          "hint": "It is a white liquid used in ice cream."
+        },
+        {
+          "score": 300,
+          "question": "True or False: Amphibians can only live on land.",
+          "answers": [
+            "false"
+          ],
+          "hint": "Think about frogs."
+        },
+        {
+          "score": 400,
+          "question": "What animal can turn its head almost 360 degrees?",
+          "answers": [
+            "owl"
+          ],
+          "hint": "This animals is portrayed as wise."
+        },
+        {
+          "score": 500,
+          "question": "What type of feather keep birds warm?",
+          "answers": [
+            "down"
+          ],
+          "hint": "Used in some jackets."
+        },
+        {
+          "score": 600,
+          "question": "What mammal lays eggs",
+          "answers": [
+            "platypus"
+          ],
+          "hint": "Phineas and Ferb: Agent P!"
+        }
+      ]
+    },
+    {
+      "name": "Holidays",
+      "levels": [
+        {
+          "score": 100,
+          "question": "Christmas is celebrated on ____ December each year.",
+          "answers": [
+            "25"
+          ],
+          "hint": "It's a week before New Year's Day."
+        },
+        {
+          "score": 200,
+          "question": "Holi is a Hindu festival that is known as the 'Celebration of _____'",
+          "answers": [
+            "colors"
+          ],
+          "hint": "Traffic Lights have 3 of them."
+        },
+        {
+          "score": 300,
+          "question": "What is made at the start of every new year?",
+          "answers": [
+            "new year's resolutions",
+            "new year's resolution",
+            "new year resolution",
+            "new year resolutions",
+            "resolutions",
+            "resolution"
+          ],
+          "hint": "It is often broken."
+        },
+        {
+          "score": 400,
+          "question": "During Halloween, what is a carved pumpkin with a light in it called?",
+          "answers": [
+            "jack o'lantern",
+            "jack o lantern",
+            "jack-o-lantern"
+          ],
+          "hint": "'Name'+'o'+'Something you put a light in'."
+        },
+        {
+          "score": 500,
+          "question": "Which century was Thanksgiving first celebrated?",
+          "answers": [
+            "17th",
+            "17",
+            "seventeenth"
+          ],
+          "hint": "It is a prime number."
+        },
+        {
+          "score": 600,
+          "question": "Saint Patrick was a missionary in which country?",
+          "answers": [
+            "ireland"
+          ],
+          "hint": "Dublin is its largest city."
+        }
+      ]
+    },
+    {
+      "name": "Classical",
+      "levels": [
+        {
+          "score": 100,
+          "question": "Who composed the piece Für Elise?",
+          "answers": [
+            "ludwig van beethoven",
+            "beethoven"
+          ],
+          "hint": "Famous German composer and pianist who is a crucial figure in the transition between the Classical and Romantic eras in Classical music."
+        },
+        {
+          "score": 200,
+          "question": "Who arranged The Hungarian Dances?",
+          "answers": [
+            "johannes brahms",
+            "brahms"
+          ],
+          "hint": "One of the 'Three Bs' of music, born into a Lutheren family."
+        },
+        {
+          "score": 300,
+          "question": "What is Pyotr Ilyich Tchaikovsky's famous holiday classical piece?",
+          "answers": [
+            "the nutcracker",
+            "nutcracker"
+          ],
+          "hint": "A favorite Christmas time ballet."
+        },
+        {
+          "score": 400,
+          "question": "What is György Ligeti's classical piece featured in the movie 'The Shining'?",
+          "answers": [
+            "lontano"
+          ],
+          "hint": "This piece is also featured in Scorsese's 'Shutter Island'."
+        },
+        {
+          "score": 500,
+          "question": "Who composed the Goldberg Variations, and also became blind?",
+          "answers": [
+            "johann sebastian bach",
+            "bach"
+          ],
+          "hint": "He was known as a outstanding organ player and technician."
+        },
+        {
+          "score": 600,
+          "question": "A distinguished composer and pianist of the Romantic era who was the first to perform publicly any work by Brahms, notably the Variations and Fugue on a Theme by Handel.",
+          "answers": [
+            "clara schumann",
+            "schumann"
+          ],
+          "hint": "She was married to Robert Schumann."
+        }
+      ]
+    }
+  ]
+}

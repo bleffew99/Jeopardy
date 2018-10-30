@@ -3,7 +3,7 @@ open Jeopardy
 open Command
 open State
 
-(* jeopardy tests*)
+(* jeopardy tests *)
 
 let make_get_category_name_test 
     (name : string) 
@@ -72,8 +72,38 @@ let make_answers_error_test
       assert_raises (UnknownCategory cat_name) 
         (answer_unit jeop cat_name score))
 
+let make_hint_test 
+    (name: string)
+    (cat : category_name)
+    (score: int)
+    (jeop: Jeopardy.t) 
+    (expected_output : string) : test = 
+  name >:: (fun _ ->  assert_equal expected_output 
+               (Jeopardy.hint jeop cat score))
+
+let hint_unit cat score jeop () = Jeopardy.hint jeop cat score
+
+let make_hint_unknown_cat_test 
+    (name: string)
+    (cat : category_name)
+    (score: int)
+    (jeop: Jeopardy.t) 
+    (expected_output : exn) : test = 
+  name >::(fun _ -> assert_raises (UnknownCategory cat) 
+              (hint_unit cat score jeop))
+
+let make_hint_unknown_lev_test 
+    (name: string)
+    (cat : category_name)
+    (score: int)
+    (jeop: Jeopardy.t) 
+    (expected_output : exn) : test = 
+  name >:: (fun _ -> assert_raises (UnknownLevel score) 
+               (hint_unit cat score jeop))
+
 let t1 = from_json(Yojson.Basic.from_file "3110.json")
 let t2 = from_json(Yojson.Basic.from_file "jeop1.json")
+let t3 = from_json(Yojson.Basic.from_file "jeop2.json")
 let cate1 = categories (t1)
 let cate2 = categories (t2)
 
@@ -108,7 +138,7 @@ let jeopardy_tests =
     make_question_test "question 1" (t1) (category_name_from_string "CS3110") 
       100 "Who is the professor of CS3110?";
     make_question_test "question 2" (t2) (category_name_from_string "Music") 
-      500 "This singer sings treat you better";
+      500 "This singer sings treat you better.";
     make_question_test "question 3" (t2) (category_name_from_string "Disney")
       500 "Which country is the movie 'Frozen' set in?";
 
@@ -120,11 +150,11 @@ let jeopardy_tests =
 
     (*answers test no excpetion*)
     make_answers_test "answer test 1" t1 (category_name_from_string "CS3110") 
-      100 ["Michael Clarkson";"clarkson";"Clarkson"];
+      100 ["clarkson";"michael clarkson";"michael"];
     make_answers_test "answer test 2" t2 (category_name_from_string "Disney") 
-      400 ["Sleeping Beauty"; "sleeping beauty";"Sleeping beauty"];
+      400 ["sleeping beauty"];
     make_answers_test "answer test 3" t2 (category_name_from_string "Music") 
-      200 [ "yourself"; "your self";"Yourself"];
+      200 [ "yourself"];
 
     (*answers test exception*)
     make_answers_error_test "answer error 1" t2 
@@ -133,6 +163,24 @@ let jeopardy_tests =
     make_answers_error_test "answer error 1" t2 
       (category_name_from_string "School") 
       1000 (UnknownCategory (category_name_from_string "Fruit"));
+
+    (*hint test no exception*)
+    make_hint_test "hint test 1" (category_name_from_string "States") (500) (t3)
+      "this midwestern state's capitol is Lincoln.";
+    make_hint_test "hint test 2"(category_name_from_string "Classical")(300)(t3)
+      "A favorite Christmas time ballet.";
+    make_hint_test "hint test 3" (category_name_from_string "Disney")(200)(t2)
+      "Who bites the poisoned apple?";
+
+    (*hint test exceptions*)
+    make_hint_unknown_cat_test "hint error 1"(category_name_from_string "Apple") 
+      500 t2 (UnknownCategory (category_name_from_string "Apple"));
+    make_hint_unknown_cat_test "hint error 2"(category_name_from_string "Candy") 
+      200 t3 (UnknownCategory (category_name_from_string "Candy"));
+    make_hint_unknown_lev_test "hint error 3" 
+      (category_name_from_string "Quotes") 600 t2 (UnknownLevel 600);
+    make_hint_unknown_lev_test "hint error 4" (
+      category_name_from_string "Animals") 900 t3 (UnknownLevel 900);  
   ]
 
 (* command tests*)
@@ -143,15 +191,19 @@ let make_parse_test
     (expected_output : command) : test =
   name >:: (fun _ ->
       assert_equal expected_output (parse str))
-
 let parse_unit str () = parse str
 
-let make_parse_error_test
-    (name : string)
+let make_parse_empty_error_test 
+    (name: string)
     (str : string)
-    (expected_output : exn) : test =
-  name >:: (fun _ ->
-      assert_raises expected_output (parse_unit str))
+    (expected_output : exn) : test = name >:: (fun _ -> assert_raises 
+                                                  (Empty) (parse_unit str))
+
+let make_parse_error_test 
+    (name: string)
+    (str : string)
+    (expected_output : exn) : test = name >:: (fun _ -> assert_raises 
+                                                  (Malformed) (parse_unit str))
 
 let command_tests = 
   [
@@ -161,8 +213,9 @@ let command_tests =
     make_parse_test "parse Answer" "what are apples" (Answer ["apples"]);
     make_parse_test "parse Score" "score" (Score);
     make_parse_test "parse Quit" "quit" (Quit);
-    (* make_parse_error_test "empty" "" Malformed;*)
-    make_parse_error_test "Empty " "" Empty;
+    make_parse_test "parse Hint" "hint" (Hint);
+    make_parse_test "parse Pass" "pass" (Pass);
+    make_parse_empty_error_test "Empty" "" Empty;
     make_parse_error_test "Malformed play 1" "play" Malformed;
     make_parse_error_test "Malformed play 2" "play Fruits" Malformed;
     make_parse_error_test "Malformed play 3" "play bla bla bla" Malformed;
@@ -171,6 +224,9 @@ let command_tests =
     make_parse_error_test "Malformed answer 1" "shawn" Malformed;
     make_parse_error_test "Malformed answer 2" "what is" Malformed;
     make_parse_error_test "Malformed answer 3" "who" Malformed;
+    make_parse_error_test "Malformed hint 1" "hint yes" Malformed;
+    make_parse_error_test "Malformed pass 1" "pass no" Malformed;
+
   ]
 
 (* state tests*)
@@ -189,13 +245,6 @@ let make_current_category_levels_test
   name >:: (fun _ ->
       assert_equal expected_output (current_category_levels state cate_name))
 
-let make_current_category_levels_to_string_test  
-    (name: string)
-    (state: State.t)
-    (expected_output: string) : test =
-  name >:: (fun _ ->
-      assert_equal expected_output (current_category_levels_to_string state))
-
 let make_play_illegal_tests
     (name : string)
     (cat : category_name)
@@ -205,6 +254,16 @@ let make_play_illegal_tests
     (expected_output : result) : test =
   name >:: (fun _ ->
       assert_equal expected_output (play cat lev jeop st))
+
+let make_hint_illegal_tests
+    (name : string)
+    (cat : Jeopardy.category_name)
+    (lev : int)
+    (jeop : Jeopardy.t)
+    (st : State.t)
+    (expected_output : result) : test =
+  name >:: (fun _ ->
+      assert_equal expected_output (hint cat lev jeop st)) 
 
 let make_answer_illegal_tests
     (name : string)
@@ -216,6 +275,16 @@ let make_answer_illegal_tests
     (expected_output : result) : test =
   name >:: (fun _ ->
       assert_equal expected_output (answer cat lev ans jeop st))
+
+let make_hint_illegal_tests
+    (name : string)
+    (cat : Jeopardy.category_name)
+    (lev : int)
+    (jeop : Jeopardy.t)
+    (st : State.t)
+    (expected_output : result) : test =
+  name >:: (fun _ ->
+      assert_equal expected_output (hint cat lev jeop st))
 
 let make_state = function 
   | Legal t -> t
@@ -242,50 +311,54 @@ let ans5 = make_state (answer (category_name_from_string "Disney") 500
 let ans6 = make_state (answer (category_name_from_string "Disney") 300 
                          "norway" t2 ans5) 
 
-let state_tests =
-  [
-    (*current_score tests*)
-    make_current_score_test "current score test 1" ans1 200;
-    make_current_score_test "current score test 2" ans2 500;
-    make_current_score_test "current score test 3" ans3 400;
-    make_current_score_test "current score test 4" ans4 800;
-    make_current_score_test "current score test 5" ans5 1300;
-    make_current_score_test "current score test 6" ans6 1000; 
+let hint2 = make_state (hint (category_name_from_string "Music") 300 t2 ans1)
+let hintans2 = make_state (answer (category_name_from_string "Music") 300 
+                             "despicable me 2" t2 hint2) 
+let hint3 = make_state 
+    (hint (category_name_from_string "Disney") 100 t2 hintans2)
+let hintans3 = make_state (answer (category_name_from_string "Disney") 100 
+                             "simba" t2 hint3) 
 
-    (*current_category_levels tests*)
-    make_current_category_levels_test "ccl test 1" play1 
-      (category_name_from_string "Disney") [100; 300; 400; 500];
-    make_current_category_levels_test "ccl test 2" play0
-      (category_name_from_string "Quotes") [100; 200; 300; 400; 500];
-    make_current_category_levels_test "ccl test 3" play2 
-      (category_name_from_string "Music") [100; 200; 400; 500];
-    make_current_category_levels_test "ccl test 4" play4 
-      (category_name_from_string "Disney") [300; 500];
+let state_tests = [
+  (*current_score tests*)
+  make_current_score_test "current score test 1" ans1 200;
+  make_current_score_test "current score test 2" ans2 500;
+  make_current_score_test "current score test 3" ans3 400;
+  make_current_score_test "current score test 4" ans4 800;
+  make_current_score_test "current score test 5" ans5 1300;
+  make_current_score_test "current score test 6" ans6 1000; 
+  (*to test hint score reduction*)
+  make_current_score_test "current score test 7" hint2 100; 
+  make_current_score_test "current score test 8" hintans2 400; 
+  make_current_score_test "current score test 9" hint3 300; 
+  make_current_score_test "current score test 10" hintans3 200; 
 
-    (*current_category_levels_to_string test*)
-    make_current_category_levels_to_string_test "ccls test 1" play4
-      ("Disney: 300,500" ^ "\n" ^ "Quotes: 100,200,300,400,500" ^ "\n" ^ 
-       "Cornell: 100,200,300,400,500" ^ "\n" ^ 
-       "Music: 100,200,400,500" ^ "\n");
-    make_current_category_levels_to_string_test "ccls test 1" play5
-      ("Disney: 300" ^ "\n" ^ "Quotes: 100,200,300,400,500" ^ "\n" ^ 
-       "Cornell: 100,200,300,400,500" ^ "\n" ^ 
-       "Music: 100,200,400,500" ^ "\n");
-    make_current_category_levels_to_string_test "ccls test 2" play6 
-      ("Quotes: 100,200,300,400,500" ^ "\n" ^ "Cornell: 100,200,300,400,500" 
-       ^ "\n" ^ "Music: 100,200,400,500" ^ "\n");
+  (*current_category_levels tests*)
+  make_current_category_levels_test "ccl test 1" play1 
+    (category_name_from_string "Disney") [100; 300; 400; 500];
+  make_current_category_levels_test "ccl test 2" play0
+    (category_name_from_string "Quotes") [100; 200; 300; 400; 500];
+  make_current_category_levels_test "ccl test 3" play2 
+    (category_name_from_string "Music") [100; 200; 400; 500];
+  make_current_category_levels_test "ccl test 4" play4 
+    (category_name_from_string "Disney") [300; 500];
 
-    (*play illegal tests*)
-    make_play_illegal_tests "play illegal test 1" 
-      (category_name_from_string "Disney") 100 t2 play6 (Illegal);
-    make_play_illegal_tests "play illegal test 2" 
-      (category_name_from_string "Music") 300 t2 play6 (Illegal);
+  (*play illegal tests*)
+  make_play_illegal_tests "play illegal test 1" 
+    (category_name_from_string "Disney") 100 t2 play6 (Illegal);
+  make_play_illegal_tests "play illegal test 2" 
+    (category_name_from_string "Music") 300 t2 play6 (Illegal);
 
-    (*answer illegal tests*)
-    make_answer_illegal_tests "answer illegal test 1" 
-      (category_name_from_string "Movies") 100 "hello" t2 play6 (Illegal);
+  (*answer illegal tests*)
+  make_answer_illegal_tests "answer illegal test 1" 
+    (category_name_from_string "Movies") 100 "hello" t2 play6 (Illegal);
 
-  ]
+  (*hint illegal tests*)
+  make_hint_illegal_tests "hint illegal test 1" 
+    (category_name_from_string "Movies") 100 t2 play6 (Illegal);
+  make_hint_illegal_tests "hint illegal test 2" 
+    (category_name_from_string "Music") 9878 t2 play6 (Illegal);
+]
 
 let suite =
   "test suite for midterm project"  >::: List.flatten [

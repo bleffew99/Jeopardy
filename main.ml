@@ -2,7 +2,8 @@ open Command
 
 (** [question_loop jeop st lev cat] conducts the game loop after a question is
     asked, prompting the user, updating points in [st] once the user inputs a 
-    valid answer, whether the answer is correct or not. *)
+    valid answer, whether the answer is correct or not. 
+    For one player games. *)
 let rec question_loop jeop (st : State.t) 
     (lev: int) (cat: Jeopardy.category_name) : State.t = 
   match parse (read_line ()) with
@@ -49,13 +50,13 @@ let rec question_loop jeop (st : State.t)
                | Legal st' -> question_loop jeop st' lev cat
                | Illegal -> 
                  print_endline 
-                   "That is an invalid cat/lev combination (this shouldn't happen)";
+                   "That is an invalid cat/lev combination (never happens)";
                  question_loop jeop st lev cat)
     | Pass -> print_endline "We will let you go this time!"; st
 
-
 (** [play_loop jeop st] conducts the main game loop, prompting the user, 
-    updating [st] until the user quits *)
+    updating [st] until the user quits.
+    For one player games. *)
 let rec play_loop jeop (st : State.t) =
   if (List.length (State.current_categories st)) = 0 then 
     (print_endline ("You've finished the game!! Good job!");
@@ -120,6 +121,8 @@ let rec play_loop jeop (st : State.t) =
     | Pass -> print_endline "You haven't even chosen a question yet!";
       play_loop jeop st
 
+(** [question_loop_two_player jeop st lev cat] is the same as question_loop
+    but for two players instead of one. *)
 let rec question_loop_two_player jeop (st : State2players.t) 
     (lev: int) (cat: Jeopardy.category_name) : State2players.t = 
   match parse (read_line ()) with
@@ -188,6 +191,8 @@ let rec question_loop_two_player jeop (st : State2players.t)
                  question_loop_two_player jeop st lev cat)
     | Pass -> print_endline "We will let you go this time!"; st
 
+(** [play_loop_two_player jeop st] is the same as [play_loop] but for two-player
+    games. *)
 let rec play_loop_two_player jeop (st : State2players.t) =
   if (List.length (State2players.current_categories st)) = 0 then 
     (let score1 = State2players.current_player1_score st in
@@ -265,7 +270,6 @@ let rec play_loop_two_player jeop (st : State2players.t) =
     | Pass -> print_endline "You haven't even chosen a question yet!";
       play_loop_two_player jeop st
 
-
 (** [play_game f] starts the jeopardy in file [f]. *)
 let rec play_game f =
   ANSITerminal.resize 165 40;
@@ -296,6 +300,19 @@ let rec play_game f =
        jjjjjj                                                                                                                                               
   \n");
   let jeop = Jeopardy.from_json (Yojson.Basic.from_file f) in
+  ANSITerminal.(print_string [red] 
+                  "Here are the rules of Jeopardy:
+   You're allowed to play with either one or two players and answer trivia 
+   questions in order to get the highest amount of points. For each turn the 
+   player can choose a question from the board by choosing the category and 
+   point value. EG: play Music 300. You are then presented with a question, 
+   but you MUST answer it in the form of a question ('who is' or 'what is', 
+   etc). If you answer the question correctly your score goes up by however 
+   much the question was worth, if you get it wrong, you lose that many points. 
+   You can also 'pass' and recieve no points. You can also ask for a 'hint' for 
+   every question, but this costs 100 points each time. At any point you check 
+   your score with 'score' or quit the game with 'quit'. Have fun and good 
+   luck!\n");
   ANSITerminal.(print_string [red] "\n 1 or 2 players?\n");
   match read_line() with
   | "One" | "1" | "one" -> 

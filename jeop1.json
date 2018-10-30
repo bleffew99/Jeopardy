@@ -30,7 +30,7 @@
         },
         {
           "score": 400,
-          "question": "This artist would 'catch a grenade for ya'",
+          "question": "This artist would 'catch a grenade for ya'.",
           "answers": [
             "bruno mars"
           ],
@@ -38,7 +38,7 @@
         },
         {
           "score": 500,
-          "question": "This singer sings treat you better",
+          "question": "This singer sings treat you better.",
           "answers": [
             "shawn mendes"
           ],
@@ -104,7 +104,7 @@
       "levels": [
         {
           "score": 100,
-          "question": "Complete: 'May the _____ be with you' ",
+          "question": "Complete: 'May the _____ be with you'. ",
           "answers": [
             "force"
           ],
@@ -112,7 +112,7 @@
         },
         {
           "score": 200,
-          "question": "Complete: 'Mama always said life was like a box of _____. You never know what you're gonna get' ",
+          "question": "Complete: 'Mama always said life was like a box of _____. You never know what you're gonna get'. ",
           "answers": [
             "chocolates"
           ],

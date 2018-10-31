@@ -359,12 +359,44 @@ let state_tests = [
   make_hint_illegal_tests "hint illegal test 2" 
     (category_name_from_string "Music") 9878 t2 play6 (Illegal);
 ]
+let make_state2 (res:State2players.result): State2players.t = 
+match res with
+  | Legal t -> t
+  | Illegal -> raise (Failure "Illegal")
+let play10 = State2players.init_state t3
+let play11 = make_state2 (State2players.play (category_name_from_string "States"
+) 100 t3 play10)
+let play12 = make_state2 (State2players.play (category_name_from_string 
+"Holidays") 400 t3 play11)
+let play13 = make_state2 (State2players.play (category_name_from_string 
+"Animals") 300 t3 play12)
 
+let ans10 = make_state2 (State2players.answer (category_name_from_string 
+"States") 100 "california" t3 play11)
+let ans11 = make_state2 (State2players.answer (category_name_from_string 
+"Holidays") 400 "jack o' lantern" t3 play12)
+let ans12 = make_state2 (State2players.answer (category_name_from_string 
+"Animals") 300 "jack o' lantern" t3 play13) (*player answers wrong*)
+                                              
+let make_current_player 
+  (name: string)
+  (st: State2players.t)
+  (expected_output: State2players.current_player) :test =
+  name >:: (fun _ ->
+      assert_equal expected_output (State2players.get_current_player st))
+let state_2_tests = [
+  make_current_player "init" play10 One;
+  make_current_player "tester1" ans10 Two;
+  make_current_player "tester1" ans11 One;
+  make_current_player "tester2" ans12 Two; 
+
+]
 let suite =
   "test suite for midterm project"  >::: List.flatten [
     jeopardy_tests;
     command_tests;
-    state_tests
+    state_tests;
+    state_2_tests
   ]
 
 let _ = run_test_tt_main suite

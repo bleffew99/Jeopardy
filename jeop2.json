@@ -58,27 +58,27 @@
       "levels": [
         {
           "score": 100,
-          "question": "What do fish breathe with?",
+          "question": "What is a baby whale called",
           "answers": [
-            "gills"
+            "calf"
           ],
-          "hint": "Rhymes with hills."
+          "hint": "It is also the name of a body part."
         },
         {
           "score": 200,
-          "question": "Most mammals feed what to babies?",
+          "question":"Which bird has the fastest wing beat? Falcons, Hummingbirds, Eagles ",
           "answers": [
-            "milk"
+            "hummingbirds"
           ],
           "hint": "It is a white liquid used in ice cream."
         },
         {
           "score": 300,
-          "question": "True or False: Amphibians can only live on land.",
+          "question": "What mammal lays eggs",
           "answers": [
-            "false"
+            "platypus"
           ],
-          "hint": "Think about frogs."
+          "hint": "Phineas and Ferb. Agent P!"
         },
         {
           "score": 400,
@@ -90,20 +90,22 @@
         },
         {
           "score": 500,
+          "question": "How many stomach(es) does a cow have?",
+          "answers": [
+            "four",
+            "4"
+          ],
+          "hint": "It has more than one"
+        },
+        {
+          "score": 600,
           "question": "What type of feather keep birds warm?",
           "answers": [
             "down"
           ],
           "hint": "Used in some jackets."
-        },
-        {
-          "score": 600,
-          "question": "What mammal lays eggs",
-          "answers": [
-            "platypus"
-          ],
-          "hint": "Phineas and Ferb: Agent P!"
         }
+       
       ]
     },
     {

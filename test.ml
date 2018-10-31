@@ -359,36 +359,132 @@ let state_tests = [
   make_hint_illegal_tests "hint illegal test 2" 
     (category_name_from_string "Music") 9878 t2 play6 (Illegal);
 ]
+
+(*state2players tests*)
 let make_state2 (res:State2players.result): State2players.t = 
-match res with
+  match res with
   | Legal t -> t
   | Illegal -> raise (Failure "Illegal")
-let play10 = State2players.init_state t3
-let play11 = make_state2 (State2players.play (category_name_from_string "States"
-) 100 t3 play10)
-let play12 = make_state2 (State2players.play (category_name_from_string 
-"Holidays") 400 t3 play11)
-let play13 = make_state2 (State2players.play (category_name_from_string 
-"Animals") 300 t3 play12)
 
-let ans10 = make_state2 (State2players.answer (category_name_from_string 
-"States") 100 "california" t3 play11)
-let ans11 = make_state2 (State2players.answer (category_name_from_string 
-"Holidays") 400 "jack o' lantern" t3 play12)
-let ans12 = make_state2 (State2players.answer (category_name_from_string 
-"Animals") 300 "jack o' lantern" t3 play13) (*player answers wrong*)
-                                              
-let make_current_player 
-  (name: string)
-  (st: State2players.t)
-  (expected_output: State2players.current_player) :test =
+let play10 = State2players.init_state t3
+let ans11 = make_state2 (State2players.answer 
+                           (category_name_from_string "States") 
+                           100 "california" t3 play10)
+let play11 = make_state2 (State2players.play 
+                            (category_name_from_string "States") 
+                            100 t3 ans11)
+let ans12 = make_state2 (State2players.answer 
+                           (category_name_from_string "Holidays") 
+                           400 "jack o'lantern" t3 play11)
+let play12 = make_state2 (State2players.play 
+                            (category_name_from_string "Holidays") 
+                            400 t3 ans12)
+let ans13 = make_state2 (State2players.answer 
+                           (category_name_from_string "Animals") 
+                           300 "penguin" t3 play12) 
+let play13 = make_state2 (State2players.play 
+                            (category_name_from_string "Animals") 
+                            300 t3 ans13)
+
+
+let hint12 = make_state2 (State2players.hint 
+                            (category_name_from_string "Holidays") 
+                            400 t3 play11)
+let hintans12 = make_state2 (State2players.answer 
+                               (category_name_from_string "Holidays") 
+                               400 "jack o'lantern" t3 hint12) 
+let hintplay12 = make_state2 (State2players.play 
+                                (category_name_from_string "Holidays") 
+                                400 t3 hintans12)
+let hint13 = make_state2 (State2players.hint 
+                            (category_name_from_string "Animals") 
+                            300 t3 hintplay12)
+let hintans13 = make_state2 (State2players.answer 
+                               (category_name_from_string "Animals") 
+                               300 "penguin" t3 hint13) 
+let hintplay13 = make_state2 (State2players.play 
+                                (category_name_from_string "Animals") 
+                                300 t3 hintans13)                     
+
+let make_current_player_tests 
+    (name: string)
+    (st: State2players.t)
+    (expected_output: State2players.current_player) :test =
   name >:: (fun _ ->
       assert_equal expected_output (State2players.get_current_player st))
-let state_2_tests = [
-  make_current_player "init" play10 One;
-  make_current_player "tester1" ans10 Two;
-  make_current_player "tester1" ans11 One;
-  make_current_player "tester2" ans12 Two; 
+
+let make_current_player1_score_tests 
+    (name: string)
+    (st: State2players.t)
+    (expected_output: int) :test =
+  name >:: (fun _ ->
+      assert_equal expected_output (State2players.current_player1_score st))
+
+let make_current_player2_score_tests 
+    (name: string)
+    (st: State2players.t)
+    (expected_output: int) :test =
+  name >:: (fun _ ->
+      assert_equal expected_output (State2players.current_player2_score st))
+
+let state2players_tests = [
+
+  make_current_player1_score_tests "current player1 score test 1" play10 0;
+  make_current_player1_score_tests "current player1 score test 2" ans11 100;
+  make_current_player1_score_tests "current player1 score test 3" play11 100;
+  make_current_player1_score_tests "current player1 score test 4" ans12 100;
+  make_current_player1_score_tests "current player1 score test 5" play12 100;
+  make_current_player1_score_tests "current player1 score test 6" ans13 (-200);
+  make_current_player1_score_tests "current player1 score test 7" play13 (-200);
+  make_current_player1_score_tests 
+    "current player1 score test 8" hint12 100;
+  make_current_player1_score_tests 
+    "current player1 score test 9" hintans12 100;
+  make_current_player1_score_tests 
+    "current player1 score test 10" hintplay12 100;
+  make_current_player1_score_tests 
+    "current player1 score test 11" hint13 0;
+  make_current_player1_score_tests 
+    "current player1 score test 12" hintans13 (-300);
+  make_current_player1_score_tests 
+    "current player1 score test 13" hintplay13 (-300);
+
+  make_current_player2_score_tests "current player2 score test 1" play10 0;
+  make_current_player2_score_tests "current player2 score test 2" ans11 0;
+  make_current_player2_score_tests "current player2 score test 3" play11 0;
+  make_current_player2_score_tests "current player2 score test 4" ans12 400;
+  make_current_player2_score_tests "current player2 score test 5" play12 400;
+  make_current_player2_score_tests "current player2 score test 6" ans13 400;
+  make_current_player2_score_tests "current player2 score test 7" play13 400;
+  make_current_player2_score_tests 
+    "current player2 score test 8" hint12 (-100);
+  make_current_player2_score_tests 
+    "current player2 score test 9" hintans12 300;
+  make_current_player2_score_tests 
+    "current player2 score test 10" hintplay12 300;
+  make_current_player2_score_tests 
+    "current player2 score test 11" hint13 300;
+  make_current_player2_score_tests 
+    "current player2 score test 12" hintans13 300;
+  make_current_player2_score_tests 
+    "current player2 score test 13" hintplay13 300;
+
+  make_current_player_tests "current player test 1" play10 One;
+  make_current_player_tests "current player test 2" ans11 One;
+  make_current_player_tests "current player test 3" play11 Two;
+  make_current_player_tests "current player test 4" ans12 Two;
+  make_current_player_tests "current player test 5" play12 One;
+  make_current_player_tests "current player test 6" ans13 One; 
+  make_current_player_tests "current player test 7" play13 Two;
+  make_current_player_tests "current player test 8" hint12 Two; 
+  make_current_player_tests "current player test 9" hintans12 Two; 
+  make_current_player_tests "current player test 10" hintplay12 One; 
+  make_current_player_tests "current player test 11" hint13 One; 
+  make_current_player_tests "current player test 12" hintans13 One; 
+  make_current_player_tests "current player test 13" hintplay13 Two; 
+
+
+
 
 ]
 let suite =
@@ -396,7 +492,7 @@ let suite =
     jeopardy_tests;
     command_tests;
     state_tests;
-    state_2_tests
+    state2players_tests
   ]
 
 let _ = run_test_tt_main suite

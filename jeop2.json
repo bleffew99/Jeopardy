@@ -121,7 +121,8 @@
           "score": 200,
           "question": "Holi is a Hindu festival that is known as the 'Celebration of _____'",
           "answers": [
-            "colors"
+            "colors",
+            "color"
           ],
           "hint": "Traffic Lights have 3 of them."
         },
@@ -143,6 +144,7 @@
           "question": "During Halloween, what is a carved pumpkin with a light in it called?",
           "answers": [
             "jack o'lantern",
+            "jack o' lantern",
             "jack o lantern",
             "jack-o-lantern"
           ],

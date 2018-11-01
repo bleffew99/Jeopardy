@@ -32,15 +32,17 @@ let rec question_loop jeop (st : State.t)
          question_loop jeop st lev cat
        | Legal s -> 
          if (State.current_score s) > (State.current_score st) then
-           (ANSITerminal.erase Screen;
-            print_endline "Congratulations, you are correct!";
-            s)
-         else (ANSITerminal.erase Screen;
-               print_endline 
+           ( print_endline "Congratulations, you are correct!";
+             Unix.sleep 2;
+             ANSITerminal.erase Screen;
+             s)
+         else (print_endline 
                  "Sorry that's wrong, better luck next time, buckaroo.";
                print_endline "The answer was: ";
                let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
                print_endline correct;
+               Unix.sleepf 2.5;
+               ANSITerminal.erase Screen;
                s))
     | Quit -> print_endline "OK, see ya next time!"; exit 0
     | Hint -> (print_endline "Here is a hint to help you:";
@@ -156,28 +158,32 @@ let rec question_loop_two_player jeop (st : State2players.t)
          if State2players.get_current_player st = One then
            (if (State2players.current_player1_score s) > 
                (State2players.current_player1_score st) then
-              (ANSITerminal.erase Screen;
-               print_endline "Congratulations, you are correct!";
+              (print_endline "Congratulations, you are correct!";
+               Unix.sleep 2;
+               ANSITerminal.erase Screen;
                s)
-            else (ANSITerminal.erase Screen;
-                  print_endline 
+            else (print_endline 
                     "Sorry that's wrong, better luck next time, buckaroo.";
                   print_endline "The answer was: ";
                   let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
                   print_endline correct;
+                  Unix.sleepf 2.5;
+                  ANSITerminal.erase Screen;
                   s))
          else  
            (if (State2players.current_player2_score s) > 
                (State2players.current_player2_score st) then
-              (ANSITerminal.erase Screen;
-               print_endline "Congratulations, you are correct!";
+              (print_endline "Congratulations, you are correct!";
+               Unix.sleep 2;
+               ANSITerminal.erase Screen;
                s)
-            else (ANSITerminal.erase Screen;
-                  print_endline 
+            else (print_endline 
                     "Sorry that's wrong, better luck next time, buckaroo.";
                   print_endline "The answer was: ";
                   let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
                   print_endline correct;
+                  Unix.sleepf 2.5;
+                  ANSITerminal.erase Screen;
                   s)))
     | Quit -> print_endline "OK, see ya next time!"; exit 0
     | Hint -> (print_endline "Here is a hint to help you:";

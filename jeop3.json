@@ -171,40 +171,38 @@
       "levels": [
         {
           "score": 100,
-          "question": "The Colosseum is found in which city?",
+          "question": "Which country’s flag has 3 vertical color stripes, blue, white, and red?",
           "answers": [
-            "rome"
+            "france"
           ],
-          "hint": "It is the capital city of Italy."
+          "hint": "Its capital is the city of love."
         },
         {
           "score": 200,
-          "question": "This landmark is the oldest of the Seven Wonders of the Ancient World.",
+          "question": "Which 2 countries have 3 stripes of the same 3 color? Belgium and Mexico, Belgium and Italy, Italy and Mexico.",
           "answers": [
-            "the pyramids",
-            "pyramids",
-            "pyramid",
-            "pyramids of giza",
-            "pyramid of giza"
+            "italy and mexico",
+            "mexico and italy",
+            "italy mexico",
+            "mexico italy"
           ],
-          "hint": "A 3D triangle!"
+          "hint": "The answer contains Mexico."
         },
         {
           "score": 300,
-          "question": "Machu Picchu was built by which Civilization?",
+          "question": "What shape is found on the Japanese flag? square, circle, triangle, or crescent?",
           "answers": [
-            "inca"
+            "circle"
           ],
-          "hint": "This civilization was centered in Peru."
+          "hint": "pi."
         },
         {
           "score": 400,
-          "question": "The Eiffel Tower surpassed which man-made structure to become the tallest in the world?",
+          "question": "Germany and Belgium both have flags with the same 3 colors. Which country has the flag with horizontal stripes?",
           "answers": [
-            "washington monument",
-            "the washington monument"
+            "Germany"
           ],
-          "hint": "It was built to commemorate the commander-in-chief of the Continental Army."
+          "hint": "Where is Oktoberfest?"
         }
       ]
     }

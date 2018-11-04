@@ -137,15 +137,11 @@
         },
         {
           "score": 200,
-          "question": "This landmark is the oldest of the Seven Wonders of the Ancient World.",
+          "question": "What song is the following lyrics from? \nYou better lose yourself in the music, the moment \nYou own it, you better never let it go \nYou only get one shot, do not miss your chance to blow \nThis opportunity comes once in a lifetime you better.",
           "answers": [
-            "the pyramids",
-            "pyramids",
-            "pyramid",
-            "pyramids of giza",
-            "pyramid of giza"
+            "lose yourself"
           ],
-          "hint": "A 3D triangle!"
+          "hint": "Eminem's song released in 2002. "
         },
         {
           "score": 300,

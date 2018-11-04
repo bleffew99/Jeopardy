@@ -3,7 +3,8 @@ type category_status
 
 (** [t] represents a game state with current categories [categories_left] and
     their statuses represented by [categories]. [score] represents the player's
-    current total score. [board] reprents the current game board. *)
+    current total score. [passes_left] represents the number of passes left for
+    the player. [board] represents the current game board. *)
 type t
 
 (** [init_state jeop] is the initial state of the game when playing [jeop].
@@ -16,8 +17,18 @@ val current_categories : t -> Jeopardy.category_name list
 (** [current_score st] gets the current score from [st]. *)
 val current_score : t -> int
 
+(** [current_passes_left st] gets the current number of passes left from [st].*)
+val current_passes_left: t -> int
+
+(** [get_final_bet st] gets the final jeopardy bet from [st].*)
+val get_final_bet: t -> int
+
 (** [current_board st] get the current score from [st]*)
 val current_board : t -> string
+
+(** [has_played_final st] returns true if the final question has been answered
+    false otherwise in the state st.*)
+val has_played_final : t -> bool 
 
 (** [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] *)
@@ -45,3 +56,21 @@ val answer :
     Hint does NO printing. *)
 val hint : 
   Jeopardy.category_name -> int -> Jeopardy.t -> t -> result
+
+(** [pass st] is [r] if requesting a pass in state [st]. If the number of passes
+    left is 0, then the result is [Illegal] otherwise the player is deducted
+    1 pass for asking for a pass. *)
+val pass : t -> result
+
+(** [double st] is [r] if requesting to use the double-or-nothing ability in
+    state [st]. If used_double is true, then the result is Illegal, otherwise
+    used_double in [st] is set to true. *)
+val double : t -> Jeopardy.t -> Jeopardy.category_name -> int -> string-> result
+
+(** [bet st n] is [r] when a player bets in the final round of jeopardy. The 
+    result is a new final bet amount [n]. *)
+val bet : t -> int -> result
+
+(** [final_asnwer jeop st] is [r] if attempting to answer the final question
+    Depending on whether [ans] is correct, the score will increase by the final bet.*)
+val final_answer: Jeopardy.t -> t -> string -> result

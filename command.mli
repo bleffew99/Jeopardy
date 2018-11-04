@@ -9,6 +9,8 @@ type command =
   | Quit
   | Hint
   | Pass
+  | Skip
+  | Double
 
 exception Empty
 

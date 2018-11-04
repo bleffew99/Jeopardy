@@ -9,6 +9,8 @@ type command =
   | Quit
   | Hint
   | Pass
+  | Skip
+  | Double
 
 exception Empty
 
@@ -66,4 +68,10 @@ let parse str : command =
     else if h = "pass" then
       if t <> [] then raise Malformed
       else Pass
-    else raise Malformed
+    else if h = "skip" then
+      if t <> [] then raise Malformed
+      else Skip
+    else if h = "double" then
+      if t <> [] then raise Malformed
+      else Double
+    else raise Malformed;

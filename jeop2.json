@@ -5,7 +5,7 @@
       "levels": [
         {
           "score": 100,
-          "question": "This state is the most populous state in the country",
+          "question": "This state is the most populous state in the country.",
           "answers": [
             "california"
           ],
@@ -66,9 +66,10 @@
         },
         {
           "score": 200,
-          "question":"Which bird has the fastest wing beat? Falcons, Hummingbirds, Eagles ",
+          "question": "Which bird has the fastest wing beat? Falcons, Hummingbirds, Eagles ",
           "answers": [
-            "hummingbirds"
+            "hummingbirds",
+            "hummingbird"
           ],
           "hint": "It is a white liquid used in ice cream."
         },
@@ -105,7 +106,6 @@
           ],
           "hint": "Used in some jackets."
         }
-       
       ]
     },
     {
@@ -230,5 +230,12 @@
         }
       ]
     }
-  ]
+  ],
+  "final": {
+    "question": "It's the largest country in the world without any permanent rivers or lakes.",
+    "final answers": [
+      "saudi arabia",
+      "saudi"
+    ]
+  }
 }

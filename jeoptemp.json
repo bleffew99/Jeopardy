@@ -1,0 +1,68 @@
+{
+  "categories": [
+    {
+      "name": "Music",
+      "levels": [
+        {
+          "score": 100,
+          "question": "What band sang this? 'Cause I want it that way'",
+          "answers": [
+            "backstreet boys"
+          ],
+          "hint": "Two words, both start with 'B'."
+        },
+        {
+          "score": 200,
+          "question": "Complete: 'Once I was seven years old my momma told me Go make ___ some friends'",
+          "answers": [
+            "yourself"
+          ],
+          "hint": "Synonym of you."
+        }
+      ]
+    },
+    {
+      "name": "Cornell",
+      "levels": [
+        {
+          "score": 100,
+          "question": "Who is the professor of CS3110?",
+          "answers": [
+            "michael clarkson",
+            "clarkson",
+            "michael"
+          ],
+          "hint": "You're in this class!!"
+        },
+        {
+          "score": 200,
+          "question": "Cornell University was founded in this year",
+          "answers": [
+            "1865"
+          ],
+          "hint": "An eventful time in American history, this year saw the end of the civil war, and the assassination of Abraham Lincoln."
+        }
+      ]
+    }
+  ],
+  "final": {
+    "question": "Shakespeare uses the words moon and moonlight more than any other of his works.",
+    "final answers": [
+      "a midsummer night's dream",
+      "midsummer nights dream",
+      "midsummer nights dream",
+      "midsummer's nights dream",
+      "midsummers night dream",
+      "a midsummer nights dream",
+      "a midsummer nights dream",
+      "a midsummers nights dream",
+      "a midsummers night dream",
+      "midsummer night's dream",
+      "midsummer night's dream",
+      "midsummer's night's dream",
+      "a midsummer night's dream",
+      "a midsummer night's dream",
+      "a midsummers night's dream"
+    ]
+  }
+}

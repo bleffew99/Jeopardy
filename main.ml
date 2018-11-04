@@ -54,17 +54,73 @@ let rec question_loop jeop (st : State.t)
                  print_endline 
                    "That is an invalid cat/lev combination (never happens)";
                  question_loop jeop st lev cat)
-    | Pass -> print_endline "We will let you go this time!"; st
+    | Pass -> (match (State.pass st) with
+        | Illegal -> 
+          print_endline "You have used up all your passes! You have to answer.";
+          question_loop jeop st lev cat
+        | Legal s -> 
+          print_string "We will let you go this time! Your passes left:"; 
+          print_endline (string_of_int (State.current_passes_left s));
+          s)
+          (*
+    | Skip -> print_endline "This power does not exist here"; st
+    | Double -> print_endline "This power does not exist here"; st *)
+
+let rec final_answer_loop jeop (st: State.t) : State.t =
+  print_endline ("Here is the FINAL JEOPDARDY question:");
+  print_endline (Jeopardy.final_jeopardy_question jeop);
+  let answer = String.lowercase_ascii (read_line()) in
+  let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
+  match answer_lst with
+  | h::m::t -> 
+    if (h = "what" || h = "who") &&
+       (m = "is" || m = "are" || m = "was" || m = "were")
+    then 
+      let ans = String.trim (List.fold_left (fun x acc -> 
+          x ^ " " ^ acc) "" t) in   
+      match State.final_answer jeop st ans with
+      | Legal s -> s
+      | Illegal -> print_endline "This is wrong"; st
+    else 
+      (print_endline "Answer in a correct question format!";
+       final_answer_loop jeop st)
+  | _ -> print_endline "Answer in the question format!";
+    final_answer_loop jeop st
+
+let rec final_bet_loop jeop (st : State.t) : State.t =
+  print_endline ("Welcome to FINAL JEOPARDY!");
+  print_string ("Your current score is: ");
+  print_endline (string_of_int (State.current_score st));
+  print_endline ("You could win double the points you bet. Place your bet:");
+  try (let bet = int_of_string (read_line()) in
+       if bet < 0 then
+         (print_endline 
+            "Do you want to lose points?!!!!! Bet a positive number!";
+          final_bet_loop jeop st)
+       else if bet > State.current_score st then 
+         (print_endline "You don't have that many points! Don't be greedy.";
+          final_bet_loop jeop st)
+       else match State.bet st bet with
+         | Legal s -> final_answer_loop jeop s
+         | Illegal -> print_endline ("This is wrong"); st)
+  with 
+  | Failure (int_of_string) -> 
+    print_endline 
+      "That's an invalid input (bet needs to be a number)";
+    final_bet_loop jeop st 
 
 (** [play_loop jeop st] conducts the main game loop, prompting the user, 
     updating [st] until the user quits.
     For one player games. *)
 let rec play_loop jeop (st : State.t) =
-  if (List.length (State.current_categories st)) = 0 then 
-    (print_endline ("You've finished the game!! Good job!");
-     print_endline ("Your score was:");
-     print_string ((string_of_int (State.current_score st)) ^ "\n");
-     exit 0)
+  if (List.length (State.current_categories st)) = 0 then
+    if State.has_played_final st then
+      (print_endline ("You've finished the game!! Good job!");
+       print_string ("Your score was:");
+       print_endline ((string_of_int (State.current_score st)) ^ "\n");
+       exit 0)
+    else
+      play_loop jeop (final_bet_loop jeop st)
   else
     print_endline ("Here are the current categories and levels left:\n");
   print_string (State.current_board st);
@@ -121,6 +177,10 @@ let rec play_loop jeop (st : State.t) =
     | Hint -> print_endline "You need to choose a category and level first!";
       play_loop jeop st
     | Pass -> print_endline "You haven't even chosen a question yet!";
+      play_loop jeop st
+    | Skip -> print_endline "You haven't even chosen a question yet!";
+      play_loop jeop st
+    | Double -> print_endline "You haven't even chosen a question yet!";
       play_loop jeop st
 
 (** [question_loop_two_player jeop st lev cat] is the same as question_loop
@@ -195,7 +255,131 @@ let rec question_loop_two_player jeop (st : State2players.t)
                  print_endline 
                    "That is an invalid cat/lev combination (never happens)";
                  question_loop_two_player jeop st lev cat)
-    | Pass -> print_endline "We will let you go this time!"; st
+    | Pass -> (match (State2players.pass st) with
+        | Illegal -> 
+          print_endline "You have used up all your passes! You have to answer.";
+          question_loop_two_player jeop st lev cat
+        | Legal s -> 
+          print_string "We will let you go this time! Your passes left: "; 
+          if State2players.get_current_player st = One then
+            (print_endline 
+               (string_of_int (State2players.player1_passes_left s));
+             s)
+          else 
+            (print_endline 
+               (string_of_int (State2players.player2_passes_left s));
+             s)
+      )
+
+let rec final_answer1_loop jeop (st: State2players.t) : string =
+  print_endline ("Here is the FINAL JEOPDARDY question:");
+  print_endline (Jeopardy.final_jeopardy_question jeop);
+  print_endline ("Player 1, what is your answer?");
+  let answer1 = String.lowercase_ascii (read_line()) in
+  let answer_lst1 = remove_empty (String.split_on_char ' ' answer1 ) [] in
+  match answer_lst1 with
+  | h::m::t -> 
+    if (h = "what" || h = "who") &&
+       (m = "is" || m = "are" || m = "was" || m = "were")
+    then 
+      (ANSITerminal.erase Screen;
+       let ans = String.trim (List.fold_left (fun x acc -> 
+           x ^ " " ^ acc) "" t) in   
+       ans)
+    else 
+      (print_endline "Answer in a correct question format!";
+       final_answer1_loop jeop st)
+  | _ -> print_endline "Answer in the question format!";
+    final_answer1_loop jeop st
+
+let rec final_answer2_loop jeop (st: State2players.t) : string =
+  print_endline ("Here is the FINAL JEOPDARDY question:");
+  print_endline (Jeopardy.final_jeopardy_question jeop);
+  print_endline ("Player 2, what is your answer?");
+  let answer2 = String.lowercase_ascii (read_line()) in
+  let answer_lst2 = remove_empty (String.split_on_char ' ' answer2) [] in
+  match answer_lst2 with
+  | h::m::t -> 
+    if (h = "what" || h = "who") &&
+       (m = "is" || m = "are" || m = "was" || m = "were")
+    then 
+      (ANSITerminal.erase Screen;
+       let ans = String.trim (List.fold_left (fun x acc -> 
+           x ^ " " ^ acc) "" t) in   
+       ans)
+    else 
+      (print_endline "Answer in a correct question format!";
+       final_answer2_loop jeop st)
+  | _ -> print_endline "Answer in the question format!";
+    final_answer2_loop jeop st
+
+(*match State.final_answer jeop st ans with
+        | Legal s -> s
+        | Illegal -> print_endline "This is wrong"; st *)
+
+let rec final_bet1_loop jeop (st : State2players.t) : int =
+  print_endline ("Welcome to FINAL JEOPARDY!");
+  print_string ("Player1, your current score is: ");
+  print_endline (string_of_int (State2players.current_player1_score st));
+  print_string ("Player2's score is: ");
+  print_endline (string_of_int (State2players.current_player2_score st));
+  print_endline ("You could win double the points you bet. Place your bet:");
+  try (let bet = int_of_string (read_line()) in
+       if bet < 0 then
+         (print_endline 
+            "Do you want to lose points?!!!!! Bet a positive number!";
+          final_bet1_loop jeop st)
+       else if bet > State2players.current_player1_score st then 
+         (print_endline "You don't have that many points! Don't be greedy.";
+          final_bet1_loop jeop st)
+       else 
+         (ANSITerminal.erase Screen;
+          bet))
+  with 
+  | Failure (int_of_string) -> 
+    print_endline 
+      "That's an invalid input (bet needs to be a number)";
+    final_bet1_loop jeop st 
+
+let rec final_bet2_loop jeop (st : State2players.t) : int =
+  print_endline ("Welcome to FINAL JEOPARDY!");
+  print_string ("Player2, your current score is: ");
+  print_endline (string_of_int (State2players.current_player2_score st));
+  print_string ("Player1's score is: ");
+  print_endline (string_of_int (State2players.current_player1_score st));
+  print_endline ("You could win double the points you bet. Place your bet:");
+  try (let bet = int_of_string (read_line()) in
+       if bet < 0 then
+         (print_endline 
+            "Do you want to lose points?!!!!! Bet a positive number!";
+          final_bet2_loop jeop st)
+       else if bet > State2players.current_player2_score st then 
+         (print_endline "You don't have that many points! Don't be greedy.";
+          final_bet2_loop jeop st)
+       else 
+         (ANSITerminal.erase Screen;
+          bet))
+  with 
+  | Failure (int_of_string) -> 
+    print_endline 
+      "That's an invalid input (bet needs to be a number)";
+    final_bet2_loop jeop st 
+
+let final_two_player_loop jeop (st : State2players.t) =
+  ANSITerminal.erase Screen;
+  let bet1 = final_bet1_loop jeop st in
+  let bet2 = final_bet2_loop jeop st in
+  let bet_state = 
+    match State2players.bet st bet1 bet2 with
+    | Legal s -> s
+    | Illegal -> print_endline "This is wrong"; st
+  in
+  let ans1 = final_answer1_loop jeop bet_state in
+  let ans2 = final_answer2_loop jeop bet_state in
+  match State2players.final_answer jeop bet_state ans1 ans2 with
+  | Legal s -> s
+  | Illegal -> print_endline "This is wrong"; st
+
 
 (** [play_loop_two_player jeop st] is the same as [play_loop] but for two-player
     games. *)
@@ -203,15 +387,32 @@ let rec play_loop_two_player jeop (st : State2players.t) =
   if (List.length (State2players.current_categories st)) = 0 then 
     (let score1 = State2players.current_player1_score st in
      let score2 = State2players.current_player2_score st in
-     print_endline ("You've finished the game!! Good job!");
-     print_string ("The scores were: \nplayer 1: ");
-     print_endline ((string_of_int score1));
-     print_string ("player 2: ");
-     print_endline ((string_of_int score2));
-     if score1 > score2 then print_endline ("Congratulations player 1!")
-     else if score2 > score1 then print_endline ("Congratulations player 2!")
-     else print_endline ("You tied! Good Game.");
-     exit 0)
+     if score1 < 0 || score2 < 0 then 
+       (print_endline ("You've finished the game!! Good job!");
+        print_string ("The scores were: \nplayer 1: ");
+        print_endline ((string_of_int score1));
+        print_string ("player 2: ");
+        print_endline ((string_of_int score2));
+        print_endline ("Since you do not both have positive scores, there is no need for a final jeopardy round!");
+        if score1 > score2 then print_endline ("Congratulations player 1!")
+        else if score2 > score1 then print_endline ("Congratulations player 2!")
+        else print_endline ("You tied! Good Game.");
+        exit 0)
+     else 
+       (if State2players.has_played_final st then
+          (let score1 = State2players.current_player1_score st in
+           let score2 = State2players.current_player2_score st in
+           print_endline ("You've finished the game!! Good job!");
+           print_string ("The scores were: \nplayer 1: ");
+           print_endline ((string_of_int score1));
+           print_string ("player 2: ");
+           print_endline ((string_of_int score2));
+           if score1 > score2 then print_endline ("Congratulations player 1!")
+           else if score2 > score1 then print_endline ("Congratulations player 2!")
+           else print_endline ("You tied! Good Game.");
+           exit 0)
+        else 
+          play_loop_two_player jeop (final_two_player_loop jeop st)))
   else
     print_endline ("Here are the current categories and levels left:\n");
   print_string (State2players.current_board st);
@@ -275,6 +476,11 @@ let rec play_loop_two_player jeop (st : State2players.t) =
       play_loop_two_player jeop st
     | Pass -> print_endline "You haven't even chosen a question yet!";
       play_loop_two_player jeop st
+    (*
+    | Skip -> print_endline "You haven't even chosen a question yet!";
+      play_loop_two_player jeop st
+    | Double -> print_endline "You haven't even chosen a question yet!";
+      play_loop_two_player jeop st *)
 
 (** [play_game f] starts the jeopardy in file [f]. *)
 let rec play_game f =
@@ -315,10 +521,11 @@ let rec play_game f =
    but you MUST answer it in the form of a question ('who is' or 'what is', 
    etc). If you answer the question correctly your score goes up by however 
    much the question was worth, if you get it wrong, you lose that many points. 
-   You can also 'pass' and recieve no points. You can also ask for a 'hint' for 
-   every question, but this costs 100 points each time. At any point you check 
-   your score with 'score' or quit the game with 'quit'. Have fun and good 
-   luck!\n");
+   You can also 'pass' and recieve no points. But be careful, you only have 3 
+   passes a game! You can also ask for a 'hint' for every question, but this 
+   costs 100 points each time. At any point you check your score with 'score' 
+   or quit the game with 'quit'. Have fun and good luck!\n");
+
   ANSITerminal.(print_string [red] "\n 1 or 2 players?\n");
   match read_line() with
   | "One" | "1" | "one" -> 

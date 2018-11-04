@@ -1,0 +1,223 @@
+{
+  "categories": [
+    {
+      "name": "CS History",
+      "levels": [
+        {
+          "score": 100,
+          "question": "Dutch computer science Edsger Dijkstra is most well known for developing an algorithm to compute this.",
+          "answers": [
+            "shortest path"
+          ],
+          "hint": "Covered in CS 2110, this algorithm is used in various mapping programs"
+        },
+        {
+          "score": 200,
+          "question": "This person was responsible for creating much of the theoretical foundations of computer science, along with cracking a nazi war code in the second world war.",
+          "answers": [
+            "alan turing",
+            "turing"
+          ],
+          "hint": "The movie The Imitation Game is based on his life."
+        },
+        {
+          "score": 300,
+          "question": "Often considered the first computer programmer, in the 19th century this person designed a computer algorithm to compute Bernoulli numbers.",
+          "answers": [
+            "ada lovelace",
+            "ada",
+            "ada byron"
+          ],
+          "hint": "This woman is also the daughter of a renowned english poet, Lord Byron"
+        },
+        {
+          "score": 400,
+          "question": "This person developed lambda calculus, a basis for expressing computation, the basis for functional programming languages.",
+          "answers": [
+            "alonzo church",
+            "church"
+          ],
+          "hint": "Working at princeton at the same time as Turing was completing his work on computation, their theories were ultimately equivalent, resulting in the ___-Turing thesis."
+        }
+      ]
+    },
+    {
+      "name": "Landmarks",
+      "levels": [
+        {
+          "score": 100,
+          "question": "The Colosseum is found in which city?",
+          "answers": [
+            "rome"
+          ],
+          "hint": "It is the capital city of Italy."
+        },
+        {
+          "score": 200,
+          "question": "This landmark is the oldest of the Seven Wonders of the Ancient World.",
+          "answers": [
+            "the pyramids",
+            "pyramids",
+            "pyramid",
+            "pyramids of giza",
+            "pyramid of giza"
+          ],
+          "hint": "A 3D triangle!"
+        },
+        {
+          "score": 300,
+          "question": "Machu Picchu was built by which Civilization?",
+          "answers": [
+            "inca"
+          ],
+          "hint": "This civilization was centered in Peru."
+        },
+        {
+          "score": 400,
+          "question": "The Eiffel Tower surpassed which man-made structure to become the tallest in the world?",
+          "answers": [
+            "washington monument",
+            "the washington monument"
+          ],
+          "hint": "It was built to commemorate the commander-in-chief of the Continental Army."
+        }
+      ]
+    },
+    {
+      "name": "Astronomy",
+      "levels": [
+        {
+          "score": 100,
+          "question": "How many (official) planets are in our solar system?",
+          "answers": [
+            "eight",
+            "8"
+          ],
+          "hint": "Pluto is not considered a planet."
+        },
+        {
+          "score": 200,
+          "question": "95% of all matter in the universe is invisible, and is called ___",
+          "answers": [
+            "dark matter"
+          ],
+          "hint": "There is no light."
+        },
+        {
+          "score": 300,
+          "question": "Which is the hottest planet in the solar system?",
+          "answers": [
+            "venus"
+          ],
+          "hint": "___ fly trap."
+        },
+        {
+          "score": 400,
+          "question": "How long is a day in Mercury in terms of days on Earth? 58, 105, 75, 30",
+          "answers": [
+            "58",
+            "fifty eight"
+          ],
+          "hint": "It is an even number ."
+        }
+      ]
+    },
+    {
+      "name": "Rap",
+      "levels": [
+        {
+          "score": 100,
+          "question": "This artist, famous for such records as My Beautiful Dark Twisted Fantasy, and the Life of Pablo, has been active for over a decade.",
+          "answers": [
+            "kanye west",
+            "kanye",
+            "yeezus"
+          ],
+          "hint": "This artist also produces his own clothing line, most notably for sneakers."
+        },
+        {
+          "score": 200,
+          "question": "This landmark is the oldest of the Seven Wonders of the Ancient World.",
+          "answers": [
+            "the pyramids",
+            "pyramids",
+            "pyramid",
+            "pyramids of giza",
+            "pyramid of giza"
+          ],
+          "hint": "A 3D triangle!"
+        },
+        {
+          "score": 300,
+          "question": "Machu Picchu was built by which Civilization?",
+          "answers": [
+            "inca"
+          ],
+          "hint": "This civilization was centered in Peru."
+        },
+        {
+          "score": 400,
+          "question": "The Eiffel Tower surpassed which man-made structure to become the tallest in the world?",
+          "answers": [
+            "washington monument",
+            "the washington monument"
+          ],
+          "hint": "It was built to commemorate the commander-in-chief of the Continental Army."
+        }
+      ]
+    },
+    {
+      "name": "Flags",
+      "levels": [
+        {
+          "score": 100,
+          "question": "The Colosseum is found in which city?",
+          "answers": [
+            "rome"
+          ],
+          "hint": "It is the capital city of Italy."
+        },
+        {
+          "score": 200,
+          "question": "This landmark is the oldest of the Seven Wonders of the Ancient World.",
+          "answers": [
+            "the pyramids",
+            "pyramids",
+            "pyramid",
+            "pyramids of giza",
+            "pyramid of giza"
+          ],
+          "hint": "A 3D triangle!"
+        },
+        {
+          "score": 300,
+          "question": "Machu Picchu was built by which Civilization?",
+          "answers": [
+            "inca"
+          ],
+          "hint": "This civilization was centered in Peru."
+        },
+        {
+          "score": 400,
+          "question": "The Eiffel Tower surpassed which man-made structure to become the tallest in the world?",
+          "answers": [
+            "washington monument",
+            "the washington monument"
+          ],
+          "hint": "It was built to commemorate the commander-in-chief of the Continental Army."
+        }
+      ]
+    }
+  ],
+  "final": {
+    "question": "This 20th century Russian-American author, famous for such works as Lolita, Pnin, and Pale fire, also taught at Cornell for a time",
+    "final answers": [
+      "vladimir nabokov",
+      "nabokov",
+      "nobokov",
+      "nabokoff",
+      "nabakov",
+      "nabokof"
+    ]
+  }
+}

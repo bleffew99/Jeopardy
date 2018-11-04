@@ -26,10 +26,18 @@ type category = {
   levels: level list;
 }
 
+(** [final] represents the final Jeopardy round with a question and a list of 
+    possible answers.*)
+type final = {
+  final_question: question;
+  final_answers: string list
+}
+
 (** [t] represents a jeopardy game, which includes a list of categories, each
     with levels to choose from. *)
 type t = {
-  categories: category list;  
+  categories: category list; 
+  final_jeopardy: final
 }
 
 (** [level_of_json json] is the representation of a level in [json]
@@ -40,6 +48,7 @@ let level_of_json json = {
   answers = json |> member "answers" |> to_list |> List.map to_string;
   hint = json |> member "hint" |> to_string;
 }
+
 (** [category_of_json json] is the representation of a category in [json]
     Requires:json is a valid JSON. *)
 let category_of_json json = {
@@ -47,11 +56,20 @@ let category_of_json json = {
   levels = json |> member "levels" |> to_list |> List.map level_of_json;
 }
 
+(** [final_of_json json] is the representation of a final Jeopardy round in
+    [json] Requires:json is a valid JSON. *)
+let final_of_json json = {
+  final_question = json |> member "question" |> to_string;
+  final_answers = json |> member "final answers" |> to_list |> 
+                  List.map to_string;
+}
+
 (* [from_json json] is a representation of a jeoparady game that json 
    represents. *)
 let from_json json = {
   categories = json |> member "categories" |> to_list |> 
                List.map category_of_json;
+  final_jeopardy = json |> member "final" |> final_of_json
 }
 
 (* [category_name_string cat] is category_name [cat] as a string. *)
@@ -111,8 +129,8 @@ let all_levels jeop : int list list =
   List.map (levels jeop) cat_names
 
 (** [get_question levels score] returns the question associated with 
-     level score [score] in the list of levels [levels]
-     Raises: UnknownLevel if score is not a valid level. *)
+    level score [score] in the list of levels [levels]
+    Raises: UnknownLevel if score is not a valid level. *)
 let rec get_question (levels : level list) (score : int) : string =
   match levels with 
   | [] -> raise (UnknownLevel score)
@@ -143,8 +161,8 @@ let score (lev : level) =
   lev.score
 
 (** [get_hint levels score] returns the hint associated with 
-     level score [score] in the list of levels [levels]
-     Raises: UnknownLevel if score is not a valid level. *)
+    level score [score] in the list of levels [levels]
+    Raises: UnknownLevel if score is not a valid level. *)
 let rec get_hint (levels : level list) (score : int) : string =
   match levels with 
   | [] -> raise (UnknownLevel score)
@@ -160,3 +178,12 @@ let hint (jeop : t) (cat: category_name) (score : int) : string =
   with 
   | UnknownCategory cat -> raise (UnknownCategory cat)
   | UnknownLevel score -> raise (UnknownLevel score) 
+
+(** [final_jeopardy_question jeop] returns the question for the final round*)
+let final_jeopardy_question (jeop : t) : string =
+  jeop.final_jeopardy.final_question
+
+(** [final_jeopardy_answers jeop] returns the answers for the final round*)
+let final_jeopardy_answers (jeop : t) : string list =
+  jeop.final_jeopardy.final_answers
+

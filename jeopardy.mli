@@ -16,6 +16,10 @@ type category
     with levels to choose from. *)
 type t 
 
+(** [final] represents the final Jeopardy round with a question,a list of 
+    possible answers and whether the question has been answered*)
+type final 
+
 exception UnknownCategory of category_name
 
 exception UnknownLevel of int
@@ -76,3 +80,10 @@ val score : level -> int
     with category [cat] and level [score]
     Raises: UnknownLevel if score is not a valid level. *)
 val hint: t -> category_name -> int -> string
+
+(** [final_jeopardy_question jeop] returns the question for the final round*)
+val final_jeopardy_question: t -> string
+
+(** [final_jeopardy_answers jeop] returns the answers for the final round*)
+val final_jeopardy_answers: t -> string list
+

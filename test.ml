@@ -101,9 +101,24 @@ let make_hint_unknown_lev_test
   name >:: (fun _ -> assert_raises (UnknownLevel score) 
                (hint_unit cat score jeop))
 
+let make_final_jeopardy_question_test 
+    (name: string)
+    (jeop: Jeopardy.t) 
+    (expected_output : string) : test = 
+  name >:: (fun _ ->  assert_equal expected_output 
+               (Jeopardy.final_jeopardy_question jeop))
+
+let make_final_jeopardy_answers_test 
+    (name: string)
+    (jeop: Jeopardy.t) 
+    (expected_output : string list) : test = 
+  name >:: (fun _ ->  assert_equal expected_output 
+               (Jeopardy.final_jeopardy_answers jeop))
+
 let t1 = from_json(Yojson.Basic.from_file "3110.json")
 let t2 = from_json(Yojson.Basic.from_file "jeop1.json")
 let t3 = from_json(Yojson.Basic.from_file "jeop2.json")
+let t4 = from_json(Yojson.Basic.from_file "jeop3.json")
 let cate1 = categories (t1)
 let cate2 = categories (t2)
 
@@ -181,6 +196,25 @@ let jeopardy_tests =
       (category_name_from_string "Quotes") 600 t2 (UnknownLevel 600);
     make_hint_unknown_lev_test "hint error 4" (
       category_name_from_string "Animals") 900 t3 (UnknownLevel 900);  
+
+    (*final question tests*)
+    make_final_jeopardy_question_test "jeop 1" t2 "Shakespeare uses the words moon 
+    and moonlight more than any other of his works.";
+    make_final_jeopardy_question_test "jeop 2" t3 "It's the largest country in the world 
+    without any permanent rivers or lakes.";
+    make_final_jeopardy_question_test "jeop3" t4 "This 20th century Russian-American author
+    , famous for such works as Lolita, Pnin, and Pale fire, also taught at Cornell for a time";
+
+    (*final answers tests*)
+    make_final_jeopardy_answers_test "jeop 1 ans" t2 ["a midsummer night's dream";
+                                                      "midsummer nights dream"; "midsummer nights dream";"midsummer's nights dream";
+                                                      "midsummers night dream"; "a midsummer nights dream"; "a midsummer nights dream";
+                                                      "a midsummers nights dream";"a midsummers night dream";"midsummer night's dream";
+                                                      "midsummer night's dream";"midsummer's night's dream";"a midsummer night's dream";
+                                                      "a midsummer night's dream";"a midsummers night's dream"];
+    make_final_jeopardy_answers_test "jeop 2 ans" t3 ["saudi arabia"; "saudi"];
+    make_final_jeopardy_answers_test "jeop 3 ans" t4 ["vladimir nabokov";"nabokov";
+                                                      "nobokov";"nabokoff";"nabakov";"nabokof"];    
   ]
 
 (* command tests*)
@@ -226,7 +260,6 @@ let command_tests =
     make_parse_error_test "Malformed answer 3" "who" Malformed;
     make_parse_error_test "Malformed hint 1" "hint yes" Malformed;
     make_parse_error_test "Malformed pass 1" "pass no" Malformed;
-
   ]
 
 (* state tests*)
@@ -286,38 +319,58 @@ let make_hint_illegal_tests
   name >:: (fun _ ->
       assert_equal expected_output (hint cat lev jeop st))
 
+let make_pass_illegal_tests
+    (name : string)
+    (st : State.t)
+    (expected_output : result) : test =
+  name >:: (fun _ ->
+      assert_equal expected_output (pass st))
+
 let make_state = function 
   | Legal t -> t
   | Illegal -> raise (Failure "Illegal")
 
 let play0 = init_state t2
-let play1 = make_state (play (category_name_from_string "Disney") 200 t2 play0) 
-let play2 = make_state (play (category_name_from_string "Music") 300 t2 play1)
-let play3 = make_state (play (category_name_from_string "Disney") 100 t2 play2)
-let play4 = make_state (play (category_name_from_string "Disney") 400 t2 play3)
-let play5 = make_state (play (category_name_from_string "Disney") 500 t2 play4)
-let play6 = make_state (play (category_name_from_string "Disney") 300 t2 play5)
-
 let ans1 = make_state (answer (category_name_from_string "Disney") 200 
-                         "snow white" t2 play1) 
+                         "snow white" t2 play0) 
+let play1 = make_state (play (category_name_from_string "Disney") 200 t2 ans1)
 let ans2 = make_state (answer (category_name_from_string "Music") 300 
-                         "despicable me 2" t2 ans1) 
+                         "despicable me 2" t2 play1)  
+let play2 = make_state (play (category_name_from_string "Music") 300 t2 ans2)
 let ans3 = make_state (answer (category_name_from_string "Disney") 100 
-                         "simba" t2 ans2) 
+                         "simba" t2 play2) 
+let play3 = make_state (play (category_name_from_string "Disney") 100 t2 ans3)
 let ans4 = make_state (answer (category_name_from_string "Disney") 400 
-                         "sleeping beauty" t2 ans3) 
+                         "sleeping beauty" t2 play3) 
+let play4 = make_state (play (category_name_from_string "Disney") 400 t2 ans4)
 let ans5 = make_state (answer (category_name_from_string "Disney") 500 
-                         "norway" t2 ans4) 
+                         "norway" t2 play4) 
+let play5 = make_state (play (category_name_from_string "Disney") 500 t2 ans5)
 let ans6 = make_state (answer (category_name_from_string "Disney") 300 
-                         "norway" t2 ans5) 
+                         "norway" t2 play5) 
+let play6 = make_state (play (category_name_from_string "Disney") 300 t2 ans6)
 
-let hint2 = make_state (hint (category_name_from_string "Music") 300 t2 ans1)
+
+let hint2 = make_state (hint (category_name_from_string "Music") 300 t2 play1)
 let hintans2 = make_state (answer (category_name_from_string "Music") 300 
                              "despicable me 2" t2 hint2) 
+let hintplay2 = make_state (play (category_name_from_string "Music") 300 
+                              t2 hintans2)
 let hint3 = make_state 
-    (hint (category_name_from_string "Disney") 100 t2 hintans2)
+    (hint (category_name_from_string "Disney") 100 t2 hintplay2)
 let hintans3 = make_state (answer (category_name_from_string "Disney") 100 
                              "simba" t2 hint3) 
+let hintplay3 = make_state (play (category_name_from_string "Disney") 100 
+                              t2 hintans3)
+
+let pass2 = make_state (pass play1)
+let pass3 = make_state (pass pass2)
+let passans4 = make_state (answer (category_name_from_string "Disney") 400 
+                             "sleeping beauty" t2 pass3) 
+let passplay4 = make_state (play (category_name_from_string "Disney") 400 
+                              t2 passans4)
+let pass5 = make_state (pass passplay4)
+let pass6 = make_state (pass pass5)
 
 let state_tests = [
   (*current_score tests*)
@@ -327,11 +380,17 @@ let state_tests = [
   make_current_score_test "current score test 4" ans4 800;
   make_current_score_test "current score test 5" ans5 1300;
   make_current_score_test "current score test 6" ans6 1000; 
-  (*to test hint score reduction*)
+  (*test hint score reduction*)
   make_current_score_test "current score test 7" hint2 100; 
   make_current_score_test "current score test 8" hintans2 400; 
   make_current_score_test "current score test 9" hint3 300; 
   make_current_score_test "current score test 10" hintans3 200; 
+  (*test pass score reduction*)
+  make_current_score_test "current score test 11" pass2 200; 
+  make_current_score_test "current score test 12" pass3 200; 
+  make_current_score_test "current score test 13" passans4 600; 
+  make_current_score_test "current score test 14" passplay4 600; 
+  make_current_score_test "current score test 15" pass5 600; 
 
   (*current_category_levels tests*)
   make_current_category_levels_test "ccl test 1" play1 
@@ -358,6 +417,9 @@ let state_tests = [
     (category_name_from_string "Movies") 100 t2 play6 (Illegal);
   make_hint_illegal_tests "hint illegal test 2" 
     (category_name_from_string "Music") 9878 t2 play6 (Illegal);
+
+  (*pass illegal tests*)
+  make_pass_illegal_tests "pass illegal test 1" pass6 (Illegal);
 ]
 
 (*state2players tests*)

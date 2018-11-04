@@ -8,11 +8,19 @@ type category_status = {
 
 (** [t] represents a game state with current categories [categories_left] and
     their statuses represented by [categories]. [score] represents the player's
-    current total score. [board] reprents the current game board. *)
+    current total score. [passes_left] represents the number of passes left for
+    the player. [used_double] is whether the player has used the double
+    superpower.[final_bet] is the points that the player bets in the final
+    jeopardy round. [played_final] is whether the final round has been played.
+    [board] represents the current game board. *)
 type t = {
   categories : category_status list;
   categories_left : category_name list;
   score : int;
+  passes_left : int;
+  used_double : bool;
+  final_bet : int;
+  played_final : bool;
   board : string
 }
 
@@ -43,6 +51,10 @@ let init_state (jeop: Jeopardy.t) : t =
   {categories = parse_categories (categories jeop) []; 
    categories_left = Jeopardy.categories_list jeop;
    score = 0; 
+   passes_left = 3;
+   final_bet = 0;
+   used_double = false;     
+   played_final = false;
    board = Board.game_board jeop level_list}
 
 (** [current_categories st] gets the categories left field from [st]. *)  
@@ -53,9 +65,22 @@ let current_categories (st: t) =
 let current_score st =
   st.score
 
+(** [current_passes_left st] gets the current number of passes left from [st].*)
+let current_passes_left st =
+  st.passes_left
+
+(** [get_final_bet st] gets the final jeopardy bet from [st].*)
+let get_final_bet st =
+  st.final_bet
+
 (** [current_board st] get the current score from [st]*)
 let current_board st =
   st.board
+
+(** [has_played_final st] returns true if the final question has been answered
+    false otherwise in the state st.*)
+let has_played_final st = 
+  st.played_final
 
 (** [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] in [st]. *)
@@ -142,11 +167,19 @@ let play cat lev (jeop: Jeopardy.t) st =
     then Legal {categories = remove_category_level st.categories cat lev; 
                 categories_left = remove_category st.categories_left cat; 
                 score = st.score;
+                passes_left = st.passes_left;
+                final_bet = st.final_bet;
+                used_double = false;                
+                played_final = false;
                 board = new_board jeop 
                     (remove_category_level st.categories cat lev)}
     else Legal {categories = remove_category_level st.categories cat lev; 
                 categories_left = st.categories_left; 
                 score = st.score;
+                passes_left = st.passes_left;
+                final_bet = st.final_bet;
+                used_double = false;                        
+                played_final = false;
                 board = new_board jeop 
                     (remove_category_level st.categories cat lev)}
 
@@ -162,10 +195,18 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
          Legal {categories = st.categories; 
                 categories_left = st.categories_left;
                 score = st.score + lev;
+                passes_left = st.passes_left;
+                final_bet = st.final_bet;
+                used_double = false;                
+                played_final = false;
                 board = st.board}
        else Legal {categories = st.categories; 
                    categories_left = st.categories_left;
                    score = st.score -lev;
+                   passes_left = st.passes_left;
+                   final_bet = st.final_bet;
+                   used_double = false;
+                   played_final = false;
                    board = st.board})
   with 
   | NoAnswersProvided -> Illegal 
@@ -180,11 +221,94 @@ let hint (cat: Jeopardy.category_name) (lev:int) (jeop: Jeopardy.t) st =
        Legal {categories = st.categories;
               categories_left = st.categories_left;
               score = st.score - 100;
+              passes_left = st.passes_left;
+              final_bet = st.final_bet;
+              used_double = false;                            
+              played_final = false;
               board = st.board})
   with
   | UnknownLevel lev -> Illegal
   | UnknownCategory cat -> Illegal
 
+(** [pass st] is [r] if requesting a pass in state [st]. If the number of passes
+    left is 0, then the result is [Illegal] otherwise the player is deducted
+    1 pass for asking for a pass. *)
+let pass (st : t) =
+  if st.passes_left = 0 then Illegal 
+  else
+    Legal {categories = st.categories;
+           categories_left = st.categories_left;
+           score = st.score;
+           passes_left = st.passes_left - 1;
+           final_bet = st.final_bet;
+           used_double = false;           
+           played_final = false;
+           board = st.board}
 
+(** [double st] is [r] if requesting to use the double-or-nothing ability in
+    state [st]. If used_double is true, then the result is Illegal, otherwise
+    used_double in [st] is set to true. *)
+let double (st : t) (jeop: Jeopardy.t) (cat: Jeopardy.category_name) 
+    (lev: int) (ans: string) = 
+  if st.used_double = false then
+    try (let corrects = answers jeop cat lev in 
+         if List.mem ans corrects then 
+           Legal {categories = st.categories; 
+                  categories_left = st.categories_left;
+                  score = st.score + (lev * 2);
+                  passes_left = st.passes_left;
+                  final_bet = st.final_bet;
+                  used_double = true;                
+                  played_final = false;
+                  board = st.board}
+         else Legal {categories = st.categories; 
+                     categories_left = st.categories_left;
+                     score = st.score - (lev * 2);
+                     passes_left = st.passes_left;
+                     final_bet = st.final_bet;
+                     used_double = true;
+                     played_final = false;
+                     board = st.board})
+    with 
+    | NoAnswersProvided -> Illegal 
+    | UnknownCategory cat -> Illegal
+  else
+    Illegal
 
+(** [bet st n] is [r] when a player bets in the final round of jeopardy. The 
+    result is a new final bet amount [n]. *)
+let bet (st: t) (n: int) = 
+  Legal {categories = st.categories;
+         categories_left = st.categories_left;
+         score = st.score;
+         passes_left = st.passes_left;
+         final_bet = n;
+         used_double = st.used_double;
+         played_final = false;
+         board = st.board}
+
+(** [final_asnwer jeop st] is [r] if attempting to answer the final question
+    Depending on whether [ans] is correct, the score will increase by the final bet.*)
+let final_answer jeop st (ans: string) =
+  if List.mem ans (Jeopardy.final_jeopardy_answers jeop) then
+    (print_endline ("You are correct!");
+     Legal {categories = st.categories;
+            categories_left = st.categories_left;
+            score = st.score + (get_final_bet st);
+            passes_left = st.passes_left;
+            final_bet = st.final_bet;
+            used_double = st.used_double;
+            played_final = true;
+            board = st.board} )
+  else 
+    (print_endline ("Sorry, that was wrong! The correct answer was: ");
+     print_endline (List.nth (Jeopardy.final_jeopardy_answers jeop) 0);
+     Legal {categories = st.categories;
+            categories_left = st.categories_left;
+            score = st.score - (get_final_bet st);
+            passes_left = st.passes_left;
+            final_bet = st.final_bet;
+            used_double = st.used_double;
+            played_final = true;
+            board = st.board})
 

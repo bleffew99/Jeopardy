@@ -26,7 +26,7 @@ finalcheck: check
 	bash finalcheck.sh
 
 zip:
-	zip a2src.zip *.ml* *.json _tags Makefile
+	zip a7src.zip *.ml* *.json _tags Makefile
 	
 docs: docs-public docs-private
 	

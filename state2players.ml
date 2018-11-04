@@ -13,14 +13,21 @@ type current_player = | One | Two
     [categories_left] and their statuses represented by [categories]. 
     [player1_score] represents player1's current total score, [player2_score] 
     represents player2's current total score, [current_player] represents
-    the current player (either One or Two), and [board] represents the 
-    current game board. *)
+    the current player (either One or Two), [player1_passes] and 
+    [player2_passes] represents player One and Two's hints remaining hints left.
+    [played_final] is whether the final round has been plaeyd. [board] 
+    represents the current game board. *)
 type t = {
   categories : category_status list;
   categories_left : category_name list;
   player1_score : int;
   player2_score : int;
   current_player : current_player;
+  player1_passes : int;
+  player2_passes : int;
+  player1_bet : int;
+  player2_bet : int;
+  played_final : bool;
   board : string
 }
 
@@ -53,6 +60,11 @@ let init_state (jeop: Jeopardy.t) : t =
    player1_score = 0; 
    player2_score = 0;
    current_player = One;
+   player1_passes = 3;
+   player2_passes = 3;
+   player1_bet = 0;
+   player2_bet = 0;
+   played_final = false;
    board = Board.game_board jeop level_list}
 
 (** [current_categories st] gets the categories left field from [st]. *)  
@@ -67,6 +79,16 @@ let current_player1_score st =
 let current_player2_score st =
   st.player2_score
 
+(** [player1_passes_left st] gets the current number of passes left of 
+    player 1 from [st]. *)
+let player1_passes_left st =
+  st.player1_passes
+
+(** [player2_passes_left st] gets the current number of passes left of 
+    player 2 from [st]. *)
+let player2_passes_left st =
+  st.player2_passes
+
 (** [current_board st] gets the current game board from [st]. *)
 let current_board st =
   st.board
@@ -74,6 +96,19 @@ let current_board st =
 (** [get_current_player st] gets the current player in [st]. *)
 let get_current_player st =
   st.current_player
+
+(** [get_player1_bet st] gets the final bet of player 1 in [st]*)
+let get_player1_bet st =
+  st.player1_bet
+
+(** [get_player2_bet st] gets the final bet of player 2 in [st]*)
+let get_player2_bet st =
+  st.player2_bet
+
+(** [has_played_final st] is whether the final jeopardy round has been played 
+    in [st]. *)
+let has_played_final st = 
+  st.played_final
 
 (** [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] in [st]. *)
@@ -162,7 +197,12 @@ let play cat lev (jeop: Jeopardy.t) st =
                 categories_left = remove_category st.categories_left cat; 
                 player1_score = st.player1_score;
                 player2_score = st.player2_score;
-                current_player = if st.current_player = One then Two else One;                                                              
+                current_player = if st.current_player = One then Two else One; 
+                player1_passes = st.player1_passes;
+                player2_passes = st.player2_passes; 
+                player1_bet = st.player1_bet;
+                player2_bet = st.player2_bet;     
+                played_final = false;                                                       
                 board = new_board jeop 
                     (remove_category_level st.categories cat lev)}
     else Legal {categories = remove_category_level st.categories cat lev; 
@@ -170,6 +210,11 @@ let play cat lev (jeop: Jeopardy.t) st =
                 player1_score = st.player1_score;
                 player2_score = st.player2_score;
                 current_player = if st.current_player = One then Two else One;
+                player1_passes = st.player1_passes;
+                player2_passes = st.player2_passes;   
+                player1_bet = st.player1_bet;
+                player2_bet = st.player2_bet;
+                played_final = false;
                 board = new_board jeop 
                     (remove_category_level st.categories cat lev)}
 
@@ -189,6 +234,11 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
                  player2_score = if st.current_player = Two then
                      st.player2_score + lev else st.player2_score;
                  current_player = st.current_player;
+                 player1_passes = st.player1_passes;
+                 player2_passes = st.player2_passes;   
+                 player1_bet = st.player1_bet;
+                 player2_bet = st.player2_bet;
+                 played_final = false;
                  board = st.board}
         else Legal {categories = st.categories; 
                     categories_left = st.categories_left;
@@ -197,6 +247,11 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
                     player2_score = if st.current_player = Two then
                         st.player2_score - lev else st.player2_score;
                     current_player = st.current_player;
+                    player1_passes = st.player1_passes;
+                    player2_passes = st.player2_passes;  
+                    player1_bet = st.player1_bet;
+                    player2_bet = st.player2_bet; 
+                    played_final = false;
                     board = st.board}))
   with 
   | NoAnswersProvided -> Illegal 
@@ -215,11 +270,120 @@ let hint (cat: Jeopardy.category_name) (lev:int) (jeop: Jeopardy.t) st =
               player2_score = if st.current_player = Two then 
                   st.player2_score - 100 else st.player2_score;
               current_player = st.current_player;
+              player1_passes = st.player1_passes;
+              player2_passes = st.player2_passes;
+              player1_bet = st.player1_bet;
+              player2_bet = st.player2_bet;
+              played_final = false;
               board = st.board})
   with
   | UnknownLevel lev -> Illegal
   | UnknownCategory cat -> Illegal
 
+(** [pass st] is [r] if requesting a pass in state [st]. If the number of passes
+    left is 0, then the result is [Illegal] otherwise the player is deducted
+    1 pass for asking for a pass. *)  
+let pass st =
+  if st.current_player = One then
+    if st.player1_passes = 0 then Illegal 
+    else Legal {categories = st.categories; 
+                categories_left = st.categories_left; 
+                player1_score = st.player1_score;
+                player2_score = st.player2_score;
+                current_player = st.current_player;
+                player1_passes = st.player1_passes -1;
+                player2_passes = st.player2_passes;   
+                player1_bet = st.player1_bet;
+                player2_bet = st.player2_bet;
+                played_final = false;
+                board = st.board}
+  else
+  if st.player2_passes = 0 then Illegal 
+  else Legal {categories = st.categories; 
+              categories_left = st.categories_left; 
+              player1_score = st.player1_score;
+              player2_score = st.player2_score;
+              current_player = st.current_player;
+              player1_passes = st.player1_passes;
+              player2_passes = st.player2_passes -1; 
+              player1_bet = st.player1_bet;
+              player2_bet = st.player2_bet;
+              played_final = false;  
+              board = st.board}
 
+(** [bet st n1 n2] is [r] when a player bets in the final round of jeopardy. 
+    The result is a new final bet amount [n1] for player 1 and [n2] for 
+    player 2. *)
+let bet st (n1: int) (n2: int) =
+  Legal {categories = st.categories; 
+         categories_left = st.categories_left; 
+         player1_score = st.player1_score;
+         player2_score = st.player2_score;
+         current_player = st.current_player;
+         player1_passes = st.player1_passes;
+         player2_passes = st.player2_passes; 
+         player1_bet = n1;
+         player2_bet = n2;
+         played_final = false;  
+         board = st.board}
 
-
+(** [final_answer jeop st] is [r] if attempting to answer the final question
+    Depending on the player and whether answer is correct, the score will 
+    increase by the player's final bet*)
+let final_answer jeop st (ans1: string) (ans2: string) =
+  if List.mem ans1 (Jeopardy.final_jeopardy_answers jeop) then
+    (print_endline ("Player 1, you are correct!");
+     if List.mem ans2 (Jeopardy.final_jeopardy_answers jeop) then
+       (print_endline ("Player 2, you are correct!");
+        (Legal {categories = st.categories;
+                categories_left = st.categories_left;
+                player1_score = st.player1_score + (get_player1_bet st);
+                player2_score = st.player2_score + (get_player2_bet st);
+                current_player = st.current_player;
+                player1_passes = st.player1_passes;
+                player2_passes = st.player2_passes; 
+                player1_bet = st.player1_bet;
+                player2_bet = st.player2_bet;
+                played_final = true;
+                board = st.board}))
+     else 
+       (print_endline ("Player 2, sorry but you are wrong!");
+        (Legal {categories = st.categories;
+                categories_left = st.categories_left;
+                player1_score = st.player1_score + (get_player1_bet st);
+                player2_score = st.player2_score - (get_player2_bet st);
+                current_player = st.current_player;
+                player1_passes = st.player1_passes;
+                player2_passes = st.player2_passes; 
+                player1_bet = st.player1_bet;
+                player2_bet = st.player2_bet;
+                played_final = true;
+                board = st.board})))
+  else 
+    (print_endline ("Player 1, sorry but you are wrong!");
+     if List.mem ans2 (Jeopardy.final_jeopardy_answers jeop) then
+       (print_endline ("Player 2, you are correct!");
+        Legal {categories = st.categories;
+               categories_left = st.categories_left;
+               player1_score = st.player1_score - (get_player1_bet st);
+               player2_score = st.player2_score + (get_player2_bet st);
+               current_player = st.current_player;
+               player1_passes = st.player1_passes;
+               player2_passes = st.player2_passes; 
+               player1_bet = st.player1_bet;
+               player2_bet = st.player2_bet;
+               played_final = true;
+               board = st.board} )
+     else 
+       (print_endline ("Player 2, sorry but you are wrong, too!");
+        Legal {categories = st.categories;
+               categories_left = st.categories_left;
+               player1_score = st.player1_score - (get_player1_bet st);
+               player2_score = st.player2_score - (get_player2_bet st);
+               current_player = st.current_player;
+               player1_passes = st.player1_passes;
+               player2_passes = st.player2_passes; 
+               player1_bet = st.player1_bet;
+               player2_bet = st.player2_bet;
+               played_final = true;
+               board = st.board} ))

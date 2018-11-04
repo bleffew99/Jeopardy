@@ -99,7 +99,7 @@ let board_box (n : int) (lev: int) =
     boxes of length [n], which contain the integer [row]th level in each 
     int list in int list list [levs]. 
     Example: [make_row 5 1 [[[1, 2, 3]; [4, 5, 6]; [7, 8, 9]]] =
-    [|2    ||5    ||8    |]*)
+    [|2    ||5    ||8    |]] *)
 let rec make_row (n: int) (row: int) (levs : int list list) =
   let row_levels = 
     List.fold_right (fun lst acc -> (List.nth lst row)::acc) levs [] in

@@ -104,6 +104,35 @@ let from_categories json (cats: category_name list) =
     let new_cats = helper [] jeop.categories in
     {categories = new_cats; final_jeopardy = jeop.final_jeopardy}
 
+let get_lowest_level jeop =
+  let rec helper acc = function
+    | [] -> acc
+    | h::t -> if List.length h.levels < acc
+      then helper (List.length h.levels) t
+      else helper acc t
+  in
+  helper 100 (jeop.categories)
+
+let rec reduce_list n = function
+  | [] -> []
+  | h::t -> if n > 0 
+    then h :: reduce_list (n-1) t
+    else []
+
+(** [reduce jeop] is jeop but with the levels reduced, eg if jeop has a
+    category with 6 levels and another with 4 levels, all categories will have
+    only 4 levels after. *)
+let reduce jeop : t = 
+  let lowest_lev = get_lowest_level jeop in
+  let rec helper acc = function
+  | [] -> acc
+  | h::t -> if List.length (h.levels) > lowest_lev
+    then 
+      helper ({name=h.name; levels=(reduce_list lowest_lev h.levels)} :: acc) t
+    else helper (h::acc) t
+  in {categories=(helper [] jeop.categories); 
+      final_jeopardy=jeop.final_jeopardy}
+
 (* [category_name_string cat] is category_name [cat] as a string. *)
 let category_name_string (cat: category_name) : string =
   cat

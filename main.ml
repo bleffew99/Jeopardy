@@ -591,7 +591,7 @@ let rec main () =
           let cats = List.map (Jeopardy.category_name_from_string) split_list in
           try (let jeop = Jeopardy.from_categories 
                    (Yojson.Basic.from_file "jeop.json") cats in
-               play_game jeop)
+               play_game (Jeopardy.reduce jeop))
           with | Jeopardy.UnknownCategory _ ->
             ANSITerminal.erase Screen;
             print_endline "Sorry, one of those is not an available category.\n";

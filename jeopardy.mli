@@ -37,6 +37,11 @@ val from_json : Yojson.Basic.json -> t
     raises [UnknownCategory] if an element in cats isn't already in json.*)
 val from_categories : Yojson.Basic.json -> category_name list -> t
 
+(** [reduce jeop] is jeop but with the levels reduced, eg if jeop has a
+    category with 6 levels and another with 4 levels, all categories will have
+    only 4 levels after. *)
+val reduce : t -> t
+
 (* [category_name_string cat] is category_name [cat] as a string. *)
 val category_name_string : category_name -> string
 

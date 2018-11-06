@@ -328,6 +328,13 @@ let make_pass_illegal_tests
   name >:: (fun _ ->
       assert_equal expected_output (pass st))
 
+let make_has_played_final_tests 
+  (name : string)
+  (st: State.t)
+  (expected_output: bool):test =
+  name >:: (fun _ ->
+    assert_equal expected_output (has_played_final st))
+
 let make_state = function 
   | Legal t -> t
   | Illegal -> raise (Failure "Illegal")
@@ -380,6 +387,9 @@ let finans2= make_state (final_answer t4 bet2 "vladimir nabokov")
 let bet3 = make_state (bet ans4 800)
 let finans3= make_state (final_answer t3 bet3 "wrong answer")
 
+let double1= make_state (double hintans2 t3(category_name_from_string "Animals") 
+300 "platypus")
+
 let state_tests = [
   (*current_score tests*)
   make_current_score_test "current score test 1" ans1 200;
@@ -403,6 +413,9 @@ let state_tests = [
   make_current_score_test "current score test 16" finans1 900;
   make_current_score_test "current score test 17" finans2 600;
   make_current_score_test "current score test 18" finans3 0;
+  (*test double score*)
+  make_current_score_test "current score test 19" double1 1000;
+
   (*current_category_levels tests*)
   make_current_category_levels_test "ccl test 1" play1 
     (category_name_from_string "Disney") [100; 300; 400; 500];
@@ -431,6 +444,11 @@ let state_tests = [
 
   (*pass illegal tests
   make_pass_illegal_tests "pass illegal test 1" pass6 (Illegal);*)
+
+  (*has_played_final tests for bet*)
+  make_has_played_final_tests "has played 1" bet1 false;
+  make_has_played_final_tests "has played 2" finans1 true;
+  make_has_played_final_tests "has played 3" finans3 true;
 ]
 
 (*state2players tests*)
@@ -477,7 +495,14 @@ let hintans13 = make_state2 (State2players.answer
                                300 "penguin" t3 hint13) 
 let hintplay13 = make_state2 (State2players.play 
                                 (category_name_from_string "Animals") 
-                                300 t3 hintans13)                     
+                                300 t3 hintans13)
+
+let bet10 = make_state2 (State2players.bet ans12 100 200 )
+let finans10 = make_state2 (State2players.final_answer t2 bet10 
+"a midsummer night's dream" "wrong")
+let bet11 = make_state2 (State2players.bet ans11 50 0 )
+let finans11 = make_state2 (State2players.final_answer t4 bet11 
+"wrong" "vladimir nabokov")
 
 let make_current_player_tests 
     (name: string)
@@ -522,6 +547,9 @@ let state2players_tests = [
   make_current_player1_score_tests 
     "current player1 score test 13" hintplay13 (-300);
 
+  make_current_player1_score_tests "bet 1" (finans10) (200);
+  make_current_player1_score_tests "bet 2" (finans11) (50);
+
   make_current_player2_score_tests "current player2 score test 1" play10 0;
   make_current_player2_score_tests "current player2 score test 2" ans11 0;
   make_current_player2_score_tests "current player2 score test 3" play11 0;
@@ -541,6 +569,8 @@ let state2players_tests = [
     "current player2 score test 12" hintans13 300;
   make_current_player2_score_tests 
     "current player2 score test 13" hintplay13 300;
+  make_current_player2_score_tests "bet player 2 1" (finans10) (200);
+  make_current_player2_score_tests "bet player 2 2" (finans11) (0);
 
   make_current_player_tests "current player test 1" play10 One;
   make_current_player_tests "current player test 2" ans11 One;

@@ -9,6 +9,7 @@ type category_name = string
 exception UnknownCategory of category_name
 exception UnknownLevel of int
 exception NoAnswersProvided
+exception NoCategoriesProvided
 
 (** [level] represents a level in a category that has a score, a question, 
     a list of possible correct answers, and a hint for the answers. *)
@@ -72,6 +73,37 @@ let from_json json = {
   final_jeopardy = json |> member "final" |> final_of_json
 }
 
+(** [categories_list jeop] returns the names of the categories in [jeop]. *)
+let categories_list jeop = 
+  let rec get_categories (cats : category list) acc : category_name list =
+    match cats with
+    | [] -> acc
+    | h::t -> get_categories t (h.name :: acc)
+  in get_categories jeop.categories []
+
+(** [from_categories json cats] is the same as [from_json] but only including
+    the categories in [cats].
+    raises [UnknownCategory] if an element in cats isn't already in json.
+    raises [NoCategoriesProvided] if [cats] is empty.*)
+let from_categories json (cats: category_name list) = 
+  if List.length cats = 0 then raise NoCategoriesProvided else
+    let rec helper acc = function
+      | [] -> acc
+      | h :: t -> if List.mem h.name cats 
+        then helper (h :: acc) t 
+        else helper acc t
+    in
+    let rec helper2 jeop_cats = function
+      | [] -> ()
+      | h :: t -> if List.mem h jeop_cats 
+        then helper2 jeop_cats t 
+        else raise (UnknownCategory h)
+    in
+    let jeop = from_json json in
+    helper2 (categories_list jeop) cats;
+    let new_cats = helper [] jeop.categories in
+    {categories = new_cats; final_jeopardy = jeop.final_jeopardy}
+
 (* [category_name_string cat] is category_name [cat] as a string. *)
 let category_name_string (cat: category_name) : string =
   cat
@@ -83,14 +115,6 @@ let category_name_from_string (cat: string) : category_name =
 (** [categories jeop] returns the categories of the jeoparady game [jeop]. *)
 let categories jeop = 
   jeop.categories
-
-(** [categories_list jeop] returns the names of the categories in [jeop]. *)
-let categories_list jeop = 
-  let rec get_categories (cats : category list) acc : category_name list =
-    match cats with
-    | [] -> acc
-    | h::t -> get_categories t (h.name :: acc)
-  in get_categories jeop.categories []
 
 (** [get_category_name cat] returns the name of the category [cat] *)
 let get_category_name (cat: category) = 
@@ -187,3 +211,8 @@ let final_jeopardy_question (jeop : t) : string =
 let final_jeopardy_answers (jeop : t) : string list =
   jeop.final_jeopardy.final_answers
 
+(** [global_cats] is the list of all categories present in the master jeop.json
+    file.  *)
+let global_cats () = 
+  let j = from_json (Yojson.Basic.from_file "jeop.json") in
+  categories_list j

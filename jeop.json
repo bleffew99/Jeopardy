@@ -1,0 +1,635 @@
+{
+    "categories": [{
+        "name": "Music",
+        "levels": [
+          {
+            "score": 100,
+            "question": "What band sang this? 'Cause I want it that way'",
+            "answers": [
+              "backstreet boys"
+            ],
+            "hint": "Two words, both start with 'B'."
+          },
+          {
+            "score": 200,
+            "question": "Complete: 'Once I was seven years old my momma told me Go make ___ some friends'",
+            "answers": [
+              "yourself"
+            ],
+            "hint": "Synonym of you."
+          },
+          {
+            "score": 300,
+            "question": "What movie is this song from? 'Because I'm happy Clap along if you feel like a room without a roof'",
+            "answers": [
+              "despicable me 2",
+              "despicable me"
+            ],
+            "hint": "This movie features tiny yellow creatures."
+          },
+          {
+            "score": 400,
+            "question": "This artist would 'catch a grenade for ya'.",
+            "answers": [
+              "bruno mars"
+            ],
+            "hint": "This artist sang a song about being lazy."
+          },
+          {
+            "score": 500,
+            "question": "This singer sings treat you better.",
+            "answers": [
+              "shawn mendes"
+            ],
+            "hint": "this artist is 20 years old."
+          }
+        ]
+      },
+      {
+        "name": "Cornell",
+        "levels": [
+          {
+            "score": 100,
+            "question": "Who is the professor of CS3110?",
+            "answers": [
+              "michael clarkson",
+              "clarkson",
+              "michael"
+            ],
+            "hint": "You're in this class!!"
+          },
+          {
+            "score": 200,
+            "question": "Cornell University was founded in this year",
+            "answers": [
+              "1865"
+            ],
+            "hint": "An eventful time in American history, this year saw the end of the civil war, and the assassination of Abraham Lincoln."
+          },
+          {
+            "score": 300,
+            "question": "On the morning of October 8, 1997, this peculiar object was found atop McGraw Tower.",
+            "answers": [
+              "a pumpkin",
+              "the pumpkin",
+              "pumpkin"
+            ],
+            "hint": "This object was very seasonal for the spooky month of October."
+          },
+          {
+            "score": 400,
+            "question": "What is Cornell University's oldest building?",
+            "answers": [
+              "morrill hall",
+              "morrill",
+              "morill",
+              "morril"
+            ],
+            "hint": "This arts quad building, home to the linguistics department, is also under heavy renovations this year."
+          },
+          {
+            "score": 500,
+            "question": "Ezra Cornell, in addition to founding Cornell University, helped found this financial service company.",
+            "answers": [
+              "western  union",
+              "western union"
+            ],
+            "hint": "Originally a telegraph company, it now mostly serves as a money transfer service."
+          }
+        ]
+      },
+      {
+        "name": "Quotes",
+        "levels": [
+          {
+            "score": 100,
+            "question": "Complete: 'May the _____ be with you'. ",
+            "answers": [
+              "force"
+            ],
+            "hint": "This quote is from Star Wars."
+          },
+          {
+            "score": 200,
+            "question": "Complete: 'Mama always said life was like a box of _____. You never know what you're gonna get'. ",
+            "answers": [
+              "chocolates"
+            ],
+            "hint": "A brown and sweet snack."
+          },
+          {
+            "score": 300,
+            "question": "Who said this? 'Program testing can at best show the presence of errors but never their absence.'",
+            "answers": [
+              "dijkstra",
+              "edsger",
+              "edsger dijkstra"
+            ],
+            "hint": "A Dutch programmer who invented an algorithm for finding the shortest paths between nodes in a graph."
+          },
+          {
+            "score": 400,
+            "question": "Which movie/book is this quote from? 'It matters not what someone is born, but what they grow to be.' ",
+            "answers": [
+              "harry potter and the goblet of fire",
+              "harry potter"
+            ],
+            "hint": "The fourth of a series of fantasy novels featuring a young wizard."
+          },
+          {
+            "score": 500,
+            "question": "Which movie is this quote from? 'I'm going to make him an offer he can't refuse.' ",
+            "answers": [
+              "the godfather",
+              "godfather"
+            ],
+            "hint": "A famous mob drama."
+          }
+        ]
+      },
+      {
+        "name": "Disney",
+        "levels": [
+          {
+            "score": 100,
+            "question": "Which movie is the song 'Circle of Life' from?",
+            "answers": [
+              "the lion king",
+              "lion king"
+            ],
+            "hint": "It's the movie featuring lions."
+          },
+          {
+            "score": 200,
+            "question": "Who was the original Disney princess?",
+            "answers": [
+              "snow white"
+            ],
+            "hint": "Who bites the poisoned apple?"
+          },
+          {
+            "score": 300,
+            "question": "What is the dragon's name in Mulan?",
+            "answers": [
+              "mushu"
+            ],
+            "hint": "M _ s h _"
+          },
+          {
+            "score": 400,
+            "question": "The castle in Disneyland is named after which princess?",
+            "answers": [
+              "sleeping beauty"
+            ],
+            "hint": "The villian in the movie this princess is featured in is Maleficient."
+          },
+          {
+            "score": 500,
+            "question": "Which country is the movie 'Frozen' set in?",
+            "answers": [
+              "norway"
+            ],
+            "hint": "The country is next to Sweden."
+          }
+        ]
+      },
+      {
+        "name": "States",
+        "levels": [
+          {
+            "score": 100,
+            "question": "This state is the most populous state in the country.",
+            "answers": [
+              "california"
+            ],
+            "hint": "This west coast state is also home to the second largest city in the country."
+          },
+          {
+            "score": 200,
+            "question": "This state contains the highest mountain in the country.",
+            "answers": [
+              "alaska"
+            ],
+            "hint": "This is also the largest state by area."
+          },
+          {
+            "score": 300,
+            "question": "Which of these states were not a part of the original 13 colonies: Georgia, Delaware, Maine, New Hampshire?",
+            "answers": [
+              "maine"
+            ],
+            "hint": "It's not Georgia!"
+          },
+          {
+            "score": 400,
+            "question": "The territory currently comprising Washington DC was formerly part of this state.",
+            "answers": [
+              "maryland"
+            ],
+            "hint": "This state is also known for their blue crabs."
+          },
+          {
+            "score": 500,
+            "question": "This state is the only state to have a unicameral state legislature.",
+            "answers": [
+              "nebraska"
+            ],
+            "hint": "this midwestern state's capitol is Lincoln."
+          },
+          {
+            "score": 600,
+            "question": "Many know the 49th and 50th state (Alaska and Hawaii), but this state was the 48th state to join the country.",
+            "answers": [
+              "arizona"
+            ],
+            "hint": "This state was also formerly a part of Mexico."
+          }
+        ]
+      },
+      {
+        "name": "Animals",
+        "levels": [
+          {
+            "score": 100,
+            "question": "What is a baby whale called",
+            "answers": [
+              "calf"
+            ],
+            "hint": "It is also the name of a body part."
+          },
+          {
+            "score": 200,
+            "question": "Which bird has the fastest wing beat? Falcons, Hummingbirds, Eagles ",
+            "answers": [
+              "hummingbirds",
+              "hummingbird"
+            ],
+            "hint": "It is a white liquid used in ice cream."
+          },
+          {
+            "score": 300,
+            "question": "What mammal lays eggs",
+            "answers": [
+              "platypus"
+            ],
+            "hint": "Phineas and Ferb. Agent P!"
+          },
+          {
+            "score": 400,
+            "question": "What animal can turn its head almost 360 degrees?",
+            "answers": [
+              "owl"
+            ],
+            "hint": "This animals is portrayed as wise."
+          },
+          {
+            "score": 500,
+            "question": "How many stomach(es) does a cow have?",
+            "answers": [
+              "four",
+              "4"
+            ],
+            "hint": "It has more than one"
+          },
+          {
+            "score": 600,
+            "question": "What type of feather keep birds warm?",
+            "answers": [
+              "down"
+            ],
+            "hint": "Used in some jackets."
+          }
+        ]
+      },
+      {
+        "name": "Holidays",
+        "levels": [
+          {
+            "score": 100,
+            "question": "Christmas is celebrated on ____ December each year.",
+            "answers": [
+              "25"
+            ],
+            "hint": "It's a week before New Year's Day."
+          },
+          {
+            "score": 200,
+            "question": "Holi is a Hindu festival that is known as the 'Celebration of _____'",
+            "answers": [
+              "colors",
+              "color"
+            ],
+            "hint": "Traffic Lights have 3 of them."
+          },
+          {
+            "score": 300,
+            "question": "What is made at the start of every new year?",
+            "answers": [
+              "new year's resolutions",
+              "new year's resolution",
+              "new year resolution",
+              "new year resolutions",
+              "resolutions",
+              "resolution"
+            ],
+            "hint": "It is often broken."
+          },
+          {
+            "score": 400,
+            "question": "During Halloween, what is a carved pumpkin with a light in it called?",
+            "answers": [
+              "jack o'lantern",
+              "jack o' lantern",
+              "jack o lantern",
+              "jack-o-lantern"
+            ],
+            "hint": "'Name'+'o'+'Something you put a light in'."
+          },
+          {
+            "score": 500,
+            "question": "Which century was Thanksgiving first celebrated?",
+            "answers": [
+              "17th",
+              "17",
+              "seventeenth"
+            ],
+            "hint": "It is a prime number."
+          },
+          {
+            "score": 600,
+            "question": "Saint Patrick was a missionary in which country?",
+            "answers": [
+              "ireland"
+            ],
+            "hint": "Dublin is its largest city."
+          }
+        ]
+      },
+      {
+        "name": "Classical",
+        "levels": [
+          {
+            "score": 100,
+            "question": "Who composed the piece Für Elise?",
+            "answers": [
+              "ludwig van beethoven",
+              "beethoven"
+            ],
+            "hint": "Famous German composer and pianist who is a crucial figure in the transition between the Classical and Romantic eras in Classical music."
+          },
+          {
+            "score": 200,
+            "question": "Who arranged The Hungarian Dances?",
+            "answers": [
+              "johannes brahms",
+              "brahms"
+            ],
+            "hint": "One of the 'Three Bs' of music, born into a Lutheren family."
+          },
+          {
+            "score": 300,
+            "question": "What is Pyotr Ilyich Tchaikovsky's famous holiday classical piece?",
+            "answers": [
+              "the nutcracker",
+              "nutcracker"
+            ],
+            "hint": "A favorite Christmas time ballet."
+          },
+          {
+            "score": 400,
+            "question": "What is György Ligeti's classical piece featured in the movie 'The Shining'?",
+            "answers": [
+              "lontano"
+            ],
+            "hint": "This piece is also featured in Scorsese's 'Shutter Island'."
+          },
+          {
+            "score": 500,
+            "question": "Who composed the Goldberg Variations, and also became blind?",
+            "answers": [
+              "johann sebastian bach",
+              "bach"
+            ],
+            "hint": "He was known as a outstanding organ player and technician."
+          },
+          {
+            "score": 600,
+            "question": "A distinguished composer and pianist of the Romantic era who was the first to perform publicly any work by Brahms, notably the Variations and Fugue on a Theme by Handel.",
+            "answers": [
+              "clara schumann",
+              "schumann"
+            ],
+            "hint": "She was married to Robert Schumann."
+          }
+        ]
+      },
+      {
+        "name": "CS History",
+        "levels": [
+          {
+            "score": 100,
+            "question": "Dutch computer science Edsger Dijkstra is most well known for developing an algorithm to compute this.",
+            "answers": [
+              "shortest path"
+            ],
+            "hint": "Covered in CS 2110, this algorithm is used in various mapping programs"
+          },
+          {
+            "score": 200,
+            "question": "This person was responsible for creating much of the theoretical foundations of computer science, along with cracking a nazi war code in the second world war.",
+            "answers": [
+              "alan turing",
+              "turing"
+            ],
+            "hint": "The movie The Imitation Game is based on his life."
+          },
+          {
+            "score": 300,
+            "question": "Often considered the first computer programmer, in the 19th century this person designed a computer algorithm to compute Bernoulli numbers.",
+            "answers": [
+              "ada lovelace",
+              "ada",
+              "ada byron"
+            ],
+            "hint": "This woman is also the daughter of a renowned english poet, Lord Byron"
+          },
+          {
+            "score": 400,
+            "question": "This person developed lambda calculus, a basis for expressing computation, the basis for functional programming languages.",
+            "answers": [
+              "alonzo church",
+              "church"
+            ],
+            "hint": "Working at princeton at the same time as Turing was completing his work on computation, their theories were ultimately equivalent, resulting in the ___-Turing thesis."
+          }
+        ]
+      },
+      {
+        "name": "Landmarks",
+        "levels": [
+          {
+            "score": 100,
+            "question": "The Colosseum is found in which city?",
+            "answers": [
+              "rome"
+            ],
+            "hint": "It is the capital city of Italy."
+          },
+          {
+            "score": 200,
+            "question": "This landmark is the oldest of the Seven Wonders of the Ancient World.",
+            "answers": [
+              "the pyramids",
+              "pyramids",
+              "pyramid",
+              "pyramids of giza",
+              "pyramid of giza"
+            ],
+            "hint": "A 3D triangle!"
+          },
+          {
+            "score": 300,
+            "question": "Machu Picchu was built by which Civilization?",
+            "answers": [
+              "inca"
+            ],
+            "hint": "This civilization was centered in Peru."
+          },
+          {
+            "score": 400,
+            "question": "The Eiffel Tower surpassed which man-made structure to become the tallest in the world?",
+            "answers": [
+              "washington monument",
+              "the washington monument"
+            ],
+            "hint": "It was built to commemorate the commander-in-chief of the Continental Army."
+          }
+        ]
+      },
+      {
+        "name": "Astronomy",
+        "levels": [
+          {
+            "score": 100,
+            "question": "How many (official) planets are in our solar system?",
+            "answers": [
+              "eight",
+              "8"
+            ],
+            "hint": "Pluto is not considered a planet."
+          },
+          {
+            "score": 200,
+            "question": "95% of all matter in the universe is invisible, and is called ___",
+            "answers": [
+              "dark matter"
+            ],
+            "hint": "There is no light."
+          },
+          {
+            "score": 300,
+            "question": "Which is the hottest planet in the solar system?",
+            "answers": [
+              "venus"
+            ],
+            "hint": "___ fly trap."
+          },
+          {
+            "score": 400,
+            "question": "How long is a day in Mercury in terms of days on Earth? 58, 105, 75, 30",
+            "answers": [
+              "58",
+              "fifty eight"
+            ],
+            "hint": "It is an even number ."
+          }
+        ]
+      },
+      {
+        "name": "Rap",
+        "levels": [
+          {
+            "score": 100,
+            "question": "This artist, famous for such records as My Beautiful Dark Twisted Fantasy, and the Life of Pablo, has been active for over a decade.",
+            "answers": [
+              "kanye west",
+              "kanye",
+              "yeezus"
+            ],
+            "hint": "This artist also produces his own clothing line, most notably for sneakers."
+          },
+          {
+            "score": 200,
+            "question": "What song is the following lyrics from? \nYou better lose yourself in the music, the moment \nYou own it, you better never let it go \nYou only get one shot, do not miss your chance to blow \nThis opportunity comes once in a lifetime you better.",
+            "answers": [
+              "lose yourself"
+            ],
+            "hint": "Eminem's song released in 2002. "
+          },
+          {
+            "score": 300,
+            "question": "Which hip-hop star featured an image of Donald Trump’s corpse on the cover of his 2017 album ‘Make America Crip Again’?",
+            "answers": [
+              "snoop dogg"
+            ],
+            "hint": "His debut albumn is called Doggystyle."
+          },
+          {
+            "score": 400,
+            "question": "The Eiffel Tower surpassed which man-made structure to become the tallest in the world?",
+            "answers": [
+              "washington monument",
+              "the washington monument"
+            ],
+            "hint": "It was built to commemorate the commander-in-chief of the Continental Army."
+          }
+        ]
+      },
+      {
+        "name": "Flags",
+        "levels": [
+          {
+            "score": 100,
+            "question": "Which country’s flag has 3 vertical color stripes, blue, white, and red?",
+            "answers": [
+              "france"
+            ],
+            "hint": "Its capital is the city of love."
+          },
+          {
+            "score": 200,
+            "question": "Which 2 countries have 3 stripes of the same 3 color? Belgium and Mexico, Belgium and Italy, Italy and Mexico.",
+            "answers": [
+              "italy and mexico",
+              "mexico and italy",
+              "italy mexico",
+              "mexico italy"
+            ],
+            "hint": "The answer contains Mexico."
+          },
+          {
+            "score": 300,
+            "question": "What shape is found on the Japanese flag? square, circle, triangle, or crescent?",
+            "answers": [
+              "circle"
+            ],
+            "hint": "pi."
+          },
+          {
+            "score": 400,
+            "question": "Germany and Belgium both have flags with the same 3 colors. Which country has the flag with horizontal stripes?",
+            "answers": [
+              "Germany"
+            ],
+            "hint": "Where is Oktoberfest?"
+          }
+        ]
+      }
+    ],
+    "final" : {
+        "question": "TODO!!!",
+        "final answers": [
+            "todo."
+        ]
+    }
+}

@@ -517,7 +517,7 @@ let rec play_loop_two_player jeop (st : State2players.t) =
       play_loop_two_player jeop st
 
 (** [play_game f] starts the jeopardy in file [f]. *)
-let rec play_game f =
+let rec play_game jeop =
   ANSITerminal.resize 165 40;
   ANSITerminal.(print_string [red] "
                                                                                                                             dddddddd                        
@@ -545,7 +545,6 @@ let rec play_game f =
     jjj::::::jjj                                       ppppppppp                                                                                            
        jjjjjj                                                                                                                                               
   \n");
-  let jeop = Jeopardy.from_json (Yojson.Basic.from_file f) in
   ANSITerminal.(print_string [red] 
                   "Here are the rules of Jeopardy:
    You're allowed to play with either one or two players and answer trivia 
@@ -569,22 +568,38 @@ let rec play_game f =
     let st = State2players.init_state jeop in
     play_loop_two_player jeop st
   | _ -> print_endline "You can only have one or two players";
-    play_game f
+    play_game jeop
+
 
 (** [main ()] prompts for the game to play, then starts it. *)
-let main () =
+let rec main () =
   (* ANSITerminal.resize 140 40; *)
   ANSITerminal.(print_string [red]
                   "\n\nWelcome to our jeopardy game extravaganza!\n");
-  print_endline "Enter the name of the jeopardy file you want to play, or say 'categories' to make a custom jeopardy game.";
+  print_endline "Here are the available categories: \n";
+  let global_cats = Jeopardy.global_cats () in
+  let () = List.fold_left (fun x y -> ()) () 
+      (List.map (fun (x: Jeopardy.category_name) -> 
+           print_endline (Jeopardy.category_name_string x)) global_cats) in
+  print_endline "Select with which categories you want to play";
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()
-  | s -> ANSITerminal.erase Screen;
-    if s = "categories" then
-      failwith "todo"
-    else          
-      play_game s
+  | s -> (ANSITerminal.erase Screen;
+          let split_list = Command.remove_empty 
+              (String.split_on_char ' ' s) [] in
+          let cats = List.map (Jeopardy.category_name_from_string) split_list in
+          try (let jeop = Jeopardy.from_categories 
+                   (Yojson.Basic.from_file "jeop.json") cats in
+               play_game jeop)
+          with | Jeopardy.UnknownCategory _ ->
+            ANSITerminal.erase Screen;
+            print_endline "Sorry, one of those is not an available category.\n";
+            main ()
+          | Jeopardy.NoCategoriesProvided ->
+            ANSITerminal.erase Screen;
+            print_endline "You need to pick at least one category!\n";
+            main ())
 
 
 

@@ -26,9 +26,16 @@ exception UnknownLevel of int
 
 exception NoAnswersProvided
 
+exception NoCategoriesProvided
+
 (* [from_json json] is a representation of a jeoparady game that json 
    represents. *)
 val from_json : Yojson.Basic.json -> t
+
+(** [from_categories json cats] is the same as [from_json] but only including
+    the categories in [cats].
+    raises [UnknownCategory] if an element in cats isn't already in json.*)
+val from_categories : Yojson.Basic.json -> category_name list -> t
 
 (* [category_name_string cat] is category_name [cat] as a string. *)
 val category_name_string : category_name -> string
@@ -87,3 +94,6 @@ val final_jeopardy_question: t -> string
 (** [final_jeopardy_answers jeop] returns the answers for the final round*)
 val final_jeopardy_answers: t -> string list
 
+(** [global_cats] is the list of all categories present in the master jeop.json
+    file.  *)
+val global_cats : unit -> category_name list 

@@ -251,27 +251,24 @@ let pass (st : t) =
 let double (st : t) (jeop: Jeopardy.t) (cat: Jeopardy.category_name) 
     (lev: int) (ans: string) = 
   if st.used_double = false then
-    try (let corrects = answers jeop cat lev in 
-         if List.mem ans corrects then 
-           Legal {categories = st.categories; 
-                  categories_left = st.categories_left;
-                  score = st.score + (lev * 2);
-                  passes_left = st.passes_left;
-                  final_bet = st.final_bet;
-                  used_double = true;                
-                  played_final = false;
-                  board = st.board}
-         else Legal {categories = st.categories; 
-                     categories_left = st.categories_left;
-                     score = st.score - (lev * 2);
-                     passes_left = st.passes_left;
-                     final_bet = st.final_bet;
-                     used_double = true;
-                     played_final = false;
-                     board = st.board})
-    with 
-    | NoAnswersProvided -> Illegal 
-    | UnknownCategory cat -> Illegal
+    (let corrects = answers jeop cat lev in 
+     if List.mem ans corrects then 
+       Legal {categories = st.categories; 
+              categories_left = st.categories_left;
+              score = st.score + (lev * 2);
+              passes_left = st.passes_left;
+              final_bet = st.final_bet;
+              used_double = true;                
+              played_final = false;
+              board = st.board}
+     else Legal {categories = st.categories; 
+                 categories_left = st.categories_left;
+                 score = st.score - (lev * 2);
+                 passes_left = st.passes_left;
+                 final_bet = st.final_bet;
+                 used_double = true;
+                 played_final = false;
+                 board = st.board})
   else
     Illegal
 

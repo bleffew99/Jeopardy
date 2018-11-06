@@ -1,4 +1,4 @@
-MODULES=jeopardy board state state2players command authors
+MODULES=jeopardy board state state2players command main authors
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)

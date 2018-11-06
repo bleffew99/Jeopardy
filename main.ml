@@ -1,5 +1,37 @@
 open Command
 
+let rec double_loop jeop (st : State.t) (lev: int) 
+    (cat: Jeopardy.category_name) =
+  print_endline 
+    ("You will get either double the points if you get this question"
+     ^ " right, or lose double the points if you get it wrong! What is your" ^
+     " answer?");
+  let answer = String.lowercase_ascii (read_line()) in
+  let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
+  match answer_lst with
+  | h::m::t -> 
+    if (h = "what" || h = "who") &&
+       (m = "is" || m = "are" || m = "was" || m = "were")
+    then 
+      let ans = String.trim (List.fold_left (fun x acc -> 
+          x ^ " " ^ acc) "" t) in   
+      (match State.double st jeop cat lev ans with
+       | Legal s -> s
+       | Illegal -> print_endline "You've already used your Double chance!"; 
+         st
+       | exception Jeopardy.NoAnswersProvided -> 
+         print_endline "Write an answer!"; 
+         double_loop jeop st lev cat
+       | exception Jeopardy.UnknownCategory cat -> 
+         print_endline "This is wrong!"; 
+         double_loop jeop st lev cat)
+    else 
+      (print_endline "Answer in a correct question format!";
+       double_loop jeop st lev cat)
+  | _ -> print_endline "Answer in the question format!";
+    double_loop jeop st lev cat
+
+
 (** [question_loop jeop st lev cat] conducts the game loop after a question is
     asked, prompting the user, updating points in [st] once the user inputs a 
     valid answer, whether the answer is correct or not. 
@@ -62,9 +94,10 @@ let rec question_loop jeop (st : State.t)
           print_string "We will let you go this time! Your passes left:"; 
           print_endline (string_of_int (State.current_passes_left s));
           s)
-          (*
-    | Skip -> print_endline "This power does not exist here"; st
-    | Double -> print_endline "This power does not exist here"; st *)
+    | Skip -> 
+      print_endline "This power does not exist here.";
+      question_loop jeop st lev cat
+    | Double -> double_loop jeop st lev cat
 
 let rec final_answer_loop jeop (st: State.t) : State.t =
   print_endline ("Here is the FINAL JEOPDARDY question:");
@@ -270,6 +303,8 @@ let rec question_loop_two_player jeop (st : State2players.t)
                (string_of_int (State2players.player2_passes_left s));
              s)
       )
+    | Skip -> st
+    | Double -> st
 
 let rec final_answer1_loop jeop (st: State2players.t) : string =
   print_endline ("Here is the FINAL JEOPDARDY question:");
@@ -476,11 +511,10 @@ let rec play_loop_two_player jeop (st : State2players.t) =
       play_loop_two_player jeop st
     | Pass -> print_endline "You haven't even chosen a question yet!";
       play_loop_two_player jeop st
-    (*
     | Skip -> print_endline "You haven't even chosen a question yet!";
       play_loop_two_player jeop st
     | Double -> print_endline "You haven't even chosen a question yet!";
-      play_loop_two_player jeop st *)
+      play_loop_two_player jeop st
 
 (** [play_game f] starts the jeopardy in file [f]. *)
 let rec play_game f =
@@ -542,12 +576,31 @@ let main () =
   (* ANSITerminal.resize 140 40; *)
   ANSITerminal.(print_string [red]
                   "\n\nWelcome to our jeopardy game extravaganza!\n");
-  print_endline "Enter the name of the jeopardy file you want to play.";
+  print_endline "Enter the name of the jeopardy file you want to play, or say 'categories' to make a custom jeopardy game.";
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()
-  | file_name -> ANSITerminal.erase Screen;
-    play_game file_name
+  | s -> ANSITerminal.erase Screen;
+    if s = "categories" then
+      failwith "todo"
+    else          
+      play_game s
+
+
+
+(** [get_global_cats] is the the list of all categories in every jeop json
+     file *)
+(* let get_global_cats () =
+   let rec get_cats n = (
+    try (
+      let j = Jeopardy.from_json (Yojson.Basic.from_file 
+                                    ("jeop" ^ (string_of_int n) ^ ".json")) in
+      (Jeopardy.categories j) @ get_cats n+1)
+    with
+    | Sys_error s -> [] )
+   in get_cats 1                        *)
+
+
 
 (* Execute the game engine. *)
 let () = main ()

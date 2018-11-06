@@ -516,7 +516,7 @@ let rec play_loop_two_player jeop (st : State2players.t) =
     | Double -> print_endline "You haven't even chosen a question yet!";
       play_loop_two_player jeop st
 
-(** [play_game f] starts the jeopardy in file [f]. *)
+(** [play_game f] starts the jeopardy in jeopardy [jeop]. *)
 let rec play_game jeop =
   ANSITerminal.resize 165 40;
   ANSITerminal.(print_string [red] "
@@ -571,7 +571,7 @@ let rec play_game jeop =
     play_game jeop
 
 
-(** [main ()] prompts for the game to play, then starts it. *)
+(** [main ()] prompts for what categories to play then starts it. *)
 let rec main () =
   (* ANSITerminal.resize 140 40; *)
   ANSITerminal.(print_string [red]

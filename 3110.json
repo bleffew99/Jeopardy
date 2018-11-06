@@ -15,5 +15,16 @@
         }
       ]
     }
-  ]
+  ],
+  "final": {
+    "question": "This 20th century Russian-American author, famous for such works as Lolita, Pnin, and Pale fire, also taught at Cornell for a time",
+    "final answers": [
+      "vladimir nabokov",
+      "nabokov",
+      "nobokov",
+      "nabokoff",
+      "nabakov",
+      "nabokof"
+    ]
+  }
 }

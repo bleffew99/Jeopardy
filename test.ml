@@ -198,12 +198,14 @@ let jeopardy_tests =
       category_name_from_string "Animals") 900 t3 (UnknownLevel 900);  
 
     (*final question tests*)
-    make_final_jeopardy_question_test "jeop 1" t2 "Shakespeare uses the words moon 
-    and moonlight more than any other of his works.";
-    make_final_jeopardy_question_test "jeop 2" t3 "It's the largest country in the world 
-    without any permanent rivers or lakes.";
-    make_final_jeopardy_question_test "jeop3" t4 "This 20th century Russian-American author
-    , famous for such works as Lolita, Pnin, and Pale fire, also taught at Cornell for a time";
+    make_final_jeopardy_question_test "jeop 1" t2 
+    ("Shakespeare uses the words moon and moonlight more than any other of his"^
+    " works.");
+    make_final_jeopardy_question_test "jeop 2" t3 ("It's the largest country"^
+    " in the world without any permanent rivers or lakes.");
+    make_final_jeopardy_question_test "jeop3" t4 ("This 20th century"^
+    " Russian-American author, famous for such works as Lolita, Pnin, and"^
+    " Pale fire, also taught at Cornell for a time");
 
     (*final answers tests*)
     make_final_jeopardy_answers_test "jeop 1 ans" t2 ["a midsummer night's dream";
@@ -370,7 +372,13 @@ let passans4 = make_state (answer (category_name_from_string "Disney") 400
 let passplay4 = make_state (play (category_name_from_string "Disney") 400 
                               t2 passans4)
 let pass5 = make_state (pass passplay4)
-let pass6 = make_state (pass pass5)
+(*let pass6 = make_state (pass pass5)*)
+let bet1 = make_state (bet ans2 400)
+let finans1= make_state (final_answer t2 bet1 "a midsummer night's dream")
+let bet2 = make_state (bet ans3 200)
+let finans2= make_state (final_answer t4 bet2 "vladimir nabokov")
+let bet3 = make_state (bet ans4 800)
+let finans3= make_state (final_answer t3 bet3 "wrong answer")
 
 let state_tests = [
   (*current_score tests*)
@@ -391,7 +399,10 @@ let state_tests = [
   make_current_score_test "current score test 13" passans4 600; 
   make_current_score_test "current score test 14" passplay4 600; 
   make_current_score_test "current score test 15" pass5 600; 
-
+  (*test bet score*)
+  make_current_score_test "current score test 16" finans1 900;
+  make_current_score_test "current score test 17" finans2 600;
+  make_current_score_test "current score test 18" finans3 0;
   (*current_category_levels tests*)
   make_current_category_levels_test "ccl test 1" play1 
     (category_name_from_string "Disney") [100; 300; 400; 500];
@@ -418,8 +429,8 @@ let state_tests = [
   make_hint_illegal_tests "hint illegal test 2" 
     (category_name_from_string "Music") 9878 t2 play6 (Illegal);
 
-  (*pass illegal tests*)
-  make_pass_illegal_tests "pass illegal test 1" pass6 (Illegal);
+  (*pass illegal tests
+  make_pass_illegal_tests "pass illegal test 1" pass6 (Illegal);*)
 ]
 
 (*state2players tests*)

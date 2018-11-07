@@ -37,11 +37,12 @@ val from_json : Yojson.Basic.json -> t
     raises [UnknownCategory] if an element in cats isn't already in json.*)
 val from_categories : Yojson.Basic.json -> category_name list -> t
 
+(** [get_lowest_level jeop] is the amount of levels in the category in [jeop]
+    with the least amount of levels *)
 val get_lowest_level : t -> int
 
-(** [reduce jeop] is jeop but with the levels reduced, eg if jeop has a
-    category with 6 levels and another with 4 levels, all categories will have
-    only 4 levels after. *)
+(** [reduce lowest_lev jeop] is jeop but with all the number of levels reduced
+    to [lowest_lev]. *)
 val reduce : int -> t -> t
 
 (* [category_name_string cat] is category_name [cat] as a string. *)

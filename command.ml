@@ -57,7 +57,7 @@ let parse str : command =
     else if h = "quit" then
       if t <> [] then raise Malformed
       else (Quit)
-    else if  (h = "what" || h = "who") then (
+    else if  (h = "what" || h = "who" || h = "when") then (
       match t with
       | h1::t1 -> if (h1 = "is" || h1 = "are" || h1 = "was" || h1 = "were")
         then if t1 = [] then raise Malformed

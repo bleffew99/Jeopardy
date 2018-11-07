@@ -7,7 +7,8 @@
           "score": 100,
           "question": "What band sang this? 'Cause I want it that way'",
           "answers": [
-            "backstreet boys"
+            "backstreet boys",
+            "the backstreet boys"
           ],
           "hint": "Two words, both start with 'B'."
         },
@@ -106,7 +107,8 @@
           "score": 100,
           "question": "Complete: 'May the _____ be with you'. ",
           "answers": [
-            "force"
+            "force",
+            "the force"
           ],
           "hint": "This quote is from Star Wars."
         },
@@ -133,7 +135,8 @@
           "question": "Which movie/book is this quote from? 'It matters not what someone is born, but what they grow to be.' ",
           "answers": [
             "harry potter and the goblet of fire",
-            "harry potter"
+            "harry potter",
+            "harry potter 4"
           ],
           "hint": "The fourth of a series of fantasy novels featuring a young wizard."
         },
@@ -254,7 +257,9 @@
           "score": 100,
           "question": "What is a baby whale called",
           "answers": [
-            "calf"
+            "calf",
+            "a calf",
+            "the calf"
           ],
           "hint": "It is also the name of a body part."
         },
@@ -263,7 +268,9 @@
           "question": "Which bird has the fastest wing beat? Falcons, Hummingbirds, Eagles ",
           "answers": [
             "hummingbirds",
-            "hummingbird"
+            "hummingbird",
+            "the hummingbird",
+            "a hummingbird"
           ],
           "hint": "It is a white liquid used in ice cream."
         },
@@ -271,7 +278,9 @@
           "score": 300,
           "question": "What mammal lays eggs",
           "answers": [
-            "platypus"
+            "platypus",
+            "a platypus",
+            "the platypus"
           ],
           "hint": "Phineas and Ferb. Agent P!"
         },
@@ -279,7 +288,9 @@
           "score": 400,
           "question": "What animal can turn its head almost 360 degrees?",
           "answers": [
-            "owl"
+            "owl",
+            "an owl",
+            "the owl"
           ],
           "hint": "This animals is portrayed as wise."
         },
@@ -318,7 +329,9 @@
           "question": "Holi is a Hindu festival that is known as the 'Celebration of _____'",
           "answers": [
             "colors",
-            "color"
+            "color",
+            "the colors",
+            "colour"
           ],
           "hint": "Traffic Lights have 3 of them."
         },
@@ -340,9 +353,13 @@
           "question": "During Halloween, what is a carved pumpkin with a light in it called?",
           "answers": [
             "jack o'lantern",
+            "a jack o'lantern",
             "jack o' lantern",
+            "a jack o' lantern",
             "jack o lantern",
-            "jack-o-lantern"
+            "a jack o lantern",
+            "jack-o-lantern",
+            "a jack-o-lantern"
           ],
           "hint": "'Name'+'o'+'Something you put a light in'."
         },
@@ -351,8 +368,10 @@
           "question": "Which century was Thanksgiving first celebrated?",
           "answers": [
             "17th",
+            "the 17th",
             "17",
-            "seventeenth"
+            "seventeenth",
+            "the seventeenth"
           ],
           "hint": "It is a prime number."
         },
@@ -431,7 +450,8 @@
           "score": 100,
           "question": "Dutch computer science Edsger Dijkstra is most well known for developing an algorithm to compute this.",
           "answers": [
-            "shortest path"
+            "shortest path",
+            "the shortest path"
           ],
           "hint": "Covered in CS 2110, this algorithm is used in various mapping programs"
         },
@@ -492,7 +512,8 @@
           "score": 300,
           "question": "Machu Picchu was built by which Civilization?",
           "answers": [
-            "inca"
+            "inca",
+            "the inca"
           ],
           "hint": "This civilization was centered in Peru."
         },
@@ -555,7 +576,8 @@
           "answers": [
             "kanye west",
             "kanye",
-            "yeezus"
+            "yeezus",
+            "ye"
           ],
           "hint": "This artist also produces his own clothing line, most notably for sneakers."
         },
@@ -613,7 +635,8 @@
           "score": 300,
           "question": "What shape is found on the Japanese flag? square, circle, triangle, or crescent?",
           "answers": [
-            "circle"
+            "circle",
+            "a circle"
           ],
           "hint": "pi."
         },

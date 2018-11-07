@@ -323,6 +323,7 @@ let rec double_two_loop jeop (st : State2players.t) (lev: int)
     ability once in the game. *)
 let rec skip_two_loop jeop (st : State2players.t) (lev: int) 
     (cat: Jeopardy.category_name) =
+  print_endline "Answer the question";
   let answer = String.lowercase_ascii (read_line()) in
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
@@ -469,7 +470,7 @@ let rec question_loop_two_player jeop (st : State2players.t)
            print_endline "Answer the question please.";
            question_loop_two_player jeop st lev cat)
         else
-          (print_endline "Ok, skipping....";
+          (print_endline "Ok, the next player's turn will be skipped";
            skip_two_loop jeop st lev cat))
     | Double -> 
       if State2players.get_current_player st = One then
@@ -491,7 +492,7 @@ let rec question_loop_two_player jeop (st : State2players.t)
 let rec final_answer1_loop jeop (st: State2players.t) : string =
   print_endline ("Here is the FINAL JEOPDARDY question:");
   print_endline (Jeopardy.final_jeopardy_question jeop);
-  print_endline ("Player 1, what is your answer?");
+  ANSITerminal.(print_string [red] "Player 1, what is your answer?\n");
   let answer1 = String.lowercase_ascii (read_line()) in
   let answer_lst1 = remove_empty (String.split_on_char ' ' answer1 ) [] in
   match answer_lst1 with
@@ -515,7 +516,7 @@ let rec final_answer1_loop jeop (st: State2players.t) : string =
 let rec final_answer2_loop jeop (st: State2players.t) : string =
   print_endline ("Here is the FINAL JEOPDARDY question:");
   print_endline (Jeopardy.final_jeopardy_question jeop);
-  print_endline ("Player 2, what is your answer?");
+  ANSITerminal.(print_string [red] "Player 2, what is your answer?\n");
   let answer2 = String.lowercase_ascii (read_line()) in
   let answer_lst2 = remove_empty (String.split_on_char ' ' answer2) [] in
   match answer_lst2 with
@@ -641,8 +642,8 @@ let rec play_loop_two_player jeop (st : State2players.t) (skipping: bool) =
     (print_endline ("Here are the current categories and levels left:\n");
      print_string (State2players.current_board st);
      if (State2players.get_current_player st = One) 
-     then print_string ("Player 1,")
-     else print_string ("Player 2,");
+     then ANSITerminal.(print_string [red] "Player 1, ")
+     else ANSITerminal.(print_string [red] "Player 2, ");
      print_string ("please choose a category: ");
      match parse (read_line ()) with
      | exception Empty -> (print_string "\nPlease choose an category!\n";

@@ -574,7 +574,7 @@ let rec prompt_levs (n: int) : int =
   print_string ("How many levels for each category do you want (max " 
                 ^ string_of_int n ^ ")\n>");
   try (let s = read_int () in
-       if s > n || n = 0 then (
+       if s > n || n <= 0 then (
          ANSITerminal.erase Screen;
          print_endline "That's not a valid input";
          prompt_levs n) else s)

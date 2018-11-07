@@ -195,24 +195,26 @@
       ]
     }
   ],
-  "final": {
-    "question": "Shakespeare uses the words moon and moonlight more than any other of his works.",
-    "final answers": [
-      "a midsummer night's dream",
-      "midsummer nights dream",
-      "midsummer nights dream",
-      "midsummer's nights dream",
-      "midsummers night dream",
-      "a midsummer nights dream",
-      "a midsummer nights dream",
-      "a midsummers nights dream",
-      "a midsummers night dream",
-      "midsummer night's dream",
-      "midsummer night's dream",
-      "midsummer's night's dream",
-      "a midsummer night's dream",
-      "a midsummer night's dream",
-      "a midsummers night's dream"
-    ]
-  }
+  "finals": [
+    {
+      "question": "Shakespeare uses the words moon and moonlight more than any other of his works.",
+      "final answers": [
+        "a midsummer night's dream",
+        "midsummer nights dream",
+        "midsummer nights dream",
+        "midsummer's nights dream",
+        "midsummers night dream",
+        "a midsummer nights dream",
+        "a midsummer nights dream",
+        "a midsummers nights dream",
+        "a midsummers night dream",
+        "midsummer night's dream",
+        "midsummer night's dream",
+        "midsummer's night's dream",
+        "a midsummer night's dream",
+        "a midsummer night's dream",
+        "a midsummers night's dream"
+      ]
+    }
+  ]
 }

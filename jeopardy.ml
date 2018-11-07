@@ -59,18 +59,21 @@ let category_of_json json = {
 
 (** [final_of_json json] is the representation of a final Jeopardy round in
     [json] Requires:json is a valid JSON. *)
-let final_of_json json = {
-  final_question = json |> member "question" |> to_string;
-  final_answers = json |> member "final answers" |> to_list |> 
-                  List.map to_string;
-}
+let final_of_json json = 
+  let i = Random.int (List.length json) in
+  let q = List.nth json i in
+  {
+    final_question = q |> member "question" |> to_string;
+    final_answers = q |> member "final answers" |> to_list |> 
+                    List.map to_string;
+  }
 
 (* [from_json json] is a representation of a jeoparady game that json 
    represents. *)
 let from_json json = {
   categories = json |> member "categories" |> to_list |> 
                List.map category_of_json;
-  final_jeopardy = json |> member "final" |> final_of_json
+  final_jeopardy = json |> member "finals" |> to_list |> final_of_json
 }
 
 (** [categories_list jeop] returns the names of the categories in [jeop]. *)
@@ -125,11 +128,11 @@ let rec reduce_list n = function
     to [lowest_lev]. *)
 let reduce lowest_lev jeop : t = 
   let rec helper acc = function
-  | [] -> acc
-  | h::t -> if List.length (h.levels) > lowest_lev
-    then 
-      helper ({name=h.name; levels=(reduce_list lowest_lev h.levels)} :: acc) t
-    else helper (h::acc) t
+    | [] -> acc
+    | h::t -> if List.length (h.levels) > lowest_lev
+      then 
+        helper ({name=h.name; levels=(reduce_list lowest_lev h.levels)} :: acc) t
+      else helper (h::acc) t
   in {categories=(helper [] jeop.categories); 
       final_jeopardy=jeop.final_jeopardy}
 

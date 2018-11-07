@@ -16,7 +16,18 @@ let rec double_loop jeop (st : State.t) (lev: int)
       let ans = String.trim (List.fold_left (fun x acc -> 
           x ^ " " ^ acc) "" t) in   
       (match State.double st jeop cat lev ans with
-       | Legal s -> s
+       | Legal s -> 
+         (if State.current_score s > State.current_score st then
+            print_endline "You are correct! You got double the points!!"
+          else 
+            print_endline 
+              ("Yikes, you got that wrong! You lose twice the points. "
+               ^ "The answer was: ");
+          let correct = List.nth (Jeopardy.answers jeop cat lev) 0 in
+          print_endline correct;
+          Unix.sleepf 2.5;
+          ANSITerminal.erase Screen;
+          s)
        | Illegal -> print_endline "You've already used your Double chance!"; 
          st
        | exception Jeopardy.NoAnswersProvided -> 
@@ -428,7 +439,8 @@ let rec play_loop_two_player jeop (st : State2players.t) =
         print_endline ((string_of_int score1));
         print_string ("player 2: ");
         print_endline ((string_of_int score2));
-        print_endline ("Since you do not both have positive scores, there is no need for a final jeopardy round!");
+        print_endline ("Since you do not both have positive scores, there is "
+                       ^ "no need for a final jeopardy round!");
         if score1 > score2 then print_endline ("Congratulations player 1!")
         else if score2 > score1 then print_endline ("Congratulations player 2!")
         else print_endline ("You tied! Good Game.");
@@ -443,7 +455,8 @@ let rec play_loop_two_player jeop (st : State2players.t) =
            print_string ("player 2: ");
            print_endline ((string_of_int score2));
            if score1 > score2 then print_endline ("Congratulations player 1!")
-           else if score2 > score1 then print_endline ("Congratulations player 2!")
+           else if score2 > score1 then print_endline 
+               ("Congratulations player 2!")
            else print_endline ("You tied! Good Game.");
            exit 0)
         else 
@@ -574,7 +587,7 @@ let rec prompt_levs (n: int) : int =
   print_string ("How many levels for each category do you want (max " 
                 ^ string_of_int n ^ ")\n>");
   try (let s = read_int () in
-       if s > n || n <= 0 then (
+       if s > n || s <= 0 then (
          ANSITerminal.erase Screen;
          print_endline "That's not a valid input";
          prompt_levs n) else s)
@@ -603,8 +616,8 @@ let rec main () =
           let cats = List.map (Jeopardy.category_name_from_string) split_list in
           try (let jeop = Jeopardy.from_categories 
                    (Yojson.Basic.from_file "jeop.json") cats in
-               let num_cats = prompt_levs (Jeopardy.get_lowest_level jeop) in
-               play_game (Jeopardy.reduce num_cats jeop))
+               let num_levs = prompt_levs (Jeopardy.get_lowest_level jeop) in
+               play_game (Jeopardy.reduce num_levs jeop))
           with | Jeopardy.UnknownCategory _ ->
             ANSITerminal.erase Screen;
             print_endline "Sorry, one of those is not an available category.\n";

@@ -231,11 +231,13 @@
       ]
     }
   ],
-  "final": {
-    "question": "It's the largest country in the world without any permanent rivers or lakes.",
-    "final answers": [
-      "saudi arabia",
-      "saudi"
-    ]
-  }
+  "finals": [
+    {
+      "question": "It's the largest country in the world without any permanent rivers or lakes.",
+      "final answers": [
+        "saudi arabia",
+        "saudi"
+      ]
+    }
+  ]
 }

@@ -4,7 +4,12 @@ open Command
 open State
 
 (* jeopardy tests *)
-
+let make_get_lowest_level_test 
+    (name: string)
+    (jeop : Jeopardy.t)
+    (expected_output: int) :test =
+  name >:: (fun _ ->  assert_equal expected_output 
+               (Jeopardy.get_lowest_level jeop))
 let make_get_category_name_test 
     (name : string) 
     (cat: category) 
@@ -115,12 +120,17 @@ let make_final_jeopardy_answers_test
   name >:: (fun _ ->  assert_equal expected_output 
                (Jeopardy.final_jeopardy_answers jeop))
 
+
+
 let t1 = from_json(Yojson.Basic.from_file "3110.json")
 let t2 = from_json(Yojson.Basic.from_file "jeop1.json")
 let t3 = from_json(Yojson.Basic.from_file "jeop2.json")
 let t4 = from_json(Yojson.Basic.from_file "jeop3.json")
+
 let cate1 = categories (t1)
 let cate2 = categories (t2)
+let newt1 = from_categories (Yojson.Basic.from_file "jeop.json") 
+    [(category_name_from_string "Music");(category_name_from_string "States")]
 
 let jeopardy_tests = 
   [
@@ -199,13 +209,13 @@ let jeopardy_tests =
 
     (*final question tests*)
     make_final_jeopardy_question_test "jeop 1" t2 
-    ("Shakespeare uses the words moon and moonlight more than any other of his"^
-    " works.");
+      ("Shakespeare uses the words moon and moonlight more than any other of his"^
+       " works.");
     make_final_jeopardy_question_test "jeop 2" t3 ("It's the largest country"^
-    " in the world without any permanent rivers or lakes.");
+                                                   " in the world without any permanent rivers or lakes.");
     make_final_jeopardy_question_test "jeop3" t4 ("This 20th century"^
-    " Russian-American author, famous for such works as Lolita, Pnin, and"^
-    " Pale fire, also taught at Cornell for a time");
+                                                  " Russian-American author, famous for such works as Lolita, Pnin, and"^
+                                                  " Pale fire, also taught at Cornell for a time");
 
     (*final answers tests*)
     make_final_jeopardy_answers_test "jeop 1 ans" t2 ["a midsummer night's dream";
@@ -216,7 +226,9 @@ let jeopardy_tests =
                                                       "a midsummer night's dream";"a midsummers night's dream"];
     make_final_jeopardy_answers_test "jeop 2 ans" t3 ["saudi arabia"; "saudi"];
     make_final_jeopardy_answers_test "jeop 3 ans" t4 ["vladimir nabokov";"nabokov";
-                                                      "nobokov";"nabokoff";"nabakov";"nabokof"];    
+                                                      "nobokov";"nabokoff";"nabakov";"nabokof"]; 
+    (*get lowest level tests*)
+    make_get_lowest_level_test "low test 1" newt1 5;    
   ]
 
 (* command tests*)
@@ -329,11 +341,11 @@ let make_pass_illegal_tests
       assert_equal expected_output (pass st))
 
 let make_has_played_final_tests 
-  (name : string)
-  (st: State.t)
-  (expected_output: bool):test =
+    (name : string)
+    (st: State.t)
+    (expected_output: bool):test =
   name >:: (fun _ ->
-    assert_equal expected_output (has_played_final st))
+      assert_equal expected_output (has_played_final st))
 
 let make_state = function 
   | Legal t -> t
@@ -380,6 +392,7 @@ let passplay4 = make_state (play (category_name_from_string "Disney") 400
                               t2 passans4)
 let pass5 = make_state (pass passplay4)
 (*let pass6 = make_state (pass pass5)*)
+
 let bet1 = make_state (bet ans2 400)
 let finans1= make_state (final_answer t2 bet1 "a midsummer night's dream")
 let bet2 = make_state (bet ans3 200)
@@ -388,7 +401,7 @@ let bet3 = make_state (bet ans4 800)
 let finans3= make_state (final_answer t3 bet3 "wrong answer")
 
 let double1= make_state (double hintans2 t3(category_name_from_string "Animals") 
-300 "platypus")
+                           300 "platypus")
 
 let state_tests = [
   (*current_score tests*)
@@ -443,7 +456,7 @@ let state_tests = [
     (category_name_from_string "Music") 9878 t2 play6 (Illegal);
 
   (*pass illegal tests
-  make_pass_illegal_tests "pass illegal test 1" pass6 (Illegal);*)
+    make_pass_illegal_tests "pass illegal test 1" pass6 (Illegal);*)
 
   (*has_played_final tests for bet*)
   make_has_played_final_tests "has played 1" bet1 false;
@@ -499,10 +512,10 @@ let hintplay13 = make_state2 (State2players.play
 
 let bet10 = make_state2 (State2players.bet ans12 100 200 )
 let finans10 = make_state2 (State2players.final_answer t2 bet10 
-"a midsummer night's dream" "wrong")
+                              "a midsummer night's dream" "wrong")
 let bet11 = make_state2 (State2players.bet ans11 50 0 )
 let finans11 = make_state2 (State2players.final_answer t4 bet11 
-"wrong" "vladimir nabokov")
+                              "wrong" "vladimir nabokov")
 
 let make_current_player_tests 
     (name: string)

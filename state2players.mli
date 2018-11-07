@@ -18,6 +18,12 @@ type t
     [jeop]. Both players have a starting score of 0 *)
 val init_state : Jeopardy.t -> t
 
+val switch : t -> t
+
+(* [current_player_used_skip st] returns true if the current player in 
+    [st] has used their skip, false otherwise. *)
+val current_player_used_skip : t -> bool
+
 (** [current_categories st] gets the categories left field from [st]. *)  
 val current_categories : t -> Jeopardy.category_name list
 
@@ -38,6 +44,14 @@ val get_player1_bet: t -> int
 
 (** [get_player2_bet st] gets the final bet of player 2 in [st]*)
 val get_player2_bet: t -> int
+
+(** [player1_double_used st] is whether player1 has used the double superpower
+    in the game state [st]. *)
+val player1_double_used: t -> bool
+
+(** [player2_double_used st] is whether player2 has used the double superpower
+    in the game state [st]. *)
+val player2_double_used: t -> bool
 
 (** [has_played_final st] is whether the final jeopardy round has been played 
     in [st].*)
@@ -88,7 +102,22 @@ val pass : t -> result
     player 2. *)
 val bet : t -> int -> int -> result
 
+(** [double st jeop cat lev ans] is [r] if requesting to use the 
+    double-or-nothing ability in state [st]. If the current player has already 
+    used the ability, then the result is [Illegal], otherwise used_double for
+    the current player in [st] is set to true, and the player gets twice 
+    the points for the current level [lev] of category [cat] in [jeop] if 
+    the answer [ans] is correct and lose twice the points if [ans] is wrong. *)
+val double: t -> Jeopardy.t -> Jeopardy.category_name -> int -> string -> result
+
 (** [final_answer jeop st] is [r] if attempting to answer the final question
     Depending on the player and whether answer is correct, the score will 
     increase by the player's final bet*)
-val final_answer : Jeopardy.t -> t -> string -> string -> result
+val final_answer: Jeopardy.t -> t -> string -> string -> result
+
+(** [skip cat lev ans jeop st] is [r] if requesting to use the skip ability in 
+    state [st]. used_skip for the current player in [st] is set to true, and 
+    the player gets the points for the current level [lev] of category [cat] in 
+    [jeop] if the answer [ans] is correct and lose the points if [ans] is 
+    wrong. *)
+val skip: Jeopardy.category_name -> int -> string -> Jeopardy.t -> t -> result

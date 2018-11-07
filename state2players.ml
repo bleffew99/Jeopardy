@@ -27,9 +27,30 @@ type t = {
   player2_passes : int;
   player1_bet : int;
   player2_bet : int;
+  player1_used_double : bool;
+  player2_used_double : bool;
+  player1_used_skip : bool;
+  player2_used_skip : bool;
   played_final : bool;
   board : string
 }
+
+let switch st =
+  {categories = st.categories; 
+   categories_left = st.categories_left; 
+   player1_score = st.player1_score;
+   player2_score = st.player2_score;
+   current_player = if st.current_player = One then Two else One; 
+   player1_passes = st.player1_passes;
+   player2_passes = st.player2_passes; 
+   player1_bet = st.player1_bet;
+   player2_bet = st.player2_bet;
+   player1_used_double = st.player1_used_double;
+   player2_used_double = st.player2_used_double;
+   player1_used_skip = if st.current_player = One then true else st.player1_used_skip;
+   player2_used_skip = if st.current_player = Two then true else st.player2_used_skip;                            
+   played_final = false;                                                       
+   board = st.board}
 
 (** [parse_levels] is the list of level scores from [levels]. *)
 let rec parse_levels (levels: Jeopardy.level list): int list =
@@ -64,8 +85,17 @@ let init_state (jeop: Jeopardy.t) : t =
    player2_passes = 3;
    player1_bet = 0;
    player2_bet = 0;
+   player1_used_double = false;
+   player2_used_double = false;
+   player1_used_skip = false;
+   player2_used_skip = false;       
    played_final = false;
    board = Board.game_board jeop level_list}
+
+(* [current_player_used_skip st] returns true if the current player in 
+    [st] has used their skip, false otherwise. *)
+let current_player_used_skip (st: t) = 
+  if st.current_player = One then st.player1_used_skip else st.player2_used_skip
 
 (** [current_categories st] gets the categories left field from [st]. *)  
 let current_categories (st: t) =
@@ -104,6 +134,16 @@ let get_player1_bet st =
 (** [get_player2_bet st] gets the final bet of player 2 in [st]*)
 let get_player2_bet st =
   st.player2_bet
+
+(** [player1_double_used st] is whether player1 has used the double superpower
+    in the game state [st]. *)
+let player1_double_used st = 
+  st.player1_used_double
+
+(** [player2_double_used st] is whether player2 has used the double superpower
+    in the game state [st]. *)
+let player2_double_used st =
+  st.player2_used_double
 
 (** [has_played_final st] is whether the final jeopardy round has been played 
     in [st]. *)
@@ -201,7 +241,11 @@ let play cat lev (jeop: Jeopardy.t) st =
                 player1_passes = st.player1_passes;
                 player2_passes = st.player2_passes; 
                 player1_bet = st.player1_bet;
-                player2_bet = st.player2_bet;     
+                player2_bet = st.player2_bet;
+                player1_used_double = st.player1_used_double;
+                player2_used_double = st.player2_used_double;
+                player1_used_skip = st.player1_used_skip;
+                player2_used_skip = st.player2_used_skip;                              
                 played_final = false;                                                       
                 board = new_board jeop 
                     (remove_category_level st.categories cat lev)}
@@ -214,6 +258,10 @@ let play cat lev (jeop: Jeopardy.t) st =
                 player2_passes = st.player2_passes;   
                 player1_bet = st.player1_bet;
                 player2_bet = st.player2_bet;
+                player1_used_double = st.player1_used_double;
+                player2_used_double = st.player2_used_double;
+                player1_used_skip = st.player1_used_skip;
+                player2_used_skip = st.player2_used_skip;  
                 played_final = false;
                 board = new_board jeop 
                     (remove_category_level st.categories cat lev)}
@@ -238,6 +286,10 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
                  player2_passes = st.player2_passes;   
                  player1_bet = st.player1_bet;
                  player2_bet = st.player2_bet;
+                 player1_used_double = st.player1_used_double;
+                 player2_used_double = st.player2_used_double;
+                 player1_used_skip = st.player1_used_skip;
+                 player2_used_skip = st.player2_used_skip;  
                  played_final = false;
                  board = st.board}
         else Legal {categories = st.categories; 
@@ -251,6 +303,10 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
                     player2_passes = st.player2_passes;  
                     player1_bet = st.player1_bet;
                     player2_bet = st.player2_bet; 
+                    player1_used_double = st.player1_used_double;
+                    player2_used_double = st.player2_used_double;
+                    player1_used_skip = st.player1_used_skip;
+                    player2_used_skip = st.player2_used_skip;  
                     played_final = false;
                     board = st.board}))
   with 
@@ -274,6 +330,10 @@ let hint (cat: Jeopardy.category_name) (lev:int) (jeop: Jeopardy.t) st =
               player2_passes = st.player2_passes;
               player1_bet = st.player1_bet;
               player2_bet = st.player2_bet;
+              player1_used_double = st.player1_used_double;
+              player2_used_double = st.player2_used_double;
+              player1_used_skip = st.player1_used_skip;
+              player2_used_skip = st.player2_used_skip;  
               played_final = false;
               board = st.board})
   with
@@ -295,6 +355,10 @@ let pass st =
                 player2_passes = st.player2_passes;   
                 player1_bet = st.player1_bet;
                 player2_bet = st.player2_bet;
+                player1_used_double = st.player1_used_double;
+                player2_used_double = st.player2_used_double;
+                player1_used_skip = st.player1_used_skip;
+                player2_used_skip = st.player2_used_skip;  
                 played_final = false;
                 board = st.board}
   else
@@ -308,6 +372,10 @@ let pass st =
               player2_passes = st.player2_passes -1; 
               player1_bet = st.player1_bet;
               player2_bet = st.player2_bet;
+              player1_used_double = st.player1_used_double;
+              player2_used_double = st.player2_used_double;
+              player1_used_skip = st.player1_used_skip;
+              player2_used_skip = st.player2_used_skip;  
               played_final = false;  
               board = st.board}
 
@@ -324,8 +392,93 @@ let bet st (n1: int) (n2: int) =
          player2_passes = st.player2_passes; 
          player1_bet = n1;
          player2_bet = n2;
+         player1_used_double = st.player1_used_double;
+         player2_used_double = st.player2_used_double;
+         player1_used_skip = st.player1_used_skip;
+         player2_used_skip = st.player2_used_skip;  
          played_final = false;  
          board = st.board}
+
+(** [double st jeop cat lev ans] is [r] if requesting to use the 
+    double-or-nothing ability in state [st]. If the current player has already 
+    used the ability, then the result is [Illegal], otherwise used_double for
+    the current player in [st] is set to true, and the player gets twice 
+    the points for the current level [lev] of category [cat] in [jeop] if 
+    the answer [ans] is correct and lose twice the points if [ans] is wrong. *)
+let double (st : t) (jeop: Jeopardy.t) (cat: Jeopardy.category_name) 
+    (lev: int) (ans: string) = 
+  if st.current_player = One then 
+    if st.player1_used_double = false then
+      (let corrects = answers jeop cat lev in 
+       if List.mem ans corrects then 
+         Legal {categories = st.categories; 
+                categories_left = st.categories_left;
+                player1_score = st.player1_score + (lev * 2);
+                player2_score = st.player2_score;
+                current_player = st.current_player;
+                player1_passes = st.player1_passes;
+                player2_passes = st.player2_passes; 
+                player1_bet = st.player1_bet;
+                player2_bet = st.player2_bet;
+                player1_used_double = true;
+                player2_used_double = st.player2_used_double;
+                player1_used_skip = st.player1_used_skip;
+                player2_used_skip = st.player2_used_skip;  
+                played_final = st.played_final;  
+                board = st.board}
+       else Legal {categories = st.categories; 
+                   categories_left = st.categories_left;
+                   player1_score = st.player1_score - (lev * 2);
+                   player2_score = st.player2_score;
+                   current_player = st.current_player;
+                   player1_passes = st.player1_passes;
+                   player2_passes = st.player2_passes; 
+                   player1_bet = st.player1_bet;
+                   player2_bet = st.player2_bet;
+                   player1_used_double = true;
+                   player2_used_double = st.player2_used_double;
+                   player1_used_skip = st.player1_used_skip;
+                   player2_used_skip = st.player2_used_skip;  
+                   played_final = st.played_final;  
+                   board = st.board})
+    else
+      Illegal
+  else 
+    (if st.player2_used_double = false then
+       (let corrects = answers jeop cat lev in 
+        if List.mem ans corrects then 
+          Legal {categories = st.categories; 
+                 categories_left = st.categories_left;
+                 player1_score = st.player1_score;
+                 player2_score = st.player2_score + (lev * 2);
+                 current_player = st.current_player;
+                 player1_passes = st.player1_passes;
+                 player2_passes = st.player2_passes; 
+                 player1_bet = st.player1_bet;
+                 player2_bet = st.player2_bet;
+                 player1_used_double = st.player1_used_double;
+                 player2_used_double = true;
+                 player1_used_skip = st.player1_used_skip;
+                 player2_used_skip = st.player2_used_skip;  
+                 played_final = st.played_final;  
+                 board = st.board}
+        else Legal {categories = st.categories; 
+                    categories_left = st.categories_left;
+                    player1_score = st.player1_score;
+                    player2_score = st.player2_score - (lev * 2);
+                    current_player = st.current_player;
+                    player1_passes = st.player1_passes;
+                    player2_passes = st.player2_passes; 
+                    player1_bet = st.player1_bet;
+                    player2_bet = st.player2_bet;
+                    player1_used_double = st.player1_used_double;
+                    player2_used_double = true;
+                    player1_used_skip = st.player1_used_skip;
+                    player2_used_skip = st.player2_used_skip;  
+                    played_final = st.played_final;  
+                    board = st.board})
+     else
+       Illegal)
 
 (** [final_answer jeop st] is [r] if attempting to answer the final question
     Depending on the player and whether answer is correct, the score will 
@@ -344,6 +497,10 @@ let final_answer jeop st (ans1: string) (ans2: string) =
                 player2_passes = st.player2_passes; 
                 player1_bet = st.player1_bet;
                 player2_bet = st.player2_bet;
+                player1_used_double = st.player1_used_double;
+                player2_used_double = st.player2_used_double;
+                player1_used_skip = st.player1_used_skip;
+                player2_used_skip = st.player2_used_skip;                  
                 played_final = true;
                 board = st.board}))
      else 
@@ -357,6 +514,10 @@ let final_answer jeop st (ans1: string) (ans2: string) =
                 player2_passes = st.player2_passes; 
                 player1_bet = st.player1_bet;
                 player2_bet = st.player2_bet;
+                player1_used_double = st.player1_used_double;
+                player2_used_double = st.player2_used_double;
+                player1_used_skip = st.player1_used_skip;
+                player2_used_skip = st.player2_used_skip;  
                 played_final = true;
                 board = st.board})))
   else 
@@ -372,6 +533,10 @@ let final_answer jeop st (ans1: string) (ans2: string) =
                player2_passes = st.player2_passes; 
                player1_bet = st.player1_bet;
                player2_bet = st.player2_bet;
+               player1_used_double = st.player1_used_double;
+               player2_used_double = st.player2_used_double;
+               player1_used_skip = st.player1_used_skip;
+               player2_used_skip = st.player2_used_skip;  
                played_final = true;
                board = st.board} )
      else 
@@ -385,5 +550,65 @@ let final_answer jeop st (ans1: string) (ans2: string) =
                player2_passes = st.player2_passes; 
                player1_bet = st.player1_bet;
                player2_bet = st.player2_bet;
+               player1_used_double = st.player1_used_double;
+               player2_used_double = st.player2_used_double;
+               player1_used_skip = st.player1_used_skip;
+               player2_used_skip = st.player2_used_skip;  
                played_final = true;
                board = st.board} ))
+
+(** [skip cat lev ans jeop st] is [r] if requesting to use the skip ability in 
+    state [st]. used_skip for the current player in [st] is set to true, and 
+    the player gets the points for the current level [lev] of category [cat] in 
+    [jeop] if the answer [ans] is correct and lose the points if [ans] is 
+    wrong. *)
+let skip (cat : Jeopardy.category_name) lev (ans: string) 
+    (jeop: Jeopardy.t) (st: t) =   
+  try (let corrects = answers jeop cat lev in 
+       (if List.mem ans corrects then 
+          Legal {categories = st.categories; 
+                 categories_left = st.categories_left;
+                 player1_score = if st.current_player = One then
+                     st.player1_score + lev else st.player1_score;
+                 player2_score = if st.current_player = Two then
+                     st.player2_score + lev else st.player2_score;
+                 current_player = if st.current_player = One then Two else One;
+                 player1_passes = st.player1_passes;
+                 player2_passes = st.player2_passes;   
+                 player1_bet = st.player1_bet;
+                 player2_bet = st.player2_bet;
+                 player1_used_double = st.player1_used_double;
+                 player2_used_double = st.player2_used_double;
+                 player1_used_skip = 
+                   if st.current_player = One then true 
+                   else st.player1_used_skip;
+                 player2_used_skip = 
+                   if st.current_player = Two then true 
+                   else st.player2_used_skip;  
+                 played_final = false;
+                 board = st.board}
+        else Legal {categories = st.categories; 
+                    categories_left = st.categories_left;
+                    player1_score = if st.current_player = One then
+                        st.player1_score - lev else st.player1_score;
+                    player2_score = if st.current_player = Two then
+                        st.player2_score - lev else st.player2_score;
+                    current_player = 
+                      if st.current_player = One then Two else One;
+                    player1_passes = st.player1_passes;
+                    player2_passes = st.player2_passes;  
+                    player1_bet = st.player1_bet;
+                    player2_bet = st.player2_bet; 
+                    player1_used_double = st.player1_used_double;
+                    player2_used_double = st.player2_used_double;
+                    player1_used_skip = 
+                      if st.current_player = One then true 
+                      else st.player1_used_skip;
+                    player2_used_skip =
+                      if st.current_player = Two then true 
+                      else st.player2_used_skip; 
+                    played_final = false;
+                    board = st.board}))
+  with 
+  | NoAnswersProvided -> Illegal 
+  | UnknownCategory cat -> Illegal

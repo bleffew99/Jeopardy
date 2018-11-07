@@ -30,6 +30,10 @@ val current_board : t -> string
     false otherwise in the state st.*)
 val has_played_final : t -> bool 
 
+(** [has_used_double st] returns true if the double superpower has been used,
+    false otherwise in the state [st].*)
+val has_used_double : t -> bool
+
 (** [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] *)
 val current_category_levels : t -> Jeopardy.category_name -> int list
@@ -62,9 +66,12 @@ val hint :
     1 pass for asking for a pass. *)
 val pass : t -> result
 
-(** [double st] is [r] if requesting to use the double-or-nothing ability in
-    state [st]. If used_double is true, then the result is Illegal, otherwise
-    used_double in [st] is set to true. *)
+(** [double st jeop cat lev ans] is [r] if requesting to use the 
+    double-or-nothing ability in state [st]. If the player has already 
+    used the ability, then the result is [Illegal], otherwise used_double for
+    the player in [st] is set to true, and the player gets twice 
+    the points for the current level [lev] of category [cat] in [jeop] if 
+    the answer [ans] is correct and lose twice the points if [ans] is wrong. *)
 val double : t -> Jeopardy.t -> Jeopardy.category_name -> int -> string-> result
 
 (** [bet st n] is [r] when a player bets in the final round of jeopardy. The 

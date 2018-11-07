@@ -19,6 +19,7 @@ type t = {
   score : int;
   passes_left : int;
   used_double : bool;
+  used_skip : bool;
   final_bet : int;
   played_final : bool;
   board : string
@@ -53,7 +54,8 @@ let init_state (jeop: Jeopardy.t) : t =
    score = 0; 
    passes_left = 3;
    final_bet = 0;
-   used_double = false;     
+   used_double = false;  
+   used_skip = false;   
    played_final = false;
    board = Board.game_board jeop level_list}
 
@@ -81,6 +83,11 @@ let current_board st =
     false otherwise in the state st.*)
 let has_played_final st = 
   st.played_final
+
+(** [has_used_double st] returns true if the double superpower has been used,
+    false otherwise in the state [st].*)
+let has_used_double st =
+  st.used_double
 
 (** [current_category_levels st cat] returns the current levels still unplayed
     in category [cat] in [st]. *)
@@ -169,7 +176,8 @@ let play cat lev (jeop: Jeopardy.t) st =
                 score = st.score;
                 passes_left = st.passes_left;
                 final_bet = st.final_bet;
-                used_double = false;                
+                used_double = st.used_double;
+                used_skip = st.used_skip;          
                 played_final = false;
                 board = new_board jeop 
                     (remove_category_level st.categories cat lev)}
@@ -178,7 +186,8 @@ let play cat lev (jeop: Jeopardy.t) st =
                 score = st.score;
                 passes_left = st.passes_left;
                 final_bet = st.final_bet;
-                used_double = false;                        
+                used_double = st.used_double;    
+                used_skip = st.used_skip;                                                      
                 played_final = false;
                 board = new_board jeop 
                     (remove_category_level st.categories cat lev)}
@@ -197,7 +206,8 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
                 score = st.score + lev;
                 passes_left = st.passes_left;
                 final_bet = st.final_bet;
-                used_double = false;                
+                used_double = st.used_double;  
+                used_skip = st.used_skip;                              
                 played_final = false;
                 board = st.board}
        else Legal {categories = st.categories; 
@@ -205,7 +215,8 @@ let answer (cat : Jeopardy.category_name) lev (ans: string)
                    score = st.score -lev;
                    passes_left = st.passes_left;
                    final_bet = st.final_bet;
-                   used_double = false;
+                   used_double = st.used_double;
+                   used_skip = st.used_skip;                   
                    played_final = false;
                    board = st.board})
   with 
@@ -223,7 +234,8 @@ let hint (cat: Jeopardy.category_name) (lev:int) (jeop: Jeopardy.t) st =
               score = st.score - 100;
               passes_left = st.passes_left;
               final_bet = st.final_bet;
-              used_double = false;                            
+              used_double = st.used_double; 
+              used_skip = st.used_skip;                           
               played_final = false;
               board = st.board})
   with
@@ -241,13 +253,17 @@ let pass (st : t) =
            score = st.score;
            passes_left = st.passes_left - 1;
            final_bet = st.final_bet;
-           used_double = false;           
+           used_double = st.used_double;
+           used_skip = st.used_skip;           
            played_final = false;
            board = st.board}
 
-(** [double st] is [r] if requesting to use the double-or-nothing ability in
-    state [st]. If used_double is true, then the result is Illegal, otherwise
-    used_double in [st] is set to true. *)
+(** [double st jeop cat lev ans] is [r] if requesting to use the 
+    double-or-nothing ability in state [st]. If the player has already 
+    used the ability, then the result is [Illegal], otherwise used_double for
+    the player in [st] is set to true, and the player gets twice 
+    the points for the current level [lev] of category [cat] in [jeop] if 
+    the answer [ans] is correct and lose twice the points if [ans] is wrong. *)
 let double (st : t) (jeop: Jeopardy.t) (cat: Jeopardy.category_name) 
     (lev: int) (ans: string) = 
   if st.used_double = false then
@@ -258,7 +274,8 @@ let double (st : t) (jeop: Jeopardy.t) (cat: Jeopardy.category_name)
               score = st.score + (lev * 2);
               passes_left = st.passes_left;
               final_bet = st.final_bet;
-              used_double = true;                
+              used_double = true;  
+              used_skip = st.used_skip;              
               played_final = false;
               board = st.board}
      else Legal {categories = st.categories; 
@@ -267,6 +284,7 @@ let double (st : t) (jeop: Jeopardy.t) (cat: Jeopardy.category_name)
                  passes_left = st.passes_left;
                  final_bet = st.final_bet;
                  used_double = true;
+                 used_skip = st.used_skip;
                  played_final = false;
                  board = st.board})
   else
@@ -281,6 +299,7 @@ let bet (st: t) (n: int) =
          passes_left = st.passes_left;
          final_bet = n;
          used_double = st.used_double;
+         used_skip = st.used_skip;
          played_final = false;
          board = st.board}
 
@@ -295,6 +314,7 @@ let final_answer jeop st (ans: string) =
             passes_left = st.passes_left;
             final_bet = st.final_bet;
             used_double = st.used_double;
+            used_skip = st.used_skip;
             played_final = true;
             board = st.board} )
   else 
@@ -306,6 +326,7 @@ let final_answer jeop st (ans: string) =
             passes_left = st.passes_left;
             final_bet = st.final_bet;
             used_double = st.used_double;
+            used_skip = st.used_skip;
             played_final = true;
             board = st.board})
 

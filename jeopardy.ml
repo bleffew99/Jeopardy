@@ -60,6 +60,7 @@ let category_of_json json = {
 (** [final_of_json json] is the representation of a final Jeopardy round in
     [json] Requires:json is a valid JSON. *)
 let final_of_json json = 
+  Random.self_init ();
   let i = Random.int (List.length json) in
   let q = List.nth json i in
   {
@@ -118,6 +119,7 @@ let get_lowest_level jeop =
   in
   helper 100 (jeop.categories)
 
+(** [reduce_list n lst] reduces the length of list [lst] to int [n]. *)
 let rec reduce_list n = function
   | [] -> []
   | h::t -> if n > 0 
@@ -131,7 +133,8 @@ let reduce lowest_lev jeop : t =
     | [] -> acc
     | h::t -> if List.length (h.levels) > lowest_lev
       then 
-        helper ({name=h.name; levels=(reduce_list lowest_lev h.levels)} :: acc) t
+        helper 
+          ({name=h.name; levels=(reduce_list lowest_lev h.levels)} :: acc) t
       else helper (h::acc) t
   in {categories=(helper [] jeop.categories); 
       final_jeopardy=jeop.final_jeopardy}

@@ -10,6 +10,7 @@ let make_get_lowest_level_test
     (expected_output: int) :test =
   name >:: (fun _ ->  assert_equal expected_output 
                (Jeopardy.get_lowest_level jeop))
+
 let make_get_category_name_test 
     (name : string) 
     (cat: category) 
@@ -35,6 +36,13 @@ let make_levels_error_test
     (expected_output: exn) : test = 
   name >:: (fun _ -> 
       assert_raises (UnknownCategory cat_name) (level_unit jeop cat_name))
+
+let make_all_levels_test 
+    (name : string) 
+    (jeop: Jeopardy.t)
+    (expected_output : int list list) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (all_levels jeop))
 
 let make_question_test 
     (name : string) 
@@ -120,8 +128,6 @@ let make_final_jeopardy_answers_test
   name >:: (fun _ ->  assert_equal expected_output 
                (Jeopardy.final_jeopardy_answers jeop))
 
-
-
 let t1 = from_json(Yojson.Basic.from_file "3110.json")
 let t2 = from_json(Yojson.Basic.from_file "jeop1.json")
 let t3 = from_json(Yojson.Basic.from_file "jeop2.json")
@@ -131,9 +137,22 @@ let cate1 = categories (t1)
 let cate2 = categories (t2)
 let newt1 = from_categories (Yojson.Basic.from_file "jeop.json") 
     [(category_name_from_string "Music");(category_name_from_string "States")]
+let newt2 = from_categories (Yojson.Basic.from_file "jeop.json") 
+    [(category_name_from_string "CS");(category_name_from_string "Holidays");
+     (category_name_from_string "Music")]
+let newt3 = from_categories (Yojson.Basic.from_file "jeop.json") 
+    [(category_name_from_string "CS");(category_name_from_string "Animals")]        
+let redt1 = reduce 500 newt1 
+let redt2 = reduce 400 newt2
+let redt3 = reduce 400 newt3 
 
 let jeopardy_tests = 
   [
+    (*get lowest level tests*)
+    make_get_lowest_level_test "low test 1" newt1 5;
+    make_get_lowest_level_test "low test 2" newt2 4;
+    make_get_lowest_level_test "low test 3" newt3 6;   
+
     (*get_category_name tests*)
     make_get_category_name_test "get category name 1"
       (List.nth (cate1) 0) "CS3110" ;
@@ -158,6 +177,11 @@ let jeopardy_tests =
     make_levels_error_test "level error 2" (t1) (category_name_from_string 
                                                    "Animal") 
       (UnknownCategory (category_name_from_string "Animal")) ;                        
+
+    (*all_levels test*)
+    make_all_levels_test "all levels 1" redt1 ([[100;200;300;400;500];[100;200;300;400;500]]);
+    make_all_levels_test "all levels 2" redt2 ([[100;200;300;400];[100;200;300;400];[100;200;300;400]]);
+    make_all_levels_test "all levels 3" redt3 ([[100;200;300;400];[100;200;300;400]]);
 
     (*question test without exception*)
     make_question_test "question 1" (t1) (category_name_from_string "CS3110") 
@@ -227,8 +251,7 @@ let jeopardy_tests =
     make_final_jeopardy_answers_test "jeop 2 ans" t3 ["saudi arabia"; "saudi"];
     make_final_jeopardy_answers_test "jeop 3 ans" t4 ["vladimir nabokov";"nabokov";
                                                       "nobokov";"nabokoff";"nabakov";"nabokof"]; 
-    (*get lowest level tests*)
-    make_get_lowest_level_test "low test 1" newt1 5;    
+
   ]
 
 (* command tests*)
@@ -263,6 +286,8 @@ let command_tests =
     make_parse_test "parse Quit" "quit" (Quit);
     make_parse_test "parse Hint" "hint" (Hint);
     make_parse_test "parse Pass" "pass" (Pass);
+    make_parse_test "parse Skip" "skip" (Skip);
+    make_parse_test "parse Double" "double" (Double);    
     make_parse_empty_error_test "Empty" "" Empty;
     make_parse_error_test "Malformed play 1" "play" Malformed;
     make_parse_error_test "Malformed play 2" "play Fruits" Malformed;
@@ -274,6 +299,8 @@ let command_tests =
     make_parse_error_test "Malformed answer 3" "who" Malformed;
     make_parse_error_test "Malformed hint 1" "hint yes" Malformed;
     make_parse_error_test "Malformed pass 1" "pass no" Malformed;
+    make_parse_error_test "Malformed skip 1" "skip 4543" Malformed;    
+    make_parse_error_test "Malformed double 1" "double hello" Malformed;
   ]
 
 (* state tests*)
@@ -283,6 +310,34 @@ let make_current_score_test
     (expected_output: int) : test =
   name >:: (fun _ ->
       assert_equal expected_output (current_score st))
+
+let make_current_passes_left_test  
+    (name: string)
+    (st: State.t)
+    (expected_output: int) : test =
+  name >:: (fun _ ->
+      assert_equal expected_output (current_passes_left st))
+
+let make_get_final_bet_test  
+    (name: string)
+    (st: State.t)
+    (expected_output: int) : test =
+  name >:: (fun _ ->
+      assert_equal expected_output (get_final_bet st))            
+
+let make_has_played_final_tests 
+    (name: string)
+    (st : State.t)
+    (expected_output: bool):test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (has_played_final st))
+
+let make_has_used_double_tests 
+    (name: string)
+    (st : State.t)
+    (expected_output: bool):test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (has_used_double st))
 
 let make_current_category_levels_test  
     (name: string)
@@ -301,16 +356,6 @@ let make_play_illegal_tests
     (expected_output : result) : test =
   name >:: (fun _ ->
       assert_equal expected_output (play cat lev jeop st))
-
-let make_hint_illegal_tests
-    (name : string)
-    (cat : Jeopardy.category_name)
-    (lev : int)
-    (jeop : Jeopardy.t)
-    (st : State.t)
-    (expected_output : result) : test =
-  name >:: (fun _ ->
-      assert_equal expected_output (hint cat lev jeop st)) 
 
 let make_answer_illegal_tests
     (name : string)
@@ -340,12 +385,16 @@ let make_pass_illegal_tests
   name >:: (fun _ ->
       assert_equal expected_output (pass st))
 
-let make_has_played_final_tests 
-    (name : string)
+let make_double_illegal_tests
+    (name: string)
     (st: State.t)
-    (expected_output: bool):test =
-  name >:: (fun _ ->
-      assert_equal expected_output (has_played_final st))
+    (jeop: Jeopardy.t)
+    (cat: Jeopardy.category_name)
+    (lev: int)
+    (ans: string)
+    (expected_output:result):test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (double st jeop cat lev ans))
 
 let make_state = function 
   | Legal t -> t
@@ -391,17 +440,21 @@ let passans4 = make_state (answer (category_name_from_string "Disney") 400
 let passplay4 = make_state (play (category_name_from_string "Disney") 400 
                               t2 passans4)
 let pass5 = make_state (pass passplay4)
-(*let pass6 = make_state (pass pass5)*)
 
-let bet1 = make_state (bet ans2 400)
-let finans1= make_state (final_answer t2 bet1 "a midsummer night's dream")
-let bet2 = make_state (bet ans3 200)
-let finans2= make_state (final_answer t4 bet2 "vladimir nabokov")
-let bet3 = make_state (bet ans4 800)
-let finans3= make_state (final_answer t3 bet3 "wrong answer")
+let bet1 = make_state (bet play1 400)
+let finans1 = make_state (final_answer t2 bet1 "a midsummer night's dream")
+let bet2 = make_state (bet play3 200)
+let finans2 = make_state (final_answer t4 bet2 "vladimir nabokov")
+let bet3 = make_state (bet play4 800)
+let finans3 = make_state (final_answer t3 bet3 "wrong answer")
 
-let double1= make_state (double hintans2 t3(category_name_from_string "Animals") 
-                           300 "platypus")
+let double1 = make_state (double hintans2 t3
+                            (category_name_from_string "Animals") 
+                            300 "platypus")
+let double2 = make_state (double ans5 t4(category_name_from_string "Flags") 
+                            300 "circle")
+let double3 = make_state (double ans6 t2(category_name_from_string "Cornell") 
+                            500 "wrong")                           
 
 let state_tests = [
   (*current_score tests*)
@@ -410,24 +463,52 @@ let state_tests = [
   make_current_score_test "current score test 3" ans3 400;
   make_current_score_test "current score test 4" ans4 800;
   make_current_score_test "current score test 5" ans5 1300;
-  make_current_score_test "current score test 6" ans6 1000; 
+  make_current_score_test "current score test 6" ans6 1000;
+
   (*test hint score reduction*)
   make_current_score_test "current score test 7" hint2 100; 
   make_current_score_test "current score test 8" hintans2 400; 
   make_current_score_test "current score test 9" hint3 300; 
   make_current_score_test "current score test 10" hintans3 200; 
+
   (*test pass score reduction*)
   make_current_score_test "current score test 11" pass2 200; 
   make_current_score_test "current score test 12" pass3 200; 
   make_current_score_test "current score test 13" passans4 600; 
   make_current_score_test "current score test 14" passplay4 600; 
   make_current_score_test "current score test 15" pass5 600; 
+
   (*test bet score*)
   make_current_score_test "current score test 16" finans1 900;
   make_current_score_test "current score test 17" finans2 600;
   make_current_score_test "current score test 18" finans3 0;
+
   (*test double score*)
   make_current_score_test "current score test 19" double1 1000;
+  make_current_score_test "current score test 20" double2 1900;
+  make_current_score_test "current score test 21" double3 0;
+
+  (*current passes left test*)  
+  make_current_passes_left_test "current passes left 1" play1 3;
+  make_current_passes_left_test "current passes left 2" pass2 2;
+  make_current_passes_left_test "current passes left 3" pass3 1;
+  make_current_passes_left_test "current passes left 4" passplay4 1;
+  make_current_passes_left_test "current passes left 5" pass5 0;
+
+  (*get final bet test*) 
+  make_get_final_bet_test "get final bet 1" bet1 400;
+  make_get_final_bet_test "get final bet 1" bet2 200;
+  make_get_final_bet_test "get final bet 1" bet3 800;
+
+  (*has_played_final tests for bet*)
+  make_has_played_final_tests "has played 1" bet1 false;
+  make_has_played_final_tests "has played 2" finans1 true;
+  make_has_played_final_tests "has played 3" finans3 true;
+
+  (*has used double tests*)
+  make_has_used_double_tests "has used 1" double1 true;
+  make_has_used_double_tests "has used 2" play6 false;
+  make_has_used_double_tests "has used 2" double3 true;
 
   (*current_category_levels tests*)
   make_current_category_levels_test "ccl test 1" play1 
@@ -455,14 +536,17 @@ let state_tests = [
   make_hint_illegal_tests "hint illegal test 2" 
     (category_name_from_string "Music") 9878 t2 play6 (Illegal);
 
-  (*pass illegal tests
-    make_pass_illegal_tests "pass illegal test 1" pass6 (Illegal);*)
+  (*pass illegal tests*) 
+  make_pass_illegal_tests "pass illegal test 1" (make_state (pass pass5)) 
+    (Illegal);
 
-  (*has_played_final tests for bet*)
-  make_has_played_final_tests "has played 1" bet1 false;
-  make_has_played_final_tests "has played 2" finans1 true;
-  make_has_played_final_tests "has played 3" finans3 true;
-]
+  (*double illegal tests*)
+  make_double_illegal_tests "double illegal test 1" double1 t2 
+    (category_name_from_string "Music") (300) ("Despecable Me") Illegal;
+  make_double_illegal_tests "double illegal test 2" double2 t2 
+    (category_name_from_string "Disney") (100) ("the lion king") Illegal;  
+]    
+
 
 (*state2players tests*)
 let make_state2 (res:State2players.result): State2players.t = 
@@ -490,7 +574,6 @@ let play13 = make_state2 (State2players.play
                             (category_name_from_string "Animals") 
                             300 t3 ans13)
 
-
 let hint12 = make_state2 (State2players.hint 
                             (category_name_from_string "Holidays") 
                             400 t3 play11)
@@ -510,14 +593,40 @@ let hintplay13 = make_state2 (State2players.play
                                 (category_name_from_string "Animals") 
                                 300 t3 hintans13)
 
-let bet10 = make_state2 (State2players.bet ans12 100 200 )
+let pass11 = make_state2 (State2players.pass play11)
+let passplay11 = make_state2 (State2players.play 
+                                (category_name_from_string "Animals") 
+                                100 t3 pass11)
+let pass12 = make_state2 (State2players.pass passplay11)
+let passplay12 = make_state2 (State2players.play 
+                                (category_name_from_string "Holidays") 
+                                400 t3 pass12)     
+let pass13 = make_state2 (State2players.pass passplay12)
+let passplay13 = make_state2 (State2players.play 
+                                (category_name_from_string "Animals") 
+                                300 t3 pass13)                                                       
+
+let bet10 = make_state2 (State2players.bet ans12 100 200)
 let finans10 = make_state2 (State2players.final_answer t2 bet10 
                               "a midsummer night's dream" "wrong")
-let bet11 = make_state2 (State2players.bet ans11 50 0 )
+let bet11 = make_state2 (State2players.bet ans11 50 0)
 let finans11 = make_state2 (State2players.final_answer t4 bet11 
                               "wrong" "vladimir nabokov")
 
-let make_current_player_tests 
+let double11 = make_state2 (State2players.double play11 t3    
+                              (category_name_from_string("Holidays")) 400 
+                              "jack o'lantern")
+let doubleplay12 = make_state2 (State2players.play 
+                                  (category_name_from_string "Holidays") 
+                                  400 t3 double11)
+let double12 = make_state2 (State2players.double doubleplay12 t3 
+                              (category_name_from_string("Animals")) 300 
+                              "penguin")
+let doubleplay13 = make_state2 (State2players.play 
+                                  (category_name_from_string "Animals") 
+                                  300 t3 double12)
+
+let make_current_player_tests
     (name: string)
     (st: State2players.t)
     (expected_output: State2players.current_player) :test =
@@ -540,6 +649,7 @@ let make_current_player2_score_tests
 
 let state2players_tests = [
 
+  (*current player 1 tests*)
   make_current_player1_score_tests "current player1 score test 1" play10 0;
   make_current_player1_score_tests "current player1 score test 2" ans11 100;
   make_current_player1_score_tests "current player1 score test 3" play11 100;
@@ -559,10 +669,16 @@ let state2players_tests = [
     "current player1 score test 12" hintans13 (-300);
   make_current_player1_score_tests 
     "current player1 score test 13" hintplay13 (-300);
-
   make_current_player1_score_tests "bet 1" (finans10) (200);
   make_current_player1_score_tests "bet 2" (finans11) (50);
+  make_current_player1_score_tests "double 1" (double11) (100);
+  make_current_player1_score_tests "double 2" (doubleplay12) (100);
+  make_current_player1_score_tests "double 3" (double12) (-500);
+  make_current_player1_score_tests "double 4" (doubleplay13) (-500);
+  make_current_player1_score_tests "pass 1 1" (pass11) (100);
+  make_current_player1_score_tests "pass 1 2" (passplay11) (100);  
 
+  (*player 2 score tests*)
   make_current_player2_score_tests "current player2 score test 1" play10 0;
   make_current_player2_score_tests "current player2 score test 2" ans11 0;
   make_current_player2_score_tests "current player2 score test 3" play11 0;
@@ -584,7 +700,16 @@ let state2players_tests = [
     "current player2 score test 13" hintplay13 300;
   make_current_player2_score_tests "bet player 2 1" (finans10) (200);
   make_current_player2_score_tests "bet player 2 2" (finans11) (0);
+  make_current_player2_score_tests "double 2 1" (double11) (800);
+  make_current_player2_score_tests "double 2 2" (doubleplay12) (800);
+  make_current_player2_score_tests "double 2 3" (double12) (800);
+  make_current_player2_score_tests "double 2 4" (doubleplay13) (800);
+  make_current_player2_score_tests "pass 2 1" (pass11) (0);
+  make_current_player2_score_tests "pass 2 2" (pass12) (0);
+  make_current_player2_score_tests "pass 2 3" (passplay12) (0);
+  make_current_player2_score_tests "pass 2 4" (passplay13) (0);
 
+  (*current player tests*)
   make_current_player_tests "current player test 1" play10 One;
   make_current_player_tests "current player test 2" ans11 One;
   make_current_player_tests "current player test 3" play11 Two;
@@ -598,11 +723,17 @@ let state2players_tests = [
   make_current_player_tests "current player test 11" hint13 One; 
   make_current_player_tests "current player test 12" hintans13 One; 
   make_current_player_tests "current player test 13" hintplay13 Two; 
-
-
-
-
+  make_current_player_tests "current player test 14" double11 Two; 
+  make_current_player_tests "current player test 15" doubleplay12 One; 
+  make_current_player_tests "current player test 16" double12 One; 
+  make_current_player_tests "current player test 17" pass11 One; 
+  make_current_player_tests "current player test 18" passplay11 Two; 
+  make_current_player_tests "current player test 19" pass12 Two; 
+  make_current_player_tests "current player test 20" passplay12 One; 
+  make_current_player_tests "current player test 19" pass13 One; 
+  make_current_player_tests "current player test 20" passplay13 Two; 
 ]
+
 let suite =
   "test suite for midterm project"  >::: List.flatten [
     jeopardy_tests;

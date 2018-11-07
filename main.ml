@@ -714,7 +714,7 @@ let rec play_loop_two_player jeop (st : State2players.t) (skipping: bool) =
 
 (** [play_game f] starts the jeopardy in jeopardy [jeop]. *)
 let rec play_game jeop =
-  ANSITerminal.resize 165 40;
+  ANSITerminal.resize 165 50;
   ANSITerminal.(print_string [red] "
                                                                                                                             dddddddd                        
              jjjj                                                                                                           d::::::d                        

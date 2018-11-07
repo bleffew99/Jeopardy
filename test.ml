@@ -151,7 +151,7 @@ let jeopardy_tests =
     (*get lowest level tests*)
     make_get_lowest_level_test "low test 1" newt1 5;
     make_get_lowest_level_test "low test 2" newt2 4;
-    make_get_lowest_level_test "low test 3" newt3 6;   
+    make_get_lowest_level_test "low test 3" newt3 4;   
 
     (*get_category_name tests*)
     make_get_category_name_test "get category name 1"

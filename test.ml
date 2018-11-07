@@ -479,7 +479,7 @@ let state_tests = [
   make_current_score_test "current score test 15" pass5 600; 
 
   (*test bet score*)
-  make_current_score_test "current score test 16" finans1 900;
+  make_current_score_test "current score test 16" finans1 600;
   make_current_score_test "current score test 17" finans2 600;
   make_current_score_test "current score test 18" finans3 0;
 
@@ -537,8 +537,7 @@ let state_tests = [
     (category_name_from_string "Music") 9878 t2 play6 (Illegal);
 
   (*pass illegal tests*) 
-  make_pass_illegal_tests "pass illegal test 1" (make_state (pass pass5)) 
-    (Illegal);
+  make_pass_illegal_tests "pass illegal test 1" pass5 (Illegal);
 
   (*double illegal tests*)
   make_double_illegal_tests "double illegal test 1" double1 t2 
@@ -726,12 +725,12 @@ let state2players_tests = [
   make_current_player_tests "current player test 14" double11 Two; 
   make_current_player_tests "current player test 15" doubleplay12 One; 
   make_current_player_tests "current player test 16" double12 One; 
-  make_current_player_tests "current player test 17" pass11 One; 
-  make_current_player_tests "current player test 18" passplay11 Two; 
-  make_current_player_tests "current player test 19" pass12 Two; 
-  make_current_player_tests "current player test 20" passplay12 One; 
-  make_current_player_tests "current player test 19" pass13 One; 
-  make_current_player_tests "current player test 20" passplay13 Two; 
+  make_current_player_tests "current player test 17" pass11 Two; 
+  make_current_player_tests "current player test 18" passplay11 One; 
+  make_current_player_tests "current player test 19" pass12 One; 
+  make_current_player_tests "current player test 20" passplay12 Two; 
+  make_current_player_tests "current player test 21" pass13 Two; 
+  make_current_player_tests "current player test 22" passplay13 One; 
 ]
 
 let suite =

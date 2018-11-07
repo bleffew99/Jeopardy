@@ -16,7 +16,7 @@ let rec double_loop jeop (st : State.t) (lev: int)
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       let ans = String.trim (List.fold_left (fun x acc -> 
@@ -130,7 +130,7 @@ let rec final_answer_loop jeop (st: State.t) : State.t =
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       let ans = String.trim (List.fold_left (fun x acc -> 
@@ -269,7 +269,7 @@ let rec double_two_loop jeop (st : State2players.t) (lev: int)
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       let ans = String.trim (List.fold_left (fun x acc -> 
@@ -323,11 +323,12 @@ let rec double_two_loop jeop (st : State2players.t) (lev: int)
     ability once in the game. *)
 let rec skip_two_loop jeop (st : State2players.t) (lev: int) 
     (cat: Jeopardy.category_name) =
+  print_endline "Answer the question";
   let answer = String.lowercase_ascii (read_line()) in
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
   | h::m::t -> ( 
-      if (h = "what" || h = "who") &&
+      if (h = "what" || h = "who" || h = "when") &&
          (m = "is" || m = "are" || m = "was" || m = "were")
       then ( 
         let ans = String.trim (List.fold_left (fun x acc -> 
@@ -469,7 +470,7 @@ let rec question_loop_two_player jeop (st : State2players.t)
            print_endline "Answer the question please.";
            question_loop_two_player jeop st lev cat)
         else
-          (print_endline "Ok, skipping....";
+          (print_endline "Ok, the next player's turn will be skipped";
            skip_two_loop jeop st lev cat))
     | Double -> 
       if State2players.get_current_player st = One then
@@ -491,12 +492,12 @@ let rec question_loop_two_player jeop (st : State2players.t)
 let rec final_answer1_loop jeop (st: State2players.t) : string =
   print_endline ("Here is the FINAL JEOPDARDY question:");
   print_endline (Jeopardy.final_jeopardy_question jeop);
-  print_endline ("Player 1, what is your answer?");
+  ANSITerminal.(print_string [red] "Player 1, what is your answer?\n");
   let answer1 = String.lowercase_ascii (read_line()) in
   let answer_lst1 = remove_empty (String.split_on_char ' ' answer1 ) [] in
   match answer_lst1 with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       (ANSITerminal.erase Screen;
@@ -515,12 +516,12 @@ let rec final_answer1_loop jeop (st: State2players.t) : string =
 let rec final_answer2_loop jeop (st: State2players.t) : string =
   print_endline ("Here is the FINAL JEOPDARDY question:");
   print_endline (Jeopardy.final_jeopardy_question jeop);
-  print_endline ("Player 2, what is your answer?");
+  ANSITerminal.(print_string [red] "Player 2, what is your answer?\n");
   let answer2 = String.lowercase_ascii (read_line()) in
   let answer_lst2 = remove_empty (String.split_on_char ' ' answer2) [] in
   match answer_lst2 with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       (ANSITerminal.erase Screen;
@@ -641,8 +642,8 @@ let rec play_loop_two_player jeop (st : State2players.t) (skipping: bool) =
     (print_endline ("Here are the current categories and levels left:\n");
      print_string (State2players.current_board st);
      if (State2players.get_current_player st = One) 
-     then print_string ("Player 1,")
-     else print_string ("Player 2,");
+     then ANSITerminal.(print_string [red] "Player 1, ")
+     else ANSITerminal.(print_string [red] "Player 2, ");
      print_string ("please choose a category: ");
      match parse (read_line ()) with
      | exception Empty -> (print_string "\nPlease choose an category!\n";
@@ -713,7 +714,7 @@ let rec play_loop_two_player jeop (st : State2players.t) (skipping: bool) =
 
 (** [play_game f] starts the jeopardy in jeopardy [jeop]. *)
 let rec play_game jeop =
-  ANSITerminal.resize 165 40;
+  ANSITerminal.resize 165 50;
   ANSITerminal.(print_string [red] "
                                                                                                                             dddddddd                        
              jjjj                                                                                                           d::::::d                        
@@ -752,7 +753,11 @@ let rec play_game jeop =
    You can also 'pass' and recieve no points. But be careful, you only have 3 
    passes a game! You can also ask for a 'hint' for every question, but this 
    costs 100 points each time. At any point you check your score with 'score' 
-   or quit the game with 'quit'. Have fun and good luck!\n");
+   or quit the game with 'quit'. You also have one chance to double the points 
+   gained or lost in a question, just enter 'double' while playing the question.
+   In two-player mode, each player also has the ability to skip the other's turn 
+   once per game, enter 'skip' when answering a question. 
+   Have fun and good luck!\n");
 
   ANSITerminal.(print_string [red] "\n 1 or 2 players?\n");
   match read_line() with
@@ -791,7 +796,8 @@ let rec main () =
   let () = List.fold_left (fun x y -> ()) () 
       (List.map (fun (x: Jeopardy.category_name) -> 
            print_endline (Jeopardy.category_name_string x)) global_cats) in
-  print_endline "Select with which categories you want to play";
+  print_endline 
+    "Select with which categories you want to play (seperated by spaces";
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()

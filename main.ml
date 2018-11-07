@@ -754,7 +754,7 @@ let rec play_game jeop =
    costs 100 points each time. At any point you check your score with 'score' 
    or quit the game with 'quit'. You also have one chance to double the points 
    gained or lost in a question, just enter 'double' while playing the question.
-   In two-player mode, each player also has the ability to skip the others turn 
+   In two-player mode, each player also has the ability to skip the other's turn 
    once per game, enter 'skip' when answering a question. 
    Have fun and good luck!\n");
 

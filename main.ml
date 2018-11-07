@@ -796,7 +796,8 @@ let rec main () =
   let () = List.fold_left (fun x y -> ()) () 
       (List.map (fun (x: Jeopardy.category_name) -> 
            print_endline (Jeopardy.category_name_string x)) global_cats) in
-  print_endline "Select with which categories you want to play";
+  print_endline 
+    "Select with which categories you want to play (seperated by spaces";
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()

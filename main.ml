@@ -193,7 +193,8 @@ let rec play_loop jeop (st : State.t) =
       play_loop jeop (final_bet_loop jeop st)
   else
     print_endline ("Here are the current categories and levels left:\n");
-  print_string (State.current_board st);
+  let board = State.current_board st in
+  ANSITerminal.(print_string [blue] (board ^ "\n"));
   print_string ("Please choose a category: ");
   match parse (read_line ()) with
   | exception Empty -> print_string "\nPlease choose an category!\n";
@@ -640,7 +641,8 @@ let rec play_loop_two_player jeop (st : State2players.t) (skipping: bool) =
           play_loop_two_player jeop (final_two_player_loop jeop st) false))
   else
     (print_endline ("Here are the current categories and levels left:\n");
-     print_string (State2players.current_board st);
+     let board = State2players.current_board st in
+     ANSITerminal.(print_string [blue] (board ^ "\n"));
      if (State2players.get_current_player st = One) 
      then ANSITerminal.(print_string [red] "Player 1, ")
      else ANSITerminal.(print_string [red] "Player 2, ");

@@ -156,7 +156,10 @@ let current_category_levels st (cat: category_name) : int list =
   let rec find_category (cats: category_status list) cat = 
     match cats with
     | [] -> raise (UnknownCategory cat)
-    | h::t -> if (h.name = cat) then h.levels_left else find_category t cat
+    | h::t -> 
+      if String.lowercase_ascii (Jeopardy.category_name_string h.name) = 
+         String.lowercase_ascii (Jeopardy.category_name_string cat) 
+      then h.levels_left else find_category t cat
   in
   find_category st.categories cat
 
@@ -189,7 +192,8 @@ let rec remove_category_level (lst : category_status list)
     match lst' with 
     | [] -> acc
     | h::t -> 
-      if (h.name = cat) 
+      if (String.lowercase_ascii (Jeopardy.category_name_string h.name) = 
+          String.lowercase_ascii (Jeopardy.category_name_string cat))
       then helper t (({name = h.name; 
                        levels_left = remove_level h.levels_left lev }) :: acc)
       else helper t (h::acc) 
@@ -229,7 +233,11 @@ let new_board (jeop: Jeopardy.t) (cats: category_status list) : string =
     where [st'] is the game state after playing the question, with the
     current player switched. *)
 let play cat lev (jeop: Jeopardy.t) st = 
-  if not (List.mem cat st.categories_left) then Illegal 
+  if not 
+      (List.mem (String.lowercase_ascii (Jeopardy.category_name_string cat)) 
+         (List.map String.lowercase_ascii 
+            (List.map Jeopardy.category_name_string st.categories_left))) 
+  then Illegal 
   else let levels = current_category_levels st cat in
     if not (List.mem lev levels) then Illegal 
     else if List.length levels = 1 

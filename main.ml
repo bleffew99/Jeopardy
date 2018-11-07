@@ -752,7 +752,11 @@ let rec play_game jeop =
    You can also 'pass' and recieve no points. But be careful, you only have 3 
    passes a game! You can also ask for a 'hint' for every question, but this 
    costs 100 points each time. At any point you check your score with 'score' 
-   or quit the game with 'quit'. Have fun and good luck!\n");
+   or quit the game with 'quit'. You also have one chance to double the points 
+   gained or lost in a question, just enter 'double' while playing the question.
+   In two-player mode, each player also has the ability to skip the others turn 
+   once per game, enter 'skip' when answering a question. 
+   Have fun and good luck!\n");
 
   ANSITerminal.(print_string [red] "\n 1 or 2 players?\n");
   match read_line() with

@@ -16,7 +16,7 @@ let rec double_loop jeop (st : State.t) (lev: int)
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       let ans = String.trim (List.fold_left (fun x acc -> 
@@ -130,7 +130,7 @@ let rec final_answer_loop jeop (st: State.t) : State.t =
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       let ans = String.trim (List.fold_left (fun x acc -> 
@@ -269,7 +269,7 @@ let rec double_two_loop jeop (st : State2players.t) (lev: int)
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       let ans = String.trim (List.fold_left (fun x acc -> 
@@ -328,7 +328,7 @@ let rec skip_two_loop jeop (st : State2players.t) (lev: int)
   let answer_lst = remove_empty (String.split_on_char ' ' answer ) [] in
   match answer_lst with
   | h::m::t -> ( 
-      if (h = "what" || h = "who") &&
+      if (h = "what" || h = "who" || h = "when") &&
          (m = "is" || m = "are" || m = "was" || m = "were")
       then ( 
         let ans = String.trim (List.fold_left (fun x acc -> 
@@ -497,7 +497,7 @@ let rec final_answer1_loop jeop (st: State2players.t) : string =
   let answer_lst1 = remove_empty (String.split_on_char ' ' answer1 ) [] in
   match answer_lst1 with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       (ANSITerminal.erase Screen;
@@ -521,7 +521,7 @@ let rec final_answer2_loop jeop (st: State2players.t) : string =
   let answer_lst2 = remove_empty (String.split_on_char ' ' answer2) [] in
   match answer_lst2 with
   | h::m::t -> 
-    if (h = "what" || h = "who") &&
+    if (h = "what" || h = "who" || h = "when") &&
        (m = "is" || m = "are" || m = "was" || m = "were")
     then 
       (ANSITerminal.erase Screen;

@@ -122,8 +122,7 @@ let rec reduce_list n = function
 (** [reduce jeop] is jeop but with the levels reduced, eg if jeop has a
     category with 6 levels and another with 4 levels, all categories will have
     only 4 levels after. *)
-let reduce jeop : t = 
-  let lowest_lev = get_lowest_level jeop in
+let reduce lowest_lev jeop : t = 
   let rec helper acc = function
   | [] -> acc
   | h::t -> if List.length (h.levels) > lowest_lev

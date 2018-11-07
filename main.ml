@@ -570,6 +570,18 @@ let rec play_game jeop =
   | _ -> print_endline "You can only have one or two players";
     play_game jeop
 
+let rec prompt_levs (n: int) : int =
+  print_string ("How many levels for each category do you want (max " 
+                ^ string_of_int n ^ ")\n>");
+  try (let s = read_int () in
+       if s > n || n = 0 then (
+         ANSITerminal.erase Screen;
+         print_endline "That's not a valid input";
+         prompt_levs n) else s)
+  with | Failure _ -> 
+    ANSITerminal.erase Screen;
+    print_endline "You need to input an int.";
+    prompt_levs n
 
 (** [main ()] prompts for what categories to play then starts it. *)
 let rec main () =
@@ -591,15 +603,16 @@ let rec main () =
           let cats = List.map (Jeopardy.category_name_from_string) split_list in
           try (let jeop = Jeopardy.from_categories 
                    (Yojson.Basic.from_file "jeop.json") cats in
-               play_game (Jeopardy.reduce jeop))
+               let num_cats = prompt_levs (Jeopardy.get_lowest_level jeop) in
+               play_game (Jeopardy.reduce num_cats jeop))
           with | Jeopardy.UnknownCategory _ ->
             ANSITerminal.erase Screen;
             print_endline "Sorry, one of those is not an available category.\n";
             main ()
-          | Jeopardy.NoCategoriesProvided ->
-            ANSITerminal.erase Screen;
-            print_endline "You need to pick at least one category!\n";
-            main ())
+               | Jeopardy.NoCategoriesProvided ->
+                 ANSITerminal.erase Screen;
+                 print_endline "You need to pick at least one category!\n";
+                 main ())
 
 
 

@@ -44,9 +44,10 @@ let rec remove_empty (lst : string list) acc : string list =
     empty object phrase.*)
 let parse str : command =
   let split_list = remove_empty (String.split_on_char ' ' str ) [] in
-  match split_list with
+  let lower_list = List.map String.lowercase_ascii split_list in
+  match lower_list with
   | [] -> raise Empty
-  | h::t -> 
+  | h::t ->
     if h = "play" then 
       if (List.length t) <> 2 then raise Malformed
       else (Play t)

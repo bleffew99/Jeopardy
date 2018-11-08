@@ -282,8 +282,8 @@ let make_parse_error_test
 let command_tests = 
   [
     (* make_parse test*)
-    make_parse_test "parse play 1" "play Music 200" (Play ["Music";"200"]);
-    make_parse_test "parse play 2" "play Cornell 400" (Play ["Cornell";"400"]); 
+    make_parse_test "parse play 1" "play Music 200" (Play ["music";"200"]);
+    make_parse_test "parse play 2" "play Cornell 400" (Play ["cornell";"400"]); 
     make_parse_test "parse Answer" "what are apples" (Answer ["apples"]);
     make_parse_test "parse Score" "score" (Score);
     make_parse_test "parse Quit" "quit" (Quit);
@@ -872,10 +872,10 @@ let state2players_tests = [
   make_player1_double_used_tests "double used 1 4" (doubleplay13) true;
 
   (*player 2 double used*)
-  make_player1_double_used_tests "double used 2 1" (double11) true;
-  make_player1_double_used_tests "double used 2 2" (doubleplay12) true;
-  make_player1_double_used_tests "double used 2 3" (double12) true;
-  make_player1_double_used_tests "double used 2 4" (doubleplay13) true;
+  make_player2_double_used_tests "double used 2 1" (double11) true;
+  make_player2_double_used_tests "double used 2 2" (doubleplay12) true;
+  make_player2_double_used_tests "double used 2 3" (double12) true;
+  make_player2_double_used_tests "double used 2 4" (doubleplay13) true;
   
   (*has played final*)
   make_has_played_final_tests "played final 1" (bet10) false;

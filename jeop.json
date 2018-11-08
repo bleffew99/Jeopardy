@@ -689,6 +689,14 @@
         "nabakov",
         "nabokof"
       ]
+    },
+    {
+      "question" : "This country has the highest average elevation in the world",
+      "final answers": [
+        "bhutan",
+        "butan",
+        "kingdom of bhutan"
+      ]
     }
   ]
 }

@@ -171,7 +171,10 @@ let remove_category (lst : category_name list) (cat : category_name) =
   let rec helper l acc =
     match l with
     | [] -> acc
-    | h::t -> if h = cat then helper t acc
+    | h::t -> 
+      if (String.lowercase_ascii (Jeopardy.category_name_string h) = 
+          String.lowercase_ascii (Jeopardy.category_name_string cat)) 
+      then helper t acc
       else helper t (h::acc) 
   in List.rev (helper lst [])
 
@@ -549,6 +552,8 @@ let final_answer jeop st (ans1: string) (ans2: string) =
                board = st.board} )
      else 
        (print_endline ("Player 2, sorry but you are wrong, too!");
+        (print_string "The correct answer was:");
+        (print_endline (List.nth (Jeopardy.final_jeopardy_answers jeop) 0));
         Legal {categories = st.categories;
                categories_left = st.categories_left;
                player1_score = st.player1_score - (get_player1_bet st);

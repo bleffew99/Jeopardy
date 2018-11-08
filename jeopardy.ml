@@ -85,6 +85,15 @@ let categories_list jeop =
     | h::t -> get_categories t (h.name :: acc)
   in get_categories jeop.categories []
 
+(** [categories_list_lowercase jeop] returns the names of the categories in 
+    [jeop], but lowercased. *)
+let categories_list_lowercse jeop = 
+  let rec get_categories (cats : category list) acc : category_name list =
+    match cats with
+    | [] -> acc
+    | h::t -> get_categories t ((String.lowercase_ascii h.name) :: acc)
+  in get_categories jeop.categories []
+
 (** [from_categories json cats] is the same as [from_json] but only including
     the categories in [cats].
     raises [UnknownCategory] if an element in cats isn't already in json.
@@ -93,18 +102,21 @@ let from_categories json (cats: category_name list) =
   if List.length cats = 0 then raise NoCategoriesProvided else
     let rec helper acc = function
       | [] -> acc
-      | h :: t -> if List.mem h.name cats 
+      | h :: t ->
+        if List.mem (String.lowercase_ascii h.name) cats 
         then helper (h :: acc) t 
         else helper acc t
     in
     let rec helper2 jeop_cats = function
       | [] -> ()
-      | h :: t -> if List.mem h jeop_cats 
+      | h :: t -> 
+        if List.mem (String.lowercase_ascii h) jeop_cats 
         then helper2 jeop_cats t 
-        else raise (UnknownCategory h)
+        else 
+          raise (UnknownCategory h)
     in
     let jeop = from_json json in
-    helper2 (categories_list jeop) cats;
+    helper2 (categories_list_lowercse jeop) cats;
     let new_cats = helper [] jeop.categories in
     {categories = new_cats; final_jeopardy = jeop.final_jeopardy}
 

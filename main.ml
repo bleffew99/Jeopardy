@@ -821,7 +821,7 @@ let rec main () =
   | exception End_of_file -> ()
   | s -> (ANSITerminal.erase Screen;
           let split_list = Command.remove_empty 
-              (String.split_on_char ' ' s) [] in
+              (String.split_on_char ' ' (String.lowercase_ascii s)) [] in
           let cats = List.map (Jeopardy.category_name_from_string) split_list in
           try (let jeop = Jeopardy.from_categories 
                    (Yojson.Basic.from_file "jeop.json") cats in

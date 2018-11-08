@@ -749,28 +749,29 @@ let rec play_game jeop =
 
    You're allowed to play with either one or two players and answer trivia 
    questions in order to get the highest amount of points. 
-   
+
    - For each turn the player can choose a question from the board by choosing 
    the category and point value. EG: 'play Music 300' 
 
    - You are then presented with a question, but you MUST answer it in the form 
      of a question ('who is' or 'what is', etc). 
-    
+
    - If you answer the question correctly your score goes up by however 
-     much the question was worth, if you get it wrong, you lose that many points.
+     much the question was worth, if you get it wrong, you lose that many 
+     points.
 
    - You can also 'pass' and recieve no points. But be careful, you only have 3 
      passes a game! 
-   
+
    - You can also ask for a 'hint' for every question, but this costs 100 points
      each time. 
-   
+
    - At any point you check your score with 'score' 
      or quit the game with 'quit'. 
-   
+
    - You also have one chance to double the points gained or lost in a question,
      just enter 'double' while playing the question.
-   
+
    - In two-player mode, each player also has the ability to skip the other's 
      turn once per game, enter 'skip' when answering a question. 
 

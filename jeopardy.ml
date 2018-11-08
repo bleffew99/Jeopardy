@@ -167,7 +167,10 @@ let rec get_levels (levels : level list) (acc : int list) : int list =
 let rec is_category (cats : category list) (cat : category_name) = 
   match cats with
   | [] -> raise (UnknownCategory cat)
-  | h::t -> if (h.name = cat) then h else is_category t cat
+  | h::t -> 
+    if ((String.lowercase_ascii (category_name_string h.name)) = 
+        String.lowercase_ascii (category_name_string cat))
+    then h else is_category t cat
 
 (** [get_category_levels cat] returns the levels for category [cat]. *)
 let get_category_levels (cat: category) = 

@@ -171,7 +171,10 @@ let remove_category (lst : category_name list) (cat : category_name) =
   let rec helper l acc =
     match l with
     | [] -> acc
-    | h::t -> if h = cat then helper t acc
+    | h::t -> 
+      if (String.lowercase_ascii (Jeopardy.category_name_string h) = 
+          String.lowercase_ascii (Jeopardy.category_name_string cat)) 
+      then helper t acc
       else helper t (h::acc) 
   in List.rev (helper lst [])
 

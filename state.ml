@@ -97,7 +97,7 @@ let current_category_levels st (cat: category_name) : int list =
     | [] -> raise (UnknownCategory cat)
     | h::t -> 
       if String.lowercase_ascii (Jeopardy.category_name_string h.name) = 
-         Jeopardy.category_name_string cat 
+         String.lowercase_ascii (Jeopardy.category_name_string cat) 
       then h.levels_left else find_category t cat
   in
   find_category st.categories cat
@@ -110,7 +110,10 @@ let remove_category (lst : category_name list) (cat : category_name) =
   let rec helper l acc =
     match l with
     | [] -> acc
-    | h::t -> if h = cat then helper t acc
+    | h::t -> 
+      if String.lowercase_ascii (Jeopardy.category_name_string h) 
+         = String.lowercase_ascii (Jeopardy.category_name_string cat)  
+      then helper t acc
       else helper t (h::acc) 
   in List.rev (helper lst [])
 
@@ -174,7 +177,11 @@ let play cat lev (jeop: Jeopardy.t) st =
   (*
   let string_cats = List.map Jeopardy.category_name_string st.categories_left in
   let lower_cats = List.map String.lowercase_ascii string_cats in *)
-  if not (List.mem cat st.categories_left) then Illegal 
+  if not 
+      (List.mem (String.lowercase_ascii (Jeopardy.category_name_string cat)) 
+         (List.map String.lowercase_ascii 
+            (List.map Jeopardy.category_name_string st.categories_left)))
+  then Illegal 
   else let levels = current_category_levels st cat in
     if not (List.mem lev levels) then Illegal 
     else if List.length levels = 1 

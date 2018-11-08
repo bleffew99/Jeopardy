@@ -626,6 +626,7 @@ let double12 = make_state2 (State2players.double doubleplay12 t3
 let doubleplay13 = make_state2 (State2players.play 
                                   (category_name_from_string "Animals") 
                                   300 t3 double12)
+
 let skip1 = make_state2 (State2players.skip (category_name_from_string 
                                                "Holidays") 400 "jack o'lantern" t3 play12 )
 let playskip1 = make_state2 (State2players.play (category_name_from_string 
@@ -646,48 +647,80 @@ let make_current_player_used_skip_tests
     (expected_output: bool) :test =
   name >:: (fun _ ->
       assert_equal expected_output (State2players.current_player_used_skip st))
-let make_current_player_tests
-    (name: string)
-    (st: State2players.t)
-    (expected_output: State2players.current_player) :test =
-  name >:: (fun _ ->
-      assert_equal expected_output (State2players.get_current_player st))
+
 let make_current_player1_score_tests 
     (name: string)
     (st: State2players.t)
     (expected_output: int) :test =
   name >:: (fun _ ->
       assert_equal expected_output (State2players.current_player1_score st))
+
 let make_current_player2_score_tests 
     (name: string)
     (st: State2players.t)
     (expected_output: int) :test =
   name >:: (fun _ ->
       assert_equal expected_output (State2players.current_player2_score st))
+
 let make_player1_passes_left_tests 
     (name: string)
     (st: State2players.t)
     (expected_output: int) :test =
   name >:: (fun _ -> 
       assert_equal expected_output (State2players.player1_passes_left st))
+
 let make_player2_passes_left_tests 
     (name: string)
     (st: State2players.t)
     (expected_output: int) :test =
   name >:: (fun _ -> 
       assert_equal expected_output (State2players.player2_passes_left st))
-let make_get_player1_bet 
+
+let make_current_player_tests
+    (name: string)
+    (st: State2players.t)
+    (expected_output: State2players.current_player) :test =
+  name >:: (fun _ ->
+      assert_equal expected_output (State2players.get_current_player st))
+
+let make_get_player1_bet_tests
     (name: string)
     (st: State2players.t)
     (expected_output: int) :test =
   name >:: (fun _ -> 
       assert_equal expected_output (State2players.get_player1_bet st))
-let make_get_player2_bet 
+
+let make_get_player2_bet_tests
     (name: string)
     (st: State2players.t)
     (expected_output: int) :test =
   name >:: (fun _ -> 
       assert_equal expected_output (State2players.get_player2_bet st))
+
+let make_player1_double_used_tests
+    (name: string)
+    (st: State2players.t)
+    (expected_output: bool) :test =
+  name >:: (fun _ -> 
+      assert_equal expected_output 
+      (State2players.player1_double_used st))
+
+let make_player2_double_used_tests
+    (name: string)
+    (st: State2players.t)
+    (expected_output: bool) :test =
+  name >:: (fun _ -> 
+      assert_equal expected_output
+      (State2players.player2_double_used st))
+    
+let make_has_played_final_tests
+    (name: string)
+    (st: State2players.t)
+    (expected_output: bool) :test =
+  name >:: (fun _ -> 
+      assert_equal expected_output 
+      (State2players.has_played_final st))
+
 let make_skip_illegal_tests 
     (name: string)
     (cat: Jeopardy.category_name)
@@ -701,7 +734,16 @@ let make_skip_illegal_tests
 
 let state2players_tests = [
 
-  (*current player 1 tests*)
+  (*curent player used skip tests*)
+  make_current_player_used_skip_tests "used skip 1" play12 false;
+  make_current_player_used_skip_tests "used skip 2" skip1 false;
+  make_current_player_used_skip_tests "used skip 3" playskip1 true;
+  make_current_player_used_skip_tests "used skip 4" ansskip1 true;
+  make_current_player_used_skip_tests "used skip 5" playansskip1 false;
+  make_current_player_used_skip_tests "used skip 6" skip2 true;
+  make_current_player_used_skip_tests "used skip 7" playskip2 true;
+
+  (*current player 1 score tests*)
   make_current_player1_score_tests "current player1 score test 1" play10 0;
   make_current_player1_score_tests "current player1 score test 2" ans11 100;
   make_current_player1_score_tests "current player1 score test 3" play11 100;
@@ -734,7 +776,7 @@ let state2players_tests = [
   make_current_player1_score_tests "ansskip 1" (ansskip1) (800);  
   make_current_player1_score_tests "playansskip 1" (playansskip1) (800);
 
-  (*player 2 score tests*)
+  (*current player 2 score tests*)
   make_current_player2_score_tests "current player2 score test 1" play10 0;
   make_current_player2_score_tests "current player2 score test 2" ans11 0;
   make_current_player2_score_tests "current player2 score test 3" play11 0;
@@ -769,6 +811,23 @@ let state2players_tests = [
   make_current_player2_score_tests "ansskip 1" (ansskip1) (400);
   make_current_player2_score_tests "skip2" (skip2) (500);
 
+  
+  (*player 1 passes left*)
+  make_player1_passes_left_tests "pass left 1 1" pass11 3;
+  make_player1_passes_left_tests "pass left 1 2" passplay11 3;
+  make_player1_passes_left_tests "pass left 1 3" pass12 2;
+  make_player1_passes_left_tests "pass left 1 4" passplay12 2;
+  make_player1_passes_left_tests "pass left 1 5" pass13 2;
+  make_player1_passes_left_tests "pass left 1 6" passplay13 2;
+  
+  (*player 2 passes left*)
+  make_player2_passes_left_tests "pass left 2 1" pass11 2;
+  make_player2_passes_left_tests "pass left 2 2" passplay11 2;
+  make_player2_passes_left_tests "pass left 2 3" pass12 2;
+  make_player2_passes_left_tests "pass left 2 4" passplay12 2;
+  make_player2_passes_left_tests "pass left 2 5" pass13 1;
+  make_player2_passes_left_tests "pass left 2 6" passplay13 1;
+
   (*current player tests*)
   make_current_player_tests "current player test 1" play10 One;
   make_current_player_tests "current player test 2" ans11 One;
@@ -798,16 +857,31 @@ let state2players_tests = [
   make_current_player_tests "skip2" skip2 One;
   make_current_player_tests "playskip2" playskip2 Two;
 
-  (*player 1 passes left*)
-  make_player1_passes_left_tests "pass left 1-1" pass11 3;
-
   (*player 1 bet*)
-  make_get_player1_bet "bet player 1 test 1" (bet10) 100;
-  make_get_player1_bet "bet player 1 test 2" (bet11) 50;
+  make_get_player1_bet_tests "bet player 1 test 1" (bet10) 100;
+  make_get_player1_bet_tests "bet player 1 test 2" (bet11) 50;
 
   (*player 2 bet*)
-  make_get_player2_bet "bet player 2 test 1" (bet10) 200;
-  make_get_player2_bet "bet player 2 test 2" (bet11) 0;
+  make_get_player2_bet_tests "bet player 2 test 1" (bet10) 200;
+  make_get_player2_bet_tests "bet player 2 test 2" (bet11) 0;
+
+  (*player 1 double used*)
+  make_player1_double_used_tests "double used 1 1" (double11) false;
+  make_player1_double_used_tests "double used 1 2" (doubleplay12) false;
+  make_player1_double_used_tests "double used 1 3" (double12) true;
+  make_player1_double_used_tests "double used 1 4" (doubleplay13) true;
+
+  (*player 2 double used*)
+  make_player1_double_used_tests "double used 2 1" (double11) true;
+  make_player1_double_used_tests "double used 2 2" (doubleplay12) true;
+  make_player1_double_used_tests "double used 2 3" (double12) true;
+  make_player1_double_used_tests "double used 2 4" (doubleplay13) true;
+  
+  (*has played final*)
+  make_has_played_final_tests "played final 1" (bet10) false;
+  make_has_played_final_tests "played final 2" (finans10) true;
+  make_has_played_final_tests "played final 3" (bet11) false;
+  make_has_played_final_tests "played final 4" (finans11) true;
 
   (*skip illegal and used skip tests*)
   make_skip_illegal_tests "skip illegal 2" (category_name_from_string "Food") 

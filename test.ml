@@ -136,12 +136,12 @@ let t4 = from_json(Yojson.Basic.from_file "jeop3.json")
 let cate1 = categories (t1)
 let cate2 = categories (t2)
 let newt1 = from_categories (Yojson.Basic.from_file "jeop.json") 
-    [(category_name_from_string "Music");(category_name_from_string "States")]
+    [(category_name_from_string "music");(category_name_from_string "states")]
 let newt2 = from_categories (Yojson.Basic.from_file "jeop.json") 
-    [(category_name_from_string "CS");(category_name_from_string "Holidays");
-     (category_name_from_string "Music")]
+    [(category_name_from_string "cs");(category_name_from_string "holidays");
+     (category_name_from_string "music")]
 let newt3 = from_categories (Yojson.Basic.from_file "jeop.json") 
-    [(category_name_from_string "CS");(category_name_from_string "Animals")]        
+    [(category_name_from_string "cs");(category_name_from_string "animals")]        
 let redt1 = reduce 5 newt1 
 let redt2 = reduce 4 newt2
 let redt3 = reduce 4 newt3 
